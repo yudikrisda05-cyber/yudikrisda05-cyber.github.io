@@ -293,7 +293,7 @@
 
   <!-- COMMAND BAR -->
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 19:20 JST</span></div>
+    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 19:35 JST</span></div>
     <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
     <div class="cell grow">
       <span id="updatedText">UPDATE: —</span>
@@ -338,7 +338,7 @@
   <section class="panel term-panel" id="termPanel" aria-label="Terminal analisa">
     <div class="phead">
       <span class="t">Terminal Analisa — Candlestick</span>
-      <span class="r" id="chartSymLabel">BTC · CHART: TRADINGVIEW · BINANCE:BTCUSDT</span>
+      <span class="r" id="chartSymLabel">BTC · CHART: BINANCE SPOT</span>
     </div>
     <div class="pbody" style="padding:5px 8px">
       <div class="termtools">
@@ -386,7 +386,7 @@
         <div class="chartwrap">
           <canvas id="chart"></canvas>
           <div class="term-legend" id="termLegend">Memuat candle…</div>
-          <div class="srcchip pending" id="chartSourceChip">CHART: MENGHUBUNGKAN TRADINGVIEW…</div>
+          <div class="srcchip pending" id="chartSourceChip">CHART: MENGHUBUNGKAN BINANCE…</div>
           <div class="msnr-panel" id="msnrPanel">
             <div class="mp-head"><span class="mp-bias" id="msnrPanelBias">MSNR · —</span><button id="msnrPanelFold" aria-label="Lipat/buka panel MSNR" title="Lipat/buka">–</button><button id="msnrPanelClose" aria-label="Tutup panel MSNR" title="Tutup panel">✕</button></div>
             <div id="msnrPanelBody">
@@ -413,7 +413,7 @@
       <div>CANDLE <b id="oh-n">0</b></div>
       <div>OBJEK GAMBAR <b id="oh-draw">0</b></div>
     </div>
-    <div class="term-hint" id="termHint">Sumber candle: <b style="color:var(--muted)">TradingView</b> (XAU = OANDA:XAUUSD, BTC = BINANCE:BTCUSDT) — chip di kanan atas chart menunjukkan sumber yang sedang aktif; bila feed TradingView gagal/putus, chart otomatis memakai <b style="color:var(--muted)">candle Hyperliquid (cadangan)</b>. Baris <b style="color:var(--muted)">DIAGNOSTIK LIVE</b> juga menampilkan status &amp; error terakhir TradingView (kolom <b style="color:var(--muted)">TV</b>) — bila server TradingView menolak koneksi, pesan penolakannya tercatat di sana. Dinding &amp; bubble tetap dari buku perpetual Hyperliquid. Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (8–600 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. <b style="color:var(--muted)">Skala vertikal bisa diatur manual:</b> seret <b style="color:var(--muted)">sumbu harga</b> (strip angka di kanan) ke bawah untuk memampatkan chart atau ke atas untuk melebarkan candle, cubit dua jari secara vertikal juga bisa; label harga berubah teal dan tombol <b style="color:#e8c33a">SKALA AUTO</b> muncul — ketuk tombol itu atau ketuk ganda sumbu harga untuk kembali ke skala otomatis; selama skala manual aktif, seretan vertikal di area chart ikut menggeser rentang harga. Seret <b style="color:var(--muted)">sumbu waktu</b> (strip jam di bawah) ke kiri/kanan untuk mengubah spasi candle. Pan mengikuti jari 1:1 secara halus (sub-candle). Di sisi kanan chart selalu ada <b style="color:var(--muted)">ruang kosong tetap</b> (±8% jendela, 3–14 candle) antara candle terakhir dan sumbu harga — harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; tombol KE TERBARU mengembalikan ke tepi live dengan ruang kanan standar itu. <b style="color:var(--muted)">Lingkaran berwarna (bubble)</b> di chart = penanda likuiditas dari scan buku jeru, menempel pada candle yang buntutnya menyentuh level tumpukan itu (atau di tepi kanan bila belum tersentuh): teal = bid, ungu = ask; makin besar lingkaran makin besar tumpukannya (≥2× / ≥3× / ≥5× median sisinya), angka di dalamnya = ukuran tumpukan — hidup-matikan lewat tombol <b style="color:var(--muted)">BUBBLE</b>. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona MSNR Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar hanya untuk sesi ini (tidak disimpan) dan tiap simbol punya gambarnya sendiri. Zona Pantau MSNR digambar <b style="color:var(--muted)">sebagai garis kustom gaya JSNR</b>: garis horizontal tipis rapi (warna menurut sisi zona: hijau = support/BUY, merah muda = resistance/SELL — status flip SBR/RBS dibaca dari teks labelnya, bukan dari warna garis) pada level kunci zona — zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya — memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada <b style="color:var(--muted)">titik (dot) di ujung garisnya sendiri, tepat pada harga levelnya</b> — dot &amp; garis tidak pernah digeser dari levelnya dan garis <b style="color:var(--muted)">TERKUNCI ke skala harga chart</b> (posisinya dihitung ulang dari pemetaan harga yang sama dengan candle setiap kali chart digambar, jadi tetap menempel tepat di levelnya saat chart dipan/di-zoom) — dengan <b style="color:var(--muted)">label “harga level TIPE · fresh/tested”</b> di kanan titik pada ketinggian yang sama persis; label zona yang berdekatan hanya digeser mendatar (dengan garis penghubung mungil ke titiknya) supaya tidak bertumpuk. Status dihitung dari candle di buffer (tersentuh = tested, belum = fresh); zona <b style="color:var(--muted)">tested digambar lebih redup</b> (garis, dot &amp; label ±55%) supaya langsung beda dari zona fresh yang berwarna penuh; hidup-matikan lewat tombol <b style="color:var(--muted)">ZONA MSNR</b>. <b style="color:var(--muted)">Panel status MSNR</b> berbentuk tabel kecil di pojok kanan atas chart menampilkan bias + zona BUY/SELL terdekat (status menunggu / DI DALAM ZONA) + baris status zona terdekat — hidup-matikan lewat tombol <b style="color:var(--muted)">PANEL</b> atau tombol ✕ di panel, lipat lewat tombol –. Zona yang sedang berada di luar rentang harga terlihat tetap ditandai <b style="color:var(--muted)">label tepi ▲ ZONA DI ATAS / ▼ ZONA DI BAWAH</b> lengkap dengan jarak % dari harga terakhir, jadi tidak pernah “hilang” dari chart. Tombol <b style="color:var(--muted)">LAYAR PENUH</b> memperluas chart memenuhi seluruh layar HP — pan, pinch zoom, crosshair, dinding order, dan zona MSNR tetap bekerja di mode itu. Garis putus-putus teal (bid) / ungu (ask) berlabel ukuran = dinding order terbesar dari scan buku jeru — hidup-matikan lewat tombol DINDING.</div>
+    <div class="term-hint" id="termHint">Sumber candle: <b style="color:var(--muted)">BTC = Binance Spot (BTCUSDT)</b> — klines REST + WebSocket kline resmi Binance — dan <b style="color:var(--muted)">XAU = TradingView (OANDA:XAUUSD)</b>; keduanya candle resmi bursa apa adanya, <b style="color:var(--muted)">bukan rakitan lokal</b> — pembangunan candle dari tick dagang sudah dimatikan total (tick hanya untuk harga terakhir, CVD, dan panel lain). Chip di kanan atas chart menunjukkan sumber yang sedang aktif per simbol; bila sumber utama gagal/putus, chart otomatis memakai <b style="color:var(--muted)">candle resmi Hyperliquid (cadangan)</b> — snapshot + kanal candle resmi exchange, disinkron ulang berkala ±8 detik. Baris <b style="color:var(--muted)">DIAGNOSTIK LIVE</b> juga menampilkan status &amp; error terakhir TradingView (kolom <b style="color:var(--muted)">TV</b>) — bila server TradingView menolak koneksi, pesan penolakannya tercatat di sana. Dinding &amp; bubble tetap dari buku perpetual Hyperliquid — pada chart spot (BTC Binance / XAU OANDA) level perp itu bisa bergeser beberapa dolar dari harga chart; ketuk chip basis di atas chart untuk catatan lengkapnya. Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (8–600 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. <b style="color:var(--muted)">Skala vertikal bisa diatur manual:</b> seret <b style="color:var(--muted)">sumbu harga</b> (strip angka di kanan) ke bawah untuk memampatkan chart atau ke atas untuk melebarkan candle, cubit dua jari secara vertikal juga bisa; label harga berubah teal dan tombol <b style="color:#e8c33a">SKALA AUTO</b> muncul — ketuk tombol itu atau ketuk ganda sumbu harga untuk kembali ke skala otomatis; selama skala manual aktif, seretan vertikal di area chart ikut menggeser rentang harga. Seret <b style="color:var(--muted)">sumbu waktu</b> (strip jam di bawah) ke kiri/kanan untuk mengubah spasi candle. Pan mengikuti jari 1:1 secara halus (sub-candle). Di sisi kanan chart selalu ada <b style="color:var(--muted)">ruang kosong tetap</b> (±8% jendela, 3–14 candle) antara candle terakhir dan sumbu harga — harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; tombol KE TERBARU mengembalikan ke tepi live dengan ruang kanan standar itu. <b style="color:var(--muted)">Lingkaran berwarna (bubble)</b> di chart = penanda likuiditas dari scan buku jeru, menempel pada candle yang buntutnya menyentuh level tumpukan itu (atau di tepi kanan bila belum tersentuh): teal = bid, ungu = ask; makin besar lingkaran makin besar tumpukannya (≥2× / ≥3× / ≥5× median sisinya), angka di dalamnya = ukuran tumpukan — hidup-matikan lewat tombol <b style="color:var(--muted)">BUBBLE</b>. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona MSNR Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar hanya untuk sesi ini (tidak disimpan) dan tiap simbol punya gambarnya sendiri. Zona Pantau MSNR digambar <b style="color:var(--muted)">sebagai garis kustom gaya JSNR</b>: garis horizontal tipis rapi (warna menurut sisi zona: hijau = support/BUY, merah muda = resistance/SELL — status flip SBR/RBS dibaca dari teks labelnya, bukan dari warna garis) pada level kunci zona — zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya — memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada <b style="color:var(--muted)">titik (dot) di ujung garisnya sendiri, tepat pada harga levelnya</b> — dot &amp; garis tidak pernah digeser dari levelnya dan garis <b style="color:var(--muted)">TERKUNCI ke skala harga chart</b> (posisinya dihitung ulang dari pemetaan harga yang sama dengan candle setiap kali chart digambar, jadi tetap menempel tepat di levelnya saat chart dipan/di-zoom) — dengan <b style="color:var(--muted)">label “harga level TIPE · fresh/tested”</b> di kanan titik pada ketinggian yang sama persis; label zona yang berdekatan hanya digeser mendatar (dengan garis penghubung mungil ke titiknya) supaya tidak bertumpuk. Status dihitung dari candle di buffer (tersentuh = tested, belum = fresh); zona <b style="color:var(--muted)">tested digambar lebih redup</b> (garis, dot &amp; label ±55%) supaya langsung beda dari zona fresh yang berwarna penuh; hidup-matikan lewat tombol <b style="color:var(--muted)">ZONA MSNR</b>. <b style="color:var(--muted)">Panel status MSNR</b> berbentuk tabel kecil di pojok kanan atas chart menampilkan bias + zona BUY/SELL terdekat (status menunggu / DI DALAM ZONA) + baris status zona terdekat — hidup-matikan lewat tombol <b style="color:var(--muted)">PANEL</b> atau tombol ✕ di panel, lipat lewat tombol –. Zona yang sedang berada di luar rentang harga terlihat tetap ditandai <b style="color:var(--muted)">label tepi ▲ ZONA DI ATAS / ▼ ZONA DI BAWAH</b> lengkap dengan jarak % dari harga terakhir, jadi tidak pernah “hilang” dari chart. Tombol <b style="color:var(--muted)">LAYAR PENUH</b> memperluas chart memenuhi seluruh layar HP — pan, pinch zoom, crosshair, dinding order, dan zona MSNR tetap bekerja di mode itu. Garis putus-putus teal (bid) / ungu (ask) berlabel ukuran = dinding order terbesar dari scan buku jeru — hidup-matikan lewat tombol DINDING.</div>
   </section>
 
   <!-- MARKET PANELS -->
@@ -460,7 +460,7 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick TradingView</b> sebagai sumber utama — feed data publik TradingView (WebSocket data.tradingview.com, token anonim; feed tidak resmi dan bisa berubah/diblokir sewaktu-waktu) dengan simbol <b>OANDA:XAUUSD</b> untuk emas (harga yang sama persis dengan acuan Zona Pantau MSNR, jadi zona kini sejajar 1:1 dengan candle) dan <b>BINANCE:BTCUSDT</b> untuk BTC; bar berjalan datang dari update timescale TradingView dan pembangunan candle dari trade Hyperliquid <b>dimatikan selama sumber TV aktif</b> supaya tidak tercampur. Bila WebSocket TradingView gagal tersambung, tidak mengirim bar dalam ±8 detik, atau putus di tengah, chart <b>otomatis kembali ke candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali). Pembaruan per tick ini berlaku untuk <b>semua timeframe</b> — bucket candle berjalan selalu mengikuti timeframe yang sedang aktif (1m/5m/15m/1H/4H/1D), dan mengganti timeframe meminta ulang snapshot candleSnapshot + langganan candle WebSocket untuk interval terpilih. Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; sisi kanan chart selalu menyisakan ruang kosong tetap (±8% jendela tampil, 3–14 candle) antara candle terakhir dan sumbu harga ala offset kanan TradingView, jadi harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live dengan ruang kanan standar itu. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — data candle dari feed publik TradingView (bukan widget/akun TradingView resmi; chip sumber di chart selalu menunjukkan sumber yang sedang aktif, termasuk saat jatuh ke cadangan Hyperliquid). Handshake TradingView kini <b>bertahap</b> (sesi dibuat → simbol di-resolve → series dibuat, tidak lagi dikirim serentak sebelum sesi siap) dan status serta pesan error terakhir TradingView ditampilkan di kolom TV pada baris DIAGNOSTIK LIVE, jadi penolakan server tercatat di layar; status TV hanya dinyatakan OK bila bar TradingView benar-benar sudah diterima. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar candle dari <b>sumber resmi per simbol</b>: untuk <b>BTC, Binance Spot (BTCUSDT)</b> — muat awal dari REST klines resmi Binance (data-api.binance.vision, cadangan api.binance.com) dan candle berjalan dari WebSocket kline resmi Binance (data-stream.binance.vision, cadangan stream.binance.com:9443), jadi bentuk candle persis pasar spot asli; untuk <b>emas, TradingView</b> — feed data publik TradingView (WebSocket data.tradingview.com, token anonim; feed tidak resmi dan bisa berubah/diblokir sewaktu-waktu) dengan simbol <b>OANDA:XAUUSD</b> (harga yang sama persis dengan acuan Zona Pantau MSNR, jadi zona sejajar 1:1 dengan candle), bar berjalan dari update timescale TradingView. <b>Pembangunan candle lokal dari tick dagang sudah dihapus total</b> — jalur rakitan itulah yang dulu membuat candle tidak beraturan; tick dagang Hyperliquid kini hanya dipakai untuk harga terakhir, CVD, dan panel-panel lain, tidak pernah membentuk atau mengubah candle. Bila sumber utama sebuah simbol gagal tersambung, tidak mengirim candle dalam ±8–10 detik, atau putus di tengah, chart simbol itu <b>otomatis jatuh ke candle RESMI Hyperliquid (cadangan)</b> — hanya snapshot candleSnapshot REST + langganan WebSocket kanal candle resmi exchange, dengan snapshot disinkronkan ulang berkala tiap ±8 detik untuk mengoreksi candle berjalan, tanpa penggabungan rakitan lokal apa pun — dan sumber utama dicoba lagi berkala ±30 detik. Mengganti timeframe meminta ulang candle dari sumber aktif untuk interval terpilih (nama interval chart 1m/5m/15m/1H/4H/1D sama dengan nama interval Binance &amp; kanal candle Hyperliquid). Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; sisi kanan chart selalu menyisakan ruang kosong tetap (±8% jendela tampil, 3–14 candle) antara candle terakhir dan sumbu harga ala offset kanan TradingView, jadi harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live dengan ruang kanan standar itu. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — data candle dari Binance Spot untuk BTC dan feed publik TradingView untuk XAU (bukan widget/akun TradingView resmi; chip sumber di chart selalu menunjukkan sumber yang sedang aktif per simbol, termasuk saat jatuh ke cadangan Hyperliquid). Handshake TradingView kini <b>bertahap</b> (sesi dibuat → simbol di-resolve → series dibuat, tidak lagi dikirim serentak sebelum sesi siap) dan status serta pesan error terakhir TradingView ditampilkan di kolom TV pada baris DIAGNOSTIK LIVE, jadi penolakan server tercatat di layar; status TV hanya dinyatakan OK bila bar TradingView benar-benar sudah diterima. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
       <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Tumpukan terbesar per sisi dari scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus berlabel ukuran order (bid teal, ask ungu; tombol DINDING) — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tipis (1,4–1,5px; zona fresh warna penuh, zona tested disamarkan ke ±55% untuk garis, dot, dan labelnya) palet JSNR — merah muda resistance/SELL, hijau support/BUY (status flip SBR/RBS dibaca dari teks label, bukan warna) — pada level kunci zona, TERKUNCI ke pemetaan harga chart: posisi vertikalnya dihitung ulang setiap frame dari view.min/view.max lewat fungsi Y() yang sama dengan yang dipakai candle pada frame itu (termasuk pan sub-candle, skala manual, dan auto-scale) dan digambar dalam klip area plot yang sama dengan candle, jadi garis tidak lepas dari levelnya saat chart digeser/di-zoom; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; tiap garis memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada titik di ujung garisnya sendiri, tepat pada harga levelnya (zona lebar: dua garis tepi, masing-masing bertitik di level tepinya), label “harga level TIPE · fresh/tested” di kanan titik pada ketinggian yang sama persis dengan titiknya — label berdekatan hanya digeser mendatar dengan garis penghubung mungil, dot tidak pernah digeser dari levelnya; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status MSNR berbentuk tabel di pojok kanan atas chart (bias + BUY/SELL zona terdekat + baris zona terdekat, tanpa skor bintang/killzone karena data itu tidak tersedia) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
@@ -734,40 +734,17 @@ function applyTrade(id,t){
   if(!tr.px||!tr.sz) return;
   s.trades.unshift(tr); if(s.trades.length>10) s.trades.length=10;
   s.cvd += tr.buy? tr.sz : -tr.sz; s.cvdN++;
-  tickCandle(id,tr);
+  /* trade tick TIDAK lagi membentuk/memodifikasi candle — candle hanya
+     dari sumber resmi (Binance Spot untuk BTC, TradingView untuk XAU,
+     kanal candle resmi Hyperliquid saat cadangan). Tick dagang hanya
+     untuk daftar trade terakhir, harga terakhir, dan CVD. */
   markDirty(id);
 }
-/* Candle berjalan dibangun dari SETIAP trade tick yang masuk (jalur trades
-   WebSocket yang terbukti hidup per tick) — bukan hanya mengandalkan channel
-   candle WS. Berlaku untuk SEMUA timeframe di ITV_MS (1m/5m/15m/1H/4H/1D):
-   posisi trade ditentukan terhadap grid candle yang sedang tampil
-   (last.t + k×span timeframe AKTIF), jadi close/high/low candle berjalan
-   di timeframe besar pun berubah pada setiap trade, dan candle baru dibuka
-   tepat saat bucket timeframe aktif berganti. Celah antar-bucket diisi
-   candle datar di harga tutup sebelumnya supaya sumbu waktu tidak bolong. */
-function tickCandle(id,tr){
-  /* sumber TradingView aktif untuk simbol ini: candle TV adalah satu-
-     satunya sumber — pembangunan candle dari trade Hyperliquid DIMATIKAN
-     supaya dua sumber tidak tercampur (penyebab candle tidak teratur) */
-  if(typeof candleSrc!=="undefined"&&candleSrc[id]==="tv") return;
-  var s=M[id]; if(!s.candles.length) return;
-  var span=ITV_MS[chart.itv]||900000;
-  var last=s.candles[s.candles.length-1];
-  if(tr.time<last.t) return; /* trade lama / di luar urutan — abaikan */
-  if(tr.time<last.t+span){
-    if(tr.px>last.h) last.h=tr.px;
-    if(tr.px<last.l) last.l=tr.px;
-    last.c=tr.px; last.v+=tr.sz;
-    return;
-  }
-  var pc=last.c, t0=last.t+span, added=0;
-  while(t0+span<=tr.time){ s.candles.push({t:t0,o:pc,h:pc,l:pc,c:pc,v:0}); t0+=span; added++; }
-  s.candles.push({t:t0,o:pc,h:Math.max(pc,tr.px),l:Math.min(pc,tr.px),c:tr.px,v:tr.sz}); added++;
-  if(s.candles.length>700) s.candles.splice(0,s.candles.length-700);
-  /* pengguna sedang menggeser ke riwayat: naikkan pan sejumlah candle baru
-     supaya jendela tetap menunjuk candle yang sama (tidak ikut terseret) */
-  if(id===chart.sym&&chart.pan>0) chart.pan+=added;
-}
+/* Pembangunan candle lokal dari tick dagang SUDAH DIHAPUS TOTAL
+   (sumber candle tidak teratur): candle chart hanya berasal dari
+   sumber resmi — Binance Spot (BTC), TradingView (XAU), atau kanal
+   candle resmi Hyperliquid saat mode cadangan. Lihat applyTrade:
+   tick dagang kini hanya menggerakkan harga terakhir, CVD, dan panel. */
 function fetchSnapshot(){
   fetchDeepBooks();
   var jobs=MARKETS.map(function(m){
@@ -1102,8 +1079,10 @@ var view={min:0,max:1,autoMin:0,autoMax:1,t0:0,t1:1,W:0,H:0,plotW:0,step:0,offse
 function mapCandle(c){ return {t:+c.t, o:+c.o, h:+c.h, l:+c.l, c:+c.c, v:+c.v||0}; }
 var candleFetchAt={};
 function fetchCandles(id){
-  /* snapshot Hyperliquid tidak boleh menimpa candle TradingView aktif */
-  if(typeof candleSrc!=="undefined"&&candleSrc[id]==="tv") return Promise.resolve();
+  /* snapshot Hyperliquid HANYA dipakai saat simbol ini sedang dalam
+     mode cadangan ("hl") — tidak boleh menimpa candle sumber utama
+     yang aktif (Binance Spot untuk BTC / TradingView untuk XAU) */
+  if(typeof candleSrc!=="undefined"&&candleSrc[id]!=="hl") return Promise.resolve();
   var s=M[id], m=s.def, now=Date.now(), itvAtCall=chart.itv, span=ITV_MS[itvAtCall]||900000;
   /* dedupe: boot + reconnect bisa memanggil snapshot yang sama beruntun —
      satu permintaan per simbol+timeframe per 3 detik sudah cukup */
@@ -1117,6 +1096,9 @@ function fetchCandles(id){
       /* abaikan jawaban basi: pengguna sudah pindah ke timeframe lain —
          candle interval lama tidak boleh menimpa grid yang sedang aktif */
       if(chart.itv!==itvAtCall) return;
+      /* sumber utama keburu aktif selama permintaan berjalan —
+         snapshot cadangan tidak boleh menimpanya */
+      if(typeof candleSrc!=="undefined"&&candleSrc[id]!=="hl") return;
       s.candles=list.map(mapCandle).filter(function(c){return c.t&&c.o;}).sort(function(a,b){return a.t-b.t;});
       if(s.candles.length>700) s.candles=s.candles.slice(-700);
       if(chart.sym===id) markChartDirty();
@@ -1125,24 +1107,22 @@ function fetchCandles(id){
 function fetchAllCandles(){ MARKETS.forEach(function(m){ fetchCandles(m.id); }); }
 function applyCandle(id,data){
   if(!data||data.i!==chart.itv) return;
-  /* candle WebSocket Hyperliquid diabaikan selama TradingView aktif */
-  if(typeof candleSrc!=="undefined"&&candleSrc[id]==="tv") return;
+  /* candle WebSocket Hyperliquid HANYA dipakai saat mode cadangan —
+     diabaikan selama sumber utama simbol ini aktif (Binance/TV) */
+  if(typeof candleSrc!=="undefined"&&candleSrc[id]!=="hl") return;
+  /* candle RESMI exchange saja: ganti bucket yang sama persis, tambah
+     bucket baru, abaikan yang lebih lama. Tidak ada lagi penggabungan
+     ke grid rakitan lokal — semua timestamp berasal dari snapshot /
+     kanal candle resmi exchange, jadi selalu sejajar. Koreksi candle
+     berjalan dijamin oleh resync snapshot berkala (lihat boot). */
   var s=M[id], c=mapCandle(data); if(!c.t) return;
-  var span=ITV_MS[chart.itv]||900000;
   var last=s.candles[s.candles.length-1];
   if(!last){ s.candles.push(c); }
   else if(c.t===last.t){ s.candles[s.candles.length-1]=c; }
-  else if(c.t>=last.t+span){
+  else if(c.t>last.t){
     s.candles.push(c);
     if(s.candles.length>700) s.candles.splice(0,s.candles.length-700);
     if(id===chart.sym&&chart.pan>0) chart.pan++;
-  }
-  else if(c.t>last.t){
-    /* t versi server jatuh di dalam bucket berjalan versi grid lokal —
-       gabungkan OHLC-nya ke candle terakhir, pertahankan t lokal */
-    if(c.h>last.h) last.h=c.h;
-    if(c.l<last.l) last.l=c.l;
-    last.c=c.c; if(c.v>last.v) last.v=c.v;
   }
   if(chart.sym===id) markChartDirty();
 }
@@ -1156,21 +1136,22 @@ function resubCandles(){
   }
 }
 
-/* ============ SUMBER CANDLE UTAMA: TRADINGVIEW (feed publik) ============
+/* ============ SUMBER CANDLE UTAMA XAU: TRADINGVIEW (feed publik) ============
    Protokol standar tvdatafeed: WebSocket ke
    wss://data.tradingview.com/socket.io/websocket dengan framing
    ~m~<panjang>~m~<JSON>: set_auth_token "unauthorized_user_token" →
    chart_create_session → resolve_symbol → create_series. Heartbeat
    server (~h~…) dijawab dengan mengembalikan frame yang sama persis.
-   Simbol: XAU = OANDA:XAUUSD (harga yang sama dengan zona MSNR),
-   BTC = BINANCE:BTCUSDT. Bar berjalan dari timescale_update / du
-   menjadi sumber utama; selama TV aktif, candle Hyperliquid (snapshot,
-   channel candle, dan pembangunan dari trade) tidak dipakai untuk
-   simbol itu. Feed ini TIDAK resmi — bila WS gagal tersambung, tidak
-   mengirim bar dalam ±8 detik, atau putus di tengah, chart otomatis
-   jatuh kembali ke jalur Hyperliquid yang sudah ada (fallback) dan
-   chip sumber di chart mengatakannya terus terang; koneksi TV dicoba
-   lagi berkala ±30 detik. */
+   Simbol: XAU = OANDA:XAUUSD (harga yang sama dengan zona MSNR).
+   (BTC tidak lagi lewat TradingView — candle BTC kini dari Binance
+   Spot langsung, lihat bagian BINANCE SPOT di bawah.) Bar berjalan
+   dari timescale_update / du menjadi sumber utama; selama TV aktif,
+   candle Hyperliquid tidak dipakai untuk simbol itu. Feed ini TIDAK
+   resmi — bila WS gagal tersambung, tidak mengirim bar dalam ±8
+   detik, atau putus di tengah, chart otomatis jatuh kembali ke
+   candle resmi Hyperliquid (fallback) dan chip sumber di chart
+   mengatakannya terus terang; koneksi TV dicoba lagi berkala
+   ±30 detik. */
 var TV_URL="wss://data.tradingview.com/socket.io/websocket";
 var TV_SYM={ btc:"BINANCE:BTCUSDT", gold:"OANDA:XAUUSD" };
 var TV_TF={ "1m":"1", "5m":"5", "15m":"15", "1h":"60", "4h":"240", "1d":"1D" };
@@ -1215,35 +1196,54 @@ function tvSendSeries(gen){
 }
 function updateSourceChip(){
   var chip=$("chartSourceChip"); if(!chip) return;
-  var id=chart.sym, tvs=TV_SYM[id]||"";
-  var isTv= candleSrc[id]==="tv", pend= tv.pending&&tv.gen>0;
+  var id=chart.sym;
   var txt, cls;
-  if(isTv){ txt="CHART: TRADINGVIEW · "+tvs; cls="srcchip"; }
-  else if(pend){ txt="CHART: MENGHUBUNGKAN TRADINGVIEW…"; cls="srcchip pending"; }
-  else { txt="CHART: HYPERLIQUID (CADANGAN)"; cls="srcchip fallback"; }
+  /* chip jujur per simbol & keadaan: BTC mengenal keadaan "bin"
+     (Binance Spot aktif), XAU mengenal "tv" (TradingView aktif);
+     selain itu chip menyebut sumber yang sedang menghubungkan,
+     atau HYPERLIQUID (CADANGAN) bila jatuh ke fallback */
+  if(id==="btc"){
+    if(candleSrc.btc==="bin"){ txt="CHART: BINANCE SPOT"; cls="srcchip"; }
+    else if(typeof bin!=="undefined"&&bin.pending){ txt="CHART: MENGHUBUNGKAN BINANCE…"; cls="srcchip pending"; }
+    else { txt="CHART: HYPERLIQUID (CADANGAN)"; cls="srcchip fallback"; }
+  } else {
+    var tvs=TV_SYM[id]||"";
+    var isTv= candleSrc[id]==="tv", pend= tv.pending&&tv.gen>0;
+    if(isTv){ txt="CHART: TRADINGVIEW · "+tvs; cls="srcchip"; }
+    else if(pend){ txt="CHART: MENGHUBUNGKAN TRADINGVIEW…"; cls="srcchip pending"; }
+    else { txt="CHART: HYPERLIQUID (CADANGAN)"; cls="srcchip fallback"; }
+  }
   chip.textContent=txt; chip.className=cls;
   var lbl=$("chartSymLabel");
   if(lbl) lbl.textContent=(id==="btc"? "BTC":"XAU")+" · "+txt+" · "+chart.itv.toUpperCase();
-  /* catatan basis zona XAU: saat TV aktif, chart & zona sama-sama
-     OANDA — sejajar 1:1, tidak ada selisih basis perp. Catatan basis
-     perp hanya relevan saat fallback Hyperliquid. Dinding & bubble
-     tetap level perpetual Hyperliquid di kedua mode. */
-  if(id==="gold"){
-    var bc=$("basisChip"), bd=$("basisDetail");
-    if(bc&&bd){
-      if(isTv){
-        bc.textContent="Zona MSNR = harga chart (OANDA) · sejajar 1:1 ⓘ";
-        bd.innerHTML='Chart XAU saat ini memakai <b>OANDA:XAUUSD</b> dari TradingView — basis yang <b>sama persis</b> dengan Zona Pantau MSNR, jadi pita zona duduk tepat pada candle, tanpa selisih basis. Yang tetap perpetual Hyperliquid hanyalah <b>dinding order &amp; bubble</b> (level buku perp bisa beberapa dolar dari spot).';
+  /* catatan basis: dinding & bubble SELALU level perpetual
+     Hyperliquid, sedangkan chart kini spot (Binance untuk BTC,
+     OANDA lewat TradingView untuk XAU) — pada chart spot level perp
+     bisa bergeser beberapa dolar, dan catatan itu ditampilkan untuk
+     KEDUA simbol. Untuk XAU ada tambahan: zona MSNR adalah acuan
+     spot OANDA, jadi saat TV aktif zona sejajar 1:1 dengan candle. */
+  var bc=$("basisChip"), bd=$("basisDetail");
+  if(bc&&bd){
+    if(id==="btc"){
+      if(candleSrc.btc==="bin"){
+        bc.textContent="Basis: chart = spot Binance · dinding = perp Hyperliquid ⓘ";
+        bd.innerHTML='Chart BTC memakai candle <b>spot Binance (BTCUSDT)</b> — harga pasar spot asli, bukan rakitan lokal. <b>Dinding order &amp; bubble</b> tetap dari buku <b>perpetual Hyperliquid</b>, jadi level tumpukannya bisa bergeser beberapa dolar dari harga spot di chart. Semua level digambar <b>apa adanya</b> (angka tidak digeser).';
       } else {
-        bc.textContent="Basis: zona XAU = spot OANDA ⓘ";
-        bd.innerHTML='Zona MSNR XAU memakai harga <b>spot OANDA</b>, sedangkan chart ini perpetual Hyperliquid — basis perp bisa bergeser beberapa dolar dari spot. Zona digambar <b>apa adanya</b> (angka tidak digeser), jadi posisi pita terhadap candle bersifat pendekatan; keputusan tetap pada close candle acuan OANDA.';
+        bc.textContent="Basis: chart = perp Hyperliquid (cadangan) ⓘ";
+        bd.innerHTML='Binance Spot sedang tidak terjangkau dari perangkat ini — chart BTC sementara memakai <b>candle resmi perpetual Hyperliquid</b> (cadangan: snapshot + kanal candle resmi, disinkron ulang berkala), satu basis dengan dinding &amp; bubble. Halaman terus mencoba menyambung lagi ke Binance Spot secara berkala.';
       }
+    } else if(candleSrc.gold==="tv"){
+      bc.textContent="Zona MSNR = harga chart (OANDA) · sejajar 1:1 ⓘ";
+      bd.innerHTML='Chart XAU saat ini memakai <b>OANDA:XAUUSD</b> dari TradingView — basis yang <b>sama persis</b> dengan Zona Pantau MSNR, jadi pita zona duduk tepat pada candle, tanpa selisih basis. Yang tetap perpetual Hyperliquid hanyalah <b>dinding order &amp; bubble</b> (level buku perp bisa beberapa dolar dari spot).';
+    } else {
+      bc.textContent="Basis: zona XAU = spot OANDA ⓘ";
+      bd.innerHTML='Zona MSNR XAU memakai harga <b>spot OANDA</b>, sedangkan chart ini perpetual Hyperliquid — basis perp bisa bergeser beberapa dolar dari spot. Zona digambar <b>apa adanya</b> (angka tidak digeser), jadi posisi pita terhadap candle bersifat pendekatan; keputusan tetap pada close candle acuan OANDA.';
     }
   }
 }
 function tvScheduleRetry(){
   if(tv.retry) clearTimeout(tv.retry);
-  tv.retry=setTimeout(function(){ tv.retry=null; if(candleSrc[chart.sym]!=="tv"&&state.mode==="live") startTV(); },30000);
+  tv.retry=setTimeout(function(){ tv.retry=null; if(chart.sym==="gold"&&candleSrc.gold!=="tv"&&state.mode==="live") startTV(); },30000);
 }
 function tvFallback(){
   var id=chart.sym;
@@ -1389,6 +1389,149 @@ function startTV(){
     tvFallback();
   };
   ws.onerror=function(){ try{ ws.close(); }catch(e){} };
+}
+
+/* ============ SUMBER CANDLE UTAMA BTC: BINANCE SPOT ============
+   Candle BTC kini candle RESMI pasar spot Binance (BTCUSDT) — bukan
+   rakitan lokal dan bukan perpetual: muat awal dari REST klines
+   (host data-api.binance.vision, cadangan api.binance.com), lalu
+   candle berjalan dari WebSocket kline resmi (host
+   data-stream.binance.vision, cadangan stream.binance.com:9443).
+   Interval chart (1m/5m/15m/1h/4h/1d) sama persis dengan nama
+   interval Binance. Bila Binance tidak terjangkau dari perangkat
+   (kedua host REST + kedua host WS gagal, atau tidak ada kline
+   dalam ±10 detik), BTC jatuh ke candle resmi Hyperliquid
+   (cadangan) dan Binance dicoba lagi berkala ±30 detik. */
+var BN_REST=["https://data-api.binance.vision/api/v3/klines","https://api.binance.com/api/v3/klines"];
+var BN_WS=["wss://data-stream.binance.vision/ws/","wss://stream.binance.com:9443/ws/"];
+var bin={ ws:null, gen:0, pending:false, gotBars:false, timer:null, retry:null, intentional:false, hostIdx:0, lastError:"" };
+function binScheduleRetry(){
+  if(bin.retry) clearTimeout(bin.retry);
+  bin.retry=setTimeout(function(){ bin.retry=null; if(chart.sym==="btc"&&candleSrc.btc!=="bin"&&state.mode==="live") startBinance(); },30000);
+}
+function binFallback(){
+  bin.pending=false;
+  candleSrc.btc="hl";
+  updateSourceChip();
+  /* tarik candle resmi Hyperliquid sekarang juga (lewati dedupe) —
+     setelah itu kanal candle WS + resync berkala yang menjaganya */
+  delete candleFetchAt["btc|"+chart.itv];
+  fetchCandles("btc");
+  binScheduleRetry();
+}
+function binKillWs(){
+  var ws=bin.ws; bin.intentional=true; bin.ws=null;
+  if(ws){ try{ ws.onclose=null; ws.onerror=null; ws.onmessage=null; ws.close(); }catch(e){} }
+}
+function binWsFailed(gen,hostIdx){
+  if(gen!==bin.gen) return;
+  if(hostIdx+1<BN_WS.length){ binConnectWS(gen,hostIdx+1); return; }
+  bin.lastError="WebSocket kline Binance gagal di semua host";
+  binKillWs();
+  binFallback();
+}
+function binApplyKline(k){
+  if(!k||!k.t) return;
+  /* kline untuk interval lain (sisa langganan lama) diabaikan */
+  if(k.i&&k.i!==chart.itv) return;
+  var c={ t:+k.t, o:+k.o, h:+k.h, l:+k.l, c:+k.c, v:+k.v||0 };
+  if(!c.t||!c.o) return;
+  var s=M.btc;
+  var last=s.candles[s.candles.length-1];
+  if(!last){ s.candles.push(c); }
+  else if(c.t===last.t){ s.candles[s.candles.length-1]=c; }
+  else if(c.t>last.t){
+    s.candles.push(c);
+    if(s.candles.length>700) s.candles.splice(0,s.candles.length-700);
+    if(chart.sym==="btc"&&chart.pan>0) chart.pan++;
+  }
+  else return; /* kline lebih lama dari bucket terakhir — abaikan */
+  bin.gotBars=true; bin.pending=false;
+  if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+  if(candleSrc.btc!=="bin") candleSrc.btc="bin";
+  updateSourceChip();
+  if(chart.sym==="btc") markChartDirty();
+}
+function binLoadRest(gen){
+  var itv=chart.itv;
+  var tryHost=function(idx){
+    if(gen!==bin.gen||chart.itv!==itv) return;
+    if(idx>=BN_REST.length){ bin.lastError="REST klines Binance gagal di semua host"; return; }
+    fetch(BN_REST[idx]+"?symbol=BTCUSDT&interval="+itv+"&limit=700")
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(function(list){
+        if(gen!==bin.gen||chart.itv!==itv) return;
+        if(!Array.isArray(list)||!list.length){ tryHost(idx+1); return; }
+        var mapped=list.map(function(k){ return { t:+k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4], v:+k[5]||0 }; })
+          .filter(function(c){ return c.t&&c.o>0&&c.h>0&&c.l>0&&c.c>0; })
+          .sort(function(a,b){ return a.t-b.t; });
+        if(!mapped.length){ tryHost(idx+1); return; }
+        /* riwayat Binance MENGGANTIKAN buffer sepenuhnya — tidak
+           dicampur dengan candle sumber lain */
+        M.btc.candles=mapped.slice(-700);
+        bin.gotBars=true; bin.pending=false;
+        if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+        if(candleSrc.btc!=="bin") candleSrc.btc="bin";
+        updateSourceChip();
+        if(chart.sym==="btc") markChartDirty();
+      })
+      .catch(function(){ tryHost(idx+1); });
+  };
+  tryHost(0);
+}
+function binConnectWS(gen,hostIdx){
+  if(gen!==bin.gen) return;
+  bin.hostIdx=hostIdx;
+  var ws;
+  try{ ws=new WebSocket(BN_WS[hostIdx]+"btcusdt@kline_"+chart.itv); }
+  catch(e){ binWsFailed(gen,hostIdx); return; }
+  bin.ws=ws;
+  ws.onmessage=function(ev){
+    if(gen!==bin.gen) return;
+    var msg; try{ msg=JSON.parse(ev.data); }catch(e){ return; }
+    /* stream tunggal: kline di msg.k; stream gabungan: di msg.data.k */
+    var k=(msg&&msg.data&&msg.data.k)||(msg&&msg.k);
+    if(k) binApplyKline(k);
+  };
+  ws.onclose=function(){
+    if(gen!==bin.gen||bin.intentional) return;
+    bin.ws=null;
+    binWsFailed(gen,hostIdx);
+  };
+  ws.onerror=function(){ try{ ws.close(); }catch(e){} };
+}
+function startBinance(){
+  if(chart.sym!=="btc") return;
+  var gen=++bin.gen;
+  if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+  if(bin.retry){ clearTimeout(bin.retry); bin.retry=null; }
+  binKillWs();
+  bin.intentional=false; bin.pending=true; bin.gotBars=false; bin.lastError=""; bin.hostIdx=0;
+  updateSourceChip();
+  binLoadRest(gen);
+  binConnectWS(gen,0);
+  /* batas ±10 detik: belum ada kline/klines apa pun → fallback HL */
+  bin.timer=setTimeout(function(){
+    bin.timer=null;
+    if(gen!==bin.gen||bin.gotBars) return;
+    bin.lastError="timeout 10 dtk tanpa kline Binance";
+    binKillWs();
+    binFallback();
+  },10000);
+}
+function stopBinance(){
+  bin.gen++;
+  bin.pending=false;
+  if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+  if(bin.retry){ clearTimeout(bin.retry); bin.retry=null; }
+  binKillWs();
+  updateSourceChip();
+}
+/* dispatcher sumber candle utama per simbol chart aktif:
+   XAU → TradingView, BTC → Binance Spot; sumber simbol lain dimatikan */
+function startCandleSource(){
+  if(chart.sym==="gold"){ stopBinance(); startTV(); }
+  else { stopTV(); startBinance(); }
 }
 /* ---- indikator ---- */
 function emaSeries(cs,period){
@@ -1544,7 +1687,7 @@ function drawChart(){
      gambar sebesar pecahan × lebar candle, jadi pan mengikuti pointer
      1:1 tanpa lompatan per candle utuh. pan=0 = menempel tepi live dan
      otomatis mengikuti candle terbaru; pan>0 = sedang melihat riwayat —
-     candle baru yang terbentuk menaikkan pan (tickCandle/applyCandle)
+     candle baru yang terbentuk menaikkan pan (applyCandle/kline Binance/bar TV)
      supaya jendela tetap menunjuk candle yang sama, dan tombol
      KE TERBARU muncul */
   var allC=s.candles;
@@ -2273,7 +2416,7 @@ $("msnrPanelFold").addEventListener("click",function(){
   p.setAttribute("data-collapsed", p.getAttribute("data-collapsed")==="1"? "0":"1");
   updateMsnrPanel();
 });
-$("btnCandles").addEventListener("click",function(){ startTV(); fetchAllCandles(); });
+$("btnCandles").addEventListener("click",function(){ startCandleSource(); fetchAllCandles(); });
 $("btnLatest").addEventListener("click",function(){ chart.pan=0; chart.drag=null; drawChart(); });
 $("btnScale").addEventListener("click",function(){ resetYScale(); });
 /* ---- mode LAYAR PENUH chart ----
@@ -2329,7 +2472,7 @@ document.querySelectorAll("[data-itv]").forEach(function(b){
     candleSrc={ btc:"hl", gold:"hl" };
     MARKETS.forEach(function(m){ M[m.id].candles=[]; });
     document.querySelectorAll("[data-itv]").forEach(function(x){ x.setAttribute("aria-pressed", x===b? "true":"false"); });
-    fetchAllCandles(); resubCandles(); startTV(); drawChart(); syncAutoDepth();
+    fetchAllCandles(); resubCandles(); startCandleSource(); drawChart(); syncAutoDepth();
   });
 });
 $("tab-btc").addEventListener("click",function(){ setChartSym("btc"); });
@@ -2338,10 +2481,12 @@ function setChartSym(id){
   chart.sym=id; chart.draft=null; chart.cross=null; chart.pan=0; chart.drag=null; chart.visible=160; chart.pinch=null; chart.pointers={}; chart.yAuto=true; chart.axisDrag=null; chart.tAxisDrag=null;
   $("tab-btc").setAttribute("aria-pressed", id==="btc"? "true":"false");
   $("tab-gold").setAttribute("aria-pressed", id==="gold"? "true":"false");
-  var bn=$("zoneBasisNote"); if(bn) bn.style.display= id==="gold"? "block":"none";
+  /* catatan basis kini tampil untuk KEDUA simbol: dinding & bubble
+     selalu perp Hyperliquid sedangkan chart spot (BTC & XAU) */
+  var bn=$("zoneBasisNote"); if(bn) bn.style.display="block";
   if(!M[id].candles.length) fetchCandles(id);
   msnrPanelCache="";
-  startTV();
+  startCandleSource();
   drawChart();
 }
 window.addEventListener("resize",function(){ drawChart(); });
@@ -2354,9 +2499,9 @@ function setMode(mode){
   bRef.setAttribute("aria-pressed", mode==="refresh"? "true":"false");
   if(mode==="live"){
     setStatus("poll","MENGHUBUNGKAN…");
-    fetchSnapshot(); fetchRecentTrades(); startWS(); startScanWS(); startTV();
+    fetchSnapshot(); fetchRecentTrades(); startWS(); startScanWS(); startCandleSource();
   } else {
-    stopWS(); stopScanWS(); stopPolling(); stopTV();
+    stopWS(); stopScanWS(); stopPolling(); stopTV(); stopBinance();
     setStatus("poll","MODE REFRESH · MANUAL");
     fetchSnapshot();
   }
@@ -2367,7 +2512,10 @@ $("btnRefresh").addEventListener("click",function(){ fetchSnapshot(); fetchRecen
 document.addEventListener("visibilitychange",function(){
   if(document.hidden||state.mode!=="live") return;
   if(!scanState.ok) startScanWS();
-  if(candleSrc[chart.sym]!=="tv"&&!tv.pending&&!tv.ws) startTV();
+  var srcOk= chart.sym==="gold"
+    ? (candleSrc.gold==="tv"||tv.pending||!!tv.ws)
+    : (candleSrc.btc==="bin"||bin.pending||!!bin.ws);
+  if(!srcOk) startCandleSource();
   if(!state.wsOk){ fetchSnapshot(); startWS(); }
   /* socket terlihat tersambung tapi aliran sudah mati selama halaman
      tertidur di latar — tutup paksa supaya onclose menyambung ulang
@@ -2411,6 +2559,17 @@ setChartSym("btc");
 MARKETS.forEach(function(m){ updateDepthUI(m.id); });
 fetchAllCandles();
 setMode("live");
+/* RESYNC CADANGAN: selama sebuah simbol berada di mode cadangan
+   Hyperliquid ("hl"), snapshot candleSnapshot resmi ditarik ulang
+   tiap ±8 detik untuk mengoreksi candle berjalan — satu-satunya
+   koreksi yang diizinkan, tanpa rakitan lokal. Simbol yang sumber
+   utamanya aktif (Binance/TV) tidak disentuh interval ini. */
+setInterval(function(){
+  if(state.mode!=="live"||document.hidden) return;
+  MARKETS.forEach(function(m){
+    if(candleSrc[m.id]==="hl"){ delete candleFetchAt[m.id+"|"+chart.itv]; fetchCandles(m.id); }
+  });
+},8000);
 /* segarkan durasi tumpukan & buang yang basi tiap detik */
 setInterval(function(){
   if(document.hidden) return;
