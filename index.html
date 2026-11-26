@@ -491,6 +491,43 @@
     .bookhead{font-size:9px}
     .brow .t{font-size:11px}
   }
+  /* ===== PANEL PX: KOLOM FLEX + BANNER JAMET TERMINAL =====
+     Panel PX dadi kolom flex: panel chart dhuwure alami, banner ing
+     ngisore ngisi sisa dhuwur layar (JS nyetel min-height #tp-px =
+     dhuwur viewport − posisi panel) supaya ora ana papan ireng mati
+     ing ngisor chart ing layar HP dhuwur; ing layar cendhek banner
+     tetep dhuwur alamine (min-height ±150px). Banner manggon ing
+     NJABA #termPanel — mode fullscreen chart (Fullscreen API utawa
+     fallback overlay .fs-fallback sing nutupi kabeh layar) ora
+     nampilne banner babar pisan. Gaya banner = konsep v3 sing
+     disetujoni pemilik (kaca konsep-banner), kelas nganggo awalan
+     jbn- supaya ora tabrakan karo .brand/.dot header. */
+  #tp-px.on{display:flex;flex-direction:column}
+  #tp-px .term-panel{flex:none}
+  .jbn{position:relative;flex:1 1 auto;min-height:150px;margin:12px 12px 0;border:1px solid #1b2637;border-radius:14px;overflow:hidden;background:radial-gradient(130% 190% at 16% 40%,#0c2438 0%,#071420 52%,#04070c 100%);display:flex;flex-direction:column}
+  .jbn-wm{position:absolute;right:-10px;top:-38px;font-size:120px;font-weight:700;color:rgba(240,200,75,.05);line-height:1;pointer-events:none}
+  .jbn-main{position:relative;flex:1 1 auto;display:flex;align-items:center;gap:15px;padding:16px 16px 13px}
+  .jbn-logo{flex:0 0 auto;animation:jbnPulse 3.4s ease-in-out infinite}
+  @keyframes jbnPulse{0%,100%{filter:drop-shadow(0 0 3px rgba(32,227,194,.40))}50%{filter:drop-shadow(0 0 10px rgba(32,227,194,.80))}}
+  .jbn-title{font-size:19px;font-weight:800;letter-spacing:2.2px;color:#eaf6ff;line-height:1.18}
+  .jbn-title span{color:#20e3c2}
+  .jbn-quote{margin-top:7px;font-size:12.5px;font-style:italic;color:#f3e9cf}
+  .jbn-quote b{color:#f0c84b;font-weight:700}
+  .jbn-tag{margin-top:6px;font-size:9px;letter-spacing:1.2px;color:#8fb0c9;line-height:1.6}
+  .jbn-tag b{color:#f0c84b;font-weight:600}
+  .jbn-ticker{position:relative;border-top:1px solid #14304a;background:rgba(4,10,16,.55);display:flex;align-items:center}
+  .jbn-thead{display:flex;align-items:center;gap:6px;padding:8px 10px 8px 13px;flex:0 0 auto}
+  .jbn-dot{width:6px;height:6px;border-radius:50%;background:#20e3a2;box-shadow:0 0 6px #20e3a2;flex:none}
+  .jbn-tbrand{font-size:10.5px;font-weight:800;letter-spacing:1.4px;color:#eaf6ff;white-space:nowrap}
+  .jbn-tbrand span{color:#f0c84b}
+  .jbn-track{overflow:hidden;flex:1;min-width:0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 96%,transparent)}
+  .jbn-move{display:flex;width:max-content;animation:jbnMq 26s linear infinite}
+  .jbn-half{display:flex;gap:30px;padding-right:30px;white-space:nowrap}
+  @keyframes jbnMq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .jbn-it{font-size:11.5px;color:#a9bdd2;white-space:nowrap}
+  .jbn-it b{color:#eaf6ff;font-weight:700}
+  .jbn-it .up{color:#20e3a2} .jbn-it .dn{color:#ff4d6a} .jbn-it .gd{color:#f0c84b}
+  @media (prefers-reduced-motion: reduce){.jbn-logo,.jbn-move{animation:none}}
 </style>
 </head>
 <body>
@@ -508,7 +545,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 04:25 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 04:40 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -610,8 +647,8 @@
              sing dipindah. -->
         <div class="ovl ovl-tl">
           <div class="symtabs" role="group" aria-label="Pilih simbol terminal">
-            <button id="tab-btc" aria-pressed="true">BTC</button>
-            <button id="tab-gold" aria-pressed="false">XAU</button>
+            <button id="tab-btc" aria-pressed="false">BTC</button>
+            <button id="tab-gold" aria-pressed="true">XAU</button>
           </div>
           <div class="tgl" role="group" aria-label="Timeframe candle">
             <button data-itv="1m">1m</button>
@@ -669,24 +706,24 @@
         <div class="indpop" id="indPop" aria-label="Daftar indikator chart">
           <div class="indpop-head"><span class="indpop-title">INDIKATOR</span><button class="indpop-x" id="indPopClose" aria-label="Tutup daftar indikator" title="Tutup">✕</button></div>
           <div class="tgl" role="group" aria-label="Indikator">
-            <button id="ind-ema" aria-pressed="true">EMA 20/50</button>
+            <button id="ind-ema" aria-pressed="false">EMA 20/50</button>
             <button id="ind-vwap" aria-pressed="false">VWAP</button>
             <button id="ind-vol" aria-pressed="true">VOL</button>
-            <button id="ind-rsi" aria-pressed="false">RSI</button>
+            <button id="ind-rsi" aria-pressed="true">RSI</button>
             <button id="ind-macd" aria-pressed="false">MACD</button>
-            <button id="ind-stoch" aria-pressed="false">STOCH</button>
+            <button id="ind-stoch" aria-pressed="true">STOCH</button>
             <button id="ind-cci" aria-pressed="false">CCI</button>
             <button id="ind-adx" aria-pressed="false">ADX</button>
             <button id="ind-obv" aria-pressed="false">OBV</button>
             <button id="ind-mfi" aria-pressed="false">MFI</button>
             <button id="ind-rvol" aria-pressed="false">RVOL</button>
             <button id="ind-walls" aria-pressed="true">DINDING</button>
-            <button id="ind-zones" aria-pressed="true">ZONA MSNR</button>
+            <button id="ind-zones" aria-pressed="false">ZONA MSNR</button>
             <button id="ind-bubbles" aria-pressed="true">BUBBLE</button>
             <button id="ind-panel" aria-pressed="false">PANEL</button>
-            <button id="ind-info" aria-pressed="false">INFO CHART</button>
+            <button id="ind-info" aria-pressed="true">INFO CHART</button>
             <button id="ind-vprof" aria-pressed="false">VPROF</button>
-            <button id="ind-smc" aria-pressed="false">SMC</button>
+            <button id="ind-smc" aria-pressed="true">SMC</button>
             <button id="ind-smcobs" aria-pressed="false">SMC OB SWING</button>
             <button id="ind-smcfvg" aria-pressed="false">SMC FVG</button>
             <button id="ind-smcpd" aria-pressed="false">SMC P/D</button>
@@ -707,7 +744,7 @@
           <div class="indpop-foot">
             <button class="mini" id="btnCandles" style="margin-top:0">↻ MUAT ULANG CANDLE</button>
             <span id="jsnrStatus" style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.02em;white-space:nowrap">JSNR: menghitung…</span>
-            <span class="indpop-sym" id="chartSymLabel">BTC · BINANCE SPOT · 15M</span>
+            <span class="indpop-sym" id="chartSymLabel">XAU · PAXG BINANCE ≈ SPOT · 15M</span>
           </div>
         </div>
         <!-- POPUP GAMBAR — kothak ngambang ing ngisore bar kontrol
@@ -750,6 +787,43 @@
     <div class="hintline" id="hintLine" style="display:none">Seret = geser riwayat · cubit dua jari = zoom · seret sumbu harga = skala manual · alat gambar lewat tombol ✎ GAMBAR di bar atas chart · panduan lengkap lewat tombol ⓘ di pojok kanan atas chart.</div>
     <div class="term-hint pinfo" id="termInfo" hidden>Sumber candle: <b style="color:var(--muted)">BTC = Binance Spot (BTCUSDT)</b> — klines REST + WebSocket kline resmi Binance — dan <b style="color:var(--muted)">XAU = PAXG Binance (PAXGUSDT) ≈ spot</b> — PAXG adalah emas token yang harganya mengikuti spot emas, dipakai sebagai proksi spot (percobaan TradingView sudah dihapus: servernya terbukti menolak koneksi dari halaman ini); keduanya candle resmi bursa apa adanya, <b style="color:var(--muted)">bukan rakitan lokal</b> — pembangunan candle dari tick dagang sudah dimatikan total (tick hanya untuk harga terakhir, CVD, dan panel lain). Baris legenda OHLC di chart menuliskan sumber yang sedang aktif per simbol di belakang nama simbol/timeframe; bila sumber utama gagal/putus, chart otomatis memakai <b style="color:var(--muted)">candle resmi Hyperliquid (cadangan)</b> — snapshot + kanal candle resmi exchange, disinkron ulang berkala ±8 detik. Baris <b style="color:var(--muted)">DIAGNOSTIK LIVE</b> menampilkan label <b style="color:var(--muted)">Sumber:</b> — sumber candle aktif per simbol plus nilai basis terukur. Dinding &amp; bubble tetap dari buku perpetual Hyperliquid, tetapi yang digambar pada chart spot/proksi spot (BTC Binance / XAU PAXG) <b style="color:var(--muted)">digeser sebesar basis live terukur</b> — untuk posisi gambar dipakai versi halusnya (rata-rata bergerak lambat, berubah paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick (harga gambar = harga perp − basis halus, label bertanda ≈spot; teks BASIS di bar atas chart menampilkan nilai basis mentahnya) supaya selaras dengan sumbu harga chart; panel orderbook, ladder, scanner &amp; CVD tetap harga perp asli. Zona MSNR tidak digeser — zona memang harga spot OANDA dan chart PAXG ≈ spot. Nilai basis juga tampil di baris status di bawah header. Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (8–600 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. <b style="color:var(--muted)">Skala vertikal bisa diatur manual:</b> seret <b style="color:var(--muted)">sumbu harga</b> (strip angka di kanan) ke bawah untuk memampatkan chart atau ke atas untuk melebarkan candle, cubit dua jari secara vertikal juga bisa; label harga berubah teal dan tombol <b style="color:#e8c33a">SKALA AUTO</b> muncul — ketuk tombol itu atau ketuk ganda sumbu harga untuk kembali ke skala otomatis; selama skala manual aktif, seretan vertikal di area chart ikut menggeser rentang harga. Seret <b style="color:var(--muted)">sumbu waktu</b> (strip jam di bawah) ke kiri/kanan untuk mengubah spasi candle. Pan mengikuti jari 1:1 secara halus (sub-candle). Di sisi kanan chart selalu ada <b style="color:var(--muted)">ruang kosong tetap</b> (±8% jendela, 3–14 candle) antara candle terakhir dan sumbu harga — harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; tombol KE TERBARU mengembalikan ke tepi live dengan ruang kanan standar itu. <b style="color:var(--muted)">Lingkaran berwarna (bubble)</b> di chart = penanda likuiditas dari scan buku jeru, menempel pada candle yang buntutnya menyentuh level tumpukan itu (atau di tepi kanan bila belum tersentuh): teal = bid, ungu = ask; makin besar lingkaran makin besar tumpukannya (≥2× / ≥3× / ≥5× median sisinya), angka di dalamnya = ukuran tumpukan — hidup-matikan lewat tombol <b style="color:var(--muted)">BUBBLE</b>. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar kini <b style="color:var(--muted)">DISIMPAN permanen di perangkat ini</b> (penyimpanan lokal per simbol) dan dimuat lagi saat aplikasi dibuka — tidak hilang saat ditutup; kotak zona gambar Anda bergaya <b style="color:var(--muted)">PERSONAL</b>: tepi emas #f0c84b putus-putus dengan label PERSONAL atau nama yang Anda beri lewat bar nama yang muncul saat zona selesai digambar — sengaja berbeda dari zona JSNR; mode Hapus Objek menghapus item tersimpan juga, dan tombol Bersihkan menghapus semua gambar simbol aktif. <b style="color:var(--muted)">Mode OANDA</b> (toggle di pojok kanan atas chart) menampilkan widget resmi TradingView — OANDA:XAUUSD untuk XAU, BINANCE:BTCUSDT untuk BTC, interval mengikuti timeframe aktif — sebagai referensi murni dari server TradingView; garis JSNR &amp; marking hanya ada di mode ANALISA. Zona Pantau MSNR digambar <b style="color:var(--muted)">sebagai garis kustom gaya JSNR</b>: garis horizontal tipis rapi (warna menurut sisi zona: hijau = support/BUY, merah muda = resistance/SELL — status flip SBR/RBS dibaca dari teks labelnya, bukan dari warna garis) pada level kunci zona — zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya — memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada <b style="color:var(--muted)">titik (dot) di ujung garisnya sendiri, tepat pada harga levelnya</b> — dot &amp; garis tidak pernah digeser dari levelnya dan garis <b style="color:var(--muted)">TERKUNCI ke skala harga chart</b> (posisinya dihitung ulang dari pemetaan harga yang sama dengan candle setiap kali chart digambar, jadi tetap menempel tepat di levelnya saat chart dipan/di-zoom) — dengan <b style="color:var(--muted)">label “harga level TIPE · fresh/tested”</b> di kanan titik pada ketinggian yang sama persis; label zona yang berdekatan hanya digeser mendatar (dengan garis penghubung mungil ke titiknya) supaya tidak bertumpuk. Status dihitung dari candle di buffer (tersentuh = tested, belum = fresh); zona <b style="color:var(--muted)">tested digambar lebih redup</b> (garis, dot &amp; label ±55%) supaya langsung beda dari zona fresh yang berwarna penuh; hidup-matikan lewat tombol <b style="color:var(--muted)">ZONA MSNR</b>. <b style="color:var(--muted)">Panel status JSNR</b> berbentuk tabel kecil di pojok kanan atas chart kini diisi <b style="color:var(--muted)">mesin JSNR V1.0 asli</b>: bias storyline W+D, zona BUY/SELL terbaik dengan ★skor rekomendasi, tahap sinyal menunggu → AWAS → DI ZONA → PEMICU → KONFIRMASI, dan baris kaki killzone waktu New York + hitungan sinyal terkonfirmasi/dihapus — hidup-matikan lewat tombol <b style="color:var(--muted)">PANEL</b> atau tombol ✕ di panel, lipat lewat tombol –. Zona yang sedang berada di luar rentang harga terlihat tetap ditandai <b style="color:var(--muted)">label tepi ▲ ZONA DI ATAS / ▼ ZONA DI BAWAH</b> lengkap dengan jarak % dari harga terakhir, jadi tidak pernah “hilang” dari chart. Tombol <b style="color:var(--muted)">LAYAR PENUH</b> memperluas chart memenuhi seluruh layar HP — pan, pinch zoom, crosshair, dinding order, dan zona MSNR tetap bekerja di mode itu. Garis putus-putus teal (bid) / ungu (ask) = <b style="color:var(--muted)">dinding order</b>: diambil dari daftar tumpukan buku jeru <b style="color:var(--muted)">yang sama persis dengan Scanner</b> (kisi harga tetap BTC $50 / XAU $5) dan hanya digambar setelah tumpukannya <b style="color:var(--muted)">bertahan ≥30 detik</b> — order sesaat dari buku dangkal yang berkedip tidak pernah menjadi garis; label dinding di chart singkat wae — sisi + ukuran + harga; <b style="color:var(--muted)">lama bertahan ("awet …") tetep tampil di tab SCAN</b>, dan selama levelnya absen sesaat garisnya memudar (masa tenggang 45 detik), tidak melompat hilang. Posisi gambar dinding &amp; bubble digeser memakai <b style="color:var(--muted)">basis yang dihaluskan</b> (rata-rata bergerak lambat, berubah paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick — nilai basis mentah tetap tampil apa adanya di teks BASIS bar atas chart — hidup-matikan lewat tombol DINDING.</div>
   </section>
+
+  <!-- BANNER JAMET TERMINAL — konsep v3 sing disetujoni pemilik,
+       manggon ing ngisore panel chart nanging ing NJABA #termPanel:
+       ngisi papan kosong ing ngisor chart (mulur liwat flex) lan
+       ORA katon ing mode fullscreen chart. Strip ticker ing ngisore
+       isine data urip aplikasi (dibangun ulang JS maksimal saben
+       ±5 detik, isi didobel kanggo puteran marquee mulus). -->
+  <div class="jbn" id="jbnBanner" aria-label="Banner JAMET Terminal">
+    <div class="jbn-wm" aria-hidden="true">ꦥꦏ꧀ꦥꦺꦴꦃ</div>
+    <div class="jbn-main">
+      <svg class="jbn-logo" width="88" height="88" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#12303f" stroke-width="2"/>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#f0c84b" stroke-width="1" stroke-dasharray="3 5" opacity="0.7"/>
+        <rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/>
+        <line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="1.6"/>
+        <rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/>
+        <line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="1.6"/>
+        <rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/>
+        <line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="1.6"/>
+      </svg>
+      <div>
+        <div class="jbn-title">JAMET<br><span>TERMINAL</span></div>
+        <div class="jbn-quote">"Sing tenang, <b>disawang wae</b> disik."</div>
+        <div class="jbn-tag">ANALISA WAE · <b>DUDU PERINTAH ORDER</b> · MSNR · JSNR · ORDERFLOW</div>
+      </div>
+    </div>
+    <div class="jbn-ticker">
+      <div class="jbn-thead">
+        <span class="jbn-dot"></span>
+        <span class="jbn-tbrand">ORDERBOOK <span>· JAMET</span></span>
+      </div>
+      <div class="jbn-track">
+        <div class="jbn-move" id="jbnMove"></div>
+      </div>
+    </div>
+  </div>
 
   </div><!-- /tp-px -->
 
@@ -880,7 +954,7 @@ var MARKETS=[
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · PERP · xyz:GOLD", unit:"oz", dec:1, szDec:2, grid:5}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
-var chart={ sym:"btc", tf:300, itv:"15m", viewMode:"analisa", ema:true, vwap:false, vol:true, rsi:false, macd:false, stoch:false, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:true, bubbles:true, panel:false, vprof:false, smc:false, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, info:false, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
+var chart={ sym:"gold", tf:300, itv:"15m", viewMode:"analisa", ema:false, vwap:false, vol:true, rsi:true, macd:false, stoch:true, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:false, bubbles:true, panel:false, vprof:false, smc:true, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, info:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, cvdLog:[], cvdSeries:[], el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
@@ -4906,6 +4980,38 @@ function applyInfoVis(){
 }
 bindToggle("ind-info","info",applyInfoVis);
 applyInfoVis();
+/* ---- STANDAR ANYAR 27 Nov 04:40 + MIGRASI SEPIŠAN ----
+   Standar toggle indikator anyar saka pemilik (screenshot popup
+   INDIKATOR ing XAU 15M): sing URIP kanthi standar = VOL, RSI,
+   STOCH, DINDING, BUBBLE, INFO CHART, SMC; sing MATI = EMA 20/50,
+   VWAP, MACD, CCI, ADX, OBV, MFI, RVOL, ZONA MSNR, PANEL, VPROF,
+   SMC OB SWING, SMC FVG, SMC P/D, SNR, VBAND, PIVOT, SUPERTREND,
+   BB, KELTNER, DONCHIAN, ORBS, STATS, HEAT, FOOT, ABSORB, TPO.
+   Simbol standar pas aplikasi dibukak = XAU (chart.sym bawaan
+   "gold" + boot setChartSym("gold") ing ngisor).
+   Migrasi sepisan nganggo flag localStorage anyar
+   "obhp_defmig_v2" (kapisah saka flag panel "obhp_panelmig_v1"):
+   nek flag durung ana — kaya ing HP pemilik sing wis nyimpen
+   kahanan saka versi lawas — kabeh field indikator ing objek
+   chart + aria-pressed tombol popup fx dipeksa menyang standar
+   anyar iki, pref PANEL diselaraskan mati liwat savePanelPref,
+   banjur flag dipasang. Sakwise kuwi ora ditimpa maneh: pilihan
+   pemilik dhewe sing mlaku (pref PANEL tetep disimpen/dibalekne
+   liwat obhp_panel_v1 kaya sadurunge). */
+var DEF_MIG_KEY="obhp_defmig_v2";
+var DEF_IND={ema:false,vwap:false,vol:true,rsi:true,macd:false,stoch:true,cci:false,adx:false,obv:false,mfi:false,rvol:false,walls:true,zones:false,bubbles:true,panel:false,vprof:false,smc:true,smcObs:false,smcFvg:false,smcPd:false,snr:false,vband:false,pivot:false,strend:false,bb:false,kelt:false,don:false,orbs:false,stats:false,heat:false,foot:false,absorb:false,tpo:false,info:true};
+var DEF_BTN={ema:"ind-ema",vwap:"ind-vwap",vol:"ind-vol",rsi:"ind-rsi",macd:"ind-macd",stoch:"ind-stoch",cci:"ind-cci",adx:"ind-adx",obv:"ind-obv",mfi:"ind-mfi",rvol:"ind-rvol",walls:"ind-walls",zones:"ind-zones",bubbles:"ind-bubbles",panel:"ind-panel",vprof:"ind-vprof",smc:"ind-smc",smcObs:"ind-smcobs",smcFvg:"ind-smcfvg",smcPd:"ind-smcpd",snr:"ind-snr",vband:"ind-vband",pivot:"ind-pivot",strend:"ind-strend",bb:"ind-bb",kelt:"ind-kelt",don:"ind-don",orbs:"ind-orbs",stats:"ind-stats",heat:"ind-heat",foot:"ind-foot",absorb:"ind-absorb",tpo:"ind-tpo",info:"ind-info"};
+try{
+  if(!localStorage.getItem(DEF_MIG_KEY)){
+    Object.keys(DEF_IND).forEach(function(k){
+      chart[k]=DEF_IND[k];
+      var db=$(DEF_BTN[k]); if(db) db.setAttribute("aria-pressed", DEF_IND[k]? "true":"false");
+    });
+    savePanelPref();
+    applyInfoVis();
+    localStorage.setItem(DEF_MIG_KEY,"1");
+  }
+}catch(e){}
 /* ---- popup daftar indikator (tombol fx INDIKATOR ing bar kontrol
    ndhuwur chart): tutul fx = bukak/tutup; ✕ = tutup; nutul area chart ing
    njaba popup (pointerdown ing canvas) = tutup. Status saben
@@ -5997,9 +6103,70 @@ document.querySelectorAll("[data-tab]").forEach(function(b){
   b.addEventListener("click",function(){ setTab(b.getAttribute("data-tab")); });
 });
 
+/* ============ BANNER JAMET TERMINAL — TICKER URIP + ISI PAPAN ====
+   Isi marquee banner = DATA URIP saka kahanan aplikasi sing wis
+   ana (dudu teks conto): rega terakhir + % sesi BTC & XAU diwaca
+   saka kertu rega ing ndhuwur (elemen tick-*), funding BTC + OI
+   GOLD diwaca saka grup FUND (fundEls), bias JSNR + killzone
+   diwaca saka asil mesin JSNR simbol aktif (jsnrRes) — padha karo
+   panel status JSNR ing chart. Dibangun ulang maksimal saben
+   ±5 detik; isi didobel (2× .jbn-half sing persis padha) kanggo
+   puteran marquee mulus; nilai sing durung kasedhiya tampil "—".
+   Animasi marquee & pulse logo mung CSS.
+   fitPxPanel: min-height #tp-px disetel = dhuwur viewport − posisi
+   dokumen panel, supaya kolom flex panel PX pas sak layar lan
+   banner (flex:1) ngisi sisa dhuwur ing ngisore chart. Dihitung
+   maneh saben resize, saben banner-tick 5 detik, lan sakwise
+   header dilipat/dibukak. */
+function jbnFundTxt(id,nm,alt){
+  try{
+    var g=(typeof fundEls!=="undefined")? fundEls[id] : null; if(!g) return "—";
+    var el=g.querySelector('[data-f="'+nm+'"]'), t=el? el.textContent.trim() : "";
+    if((!t||t==="—")&&alt){ el=g.querySelector('[data-f="'+alt+'"]'); t=el? el.textContent.trim() : ""; }
+    return t? t : "—";
+  }catch(e){ return "—"; }
+}
+function buildJbnTicker(){
+  var mv=$("jbnMove"); if(!mv) return;
+  function pxIt(sym,id){
+    var pxEl=$("tick-"+id), px=pxEl? pxEl.textContent.trim() : "";
+    var cEl=$("tick-"+id+"-chg"), chg=cEl? cEl.textContent.trim() : "", cls="gd";
+    if(chg&&chg!=="—"){ chg=chg.replace(/\s*SESI\s*$/,""); cls= (cEl&&cEl.classList.contains("dn"))? "dn" : "up"; }
+    else chg="—";
+    return '<span class="jbn-it">'+sym+' <b>'+(px? px : "—")+'</b> <span class="'+cls+'">'+chg+'</span></span>';
+  }
+  var eng=null; try{ eng=(typeof jsnrRes!=="undefined"&&jsnrRes)? jsnrRes[chart.sym] : null; }catch(e){}
+  var bias="—", bcls="gd", kz="—";
+  if(eng){
+    bias= eng.bias===1? "BULLISH ▲" : eng.bias===-1? "BEARISH ▼" : "CAMPUR ◆";
+    bcls= eng.bias===1? "up" : eng.bias===-1? "dn" : "gd";
+    if(eng.kz) kz=eng.kz;
+  }
+  var half='<div class="jbn-half">'
+    + pxIt("BTC","btc")
+    + pxIt("XAU","gold")
+    + '<span class="jbn-it">FUNDING BTC <b class="gd">'+jbnFundTxt("btc","f1h")+'</b></span>'
+    + '<span class="jbn-it">OI GOLD <b>'+jbnFundTxt("gold","oiusd","oi")+'</b></span>'
+    + '<span class="jbn-it">BIAS JSNR <b class="'+bcls+'">'+bias+'</b></span>'
+    + '<span class="jbn-it">KILLZONE <b>'+kz+'</b></span>'
+    + '</div>';
+  var html=half+half;
+  if(mv.innerHTML!==html) mv.innerHTML=html;
+}
+function fitPxPanel(){
+  var px=$("tp-px"); if(!px||!px.classList.contains("on")) return;
+  var top=px.getBoundingClientRect().top+(window.scrollY||window.pageYOffset||0);
+  px.style.minHeight=Math.max(0,Math.floor(window.innerHeight-top))+"px";
+}
+buildJbnTicker(); fitPxPanel();
+setInterval(function(){ if(document.hidden) return; buildJbnTicker(); fitPxPanel(); },5000);
+window.addEventListener("resize",fitPxPanel);
+document.querySelectorAll("[data-tab]").forEach(function(b){ b.addEventListener("click",function(){ setTimeout(fitPxPanel,30); }); });
+var jbnFoldBtn=$("btnFoldHeader"); if(jbnFoldBtn) jbnFoldBtn.addEventListener("click",function(){ setTimeout(fitPxPanel,60); });
+
 /* ============ boot ============ */
-setChartSym("btc");
-ensureJsnr("gold");
+setChartSym("gold");
+ensureJsnr("btc");
 MARKETS.forEach(function(m){ updateDepthUI(m.id); });
 fetchAllCandles();
 setMode("live");
