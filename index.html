@@ -342,7 +342,7 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket per tick) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
       <p>Scanner Tumpukan melacak semua level buku dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
@@ -559,7 +559,30 @@ function applyTrade(id,t){
   if(!tr.px||!tr.sz) return;
   s.trades.unshift(tr); if(s.trades.length>10) s.trades.length=10;
   s.cvd += tr.buy? tr.sz : -tr.sz; s.cvdN++;
+  tickCandle(id,tr);
   render(id);
+}
+/* Candle berjalan dibangun dari SETIAP trade tick yang masuk (jalur trades
+   WebSocket yang terbukti hidup per tick) — bukan hanya mengandalkan channel
+   candle WS. Bucket mengikuti timeframe aktif; candle baru dibuka saat
+   bucket berganti, celah antar-bucket diisi candle datar di harga tutup
+   sebelumnya supaya sumbu waktu tidak bolong. */
+function tickCandle(id,tr){
+  var s=M[id]; if(!s.candles.length) return;
+  var span=ITV_MS[chart.itv]||900000;
+  var bucket=Math.floor(tr.time/span)*span;
+  var last=s.candles[s.candles.length-1];
+  if(bucket===last.t){
+    if(tr.px>last.h) last.h=tr.px;
+    if(tr.px<last.l) last.l=tr.px;
+    last.c=tr.px; last.v+=tr.sz;
+  } else if(bucket>last.t){
+    var pc=last.c, t0=last.t+span;
+    while(t0<bucket){ s.candles.push({t:t0,o:pc,h:pc,l:pc,c:pc,v:0}); t0+=span; }
+    s.candles.push({t:bucket,o:pc,h:Math.max(pc,tr.px),l:Math.min(pc,tr.px),c:tr.px,v:tr.sz});
+    if(s.candles.length>400) s.candles.splice(0,s.candles.length-400);
+  }
+  /* bucket < last.t = trade lama (di luar urutan) — abaikan untuk candle */
 }
 function fetchSnapshot(){
   var jobs=MARKETS.map(function(m){
@@ -599,6 +622,9 @@ function startWS(){
   ws.onopen=function(){
     opened=true; state.wsOk=true; state.retryDelay=3000; state.lastMsg=Date.now();
     stopPolling(); stopReconnect();
+    /* sinkronkan ulang snapshot candle tiap (re)connect — menutup gap
+       candle yang terbentuk selama socket putus */
+    fetchAllCandles();
     if(state.mode==="live") setStatus("live","LIVE PER TICK · WEBSOCKET");
     MARKETS.forEach(function(m){
       ws.send(JSON.stringify({method:"subscribe",subscription:{type:"l2Book",coin:m.coin}}));
