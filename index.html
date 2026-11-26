@@ -155,6 +155,31 @@
   .zrow.near{border-color:var(--orange)}
   .ztag{display:inline-block;background:var(--teal);color:#04120c;font-weight:800;font-size:9px;padding:2px 7px;border-radius:999px;letter-spacing:.05em;margin-left:7px;vertical-align:2px}
   .ztag.near{background:var(--orange);color:#1a1000}
+  /* scanner tumpukan */
+  .scangroup{padding:12px 14px 8px}
+  .scangroup+.scangroup{border-top:1px solid var(--line2)}
+  .scanhead{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;align-items:baseline;margin-bottom:8px}
+  .scanhead .a{color:var(--ink);font-weight:700;font-size:13px;letter-spacing:.02em}
+  .scanhead .b{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+  .scancols{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:640px){.scancols{grid-template-columns:1fr 1fr}}
+  .scanside .sk{font-size:9.5px;font-weight:800;letter-spacing:.13em;margin-bottom:5px}
+  .scanside.bid .sk{color:#5ff2c4}
+  .scanside.ask .sk{color:#f0a6f7}
+  .srow{display:grid;grid-template-columns:86px 1fr auto;gap:4px 10px;align-items:center;padding:6px 10px;border:1px solid var(--line2);border-radius:10px;margin-bottom:6px;background:#080d14;font-variant-numeric:tabular-nums}
+  .srow .sp{font-size:13.5px;font-weight:700}
+  .scanside.bid .srow .sp{color:#5ff2c4}
+  .scanside.ask .srow .sp{color:#f0a6f7}
+  .srow .sbar{height:7px;border-radius:999px;background:var(--panel2);overflow:hidden}
+  .srow .sbar i{display:block;height:100%;border-radius:999px}
+  .scanside.bid .srow .sbar i{background:var(--teal)}
+  .scanside.ask .srow .sbar i{background:var(--violet)}
+  .srow .ssz{font-size:12.5px;font-weight:700;text-align:right;white-space:nowrap}
+  .srow .sm{grid-column:1/-1;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .srow .sm b{color:var(--ink)}
+  .srow.top{border-color:var(--orange);background:rgba(245,166,35,.06)}
+  .stop-tag{display:inline-block;background:var(--orange);color:#1a1000;font-weight:800;font-size:8.5px;padding:1px 6px;border-radius:999px;letter-spacing:.05em;margin-left:6px;vertical-align:2px}
+  .scanempty{font-size:12px;color:var(--muted);padding:6px 2px 8px}
   /* misc */
   .err{border:1px solid rgba(248,113,113,.6);border-radius:12px;color:#fecaca;background:rgba(248,113,113,.08);padding:10px 14px;font-size:12.5px;margin:12px 12px 0;display:none}
   .note{font-size:12.5px;color:var(--muted);line-height:1.6}
@@ -226,6 +251,18 @@
   <!-- MARKET PANELS -->
   <div class="tgrid" id="grid"></div>
 
+  <!-- SCANNER TUMPUKAN LIKUIDITAS -->
+  <section class="panel" aria-label="Scanner tumpukan likuiditas">
+    <div class="phead">
+      <span class="t">Scanner — Tumpukan Order Terbesar</span>
+      <span class="r">LEVEL ≥2× MEDIAN · DILACAK SELAMA BERTAHAN DI BUKU</span>
+    </div>
+    <div id="scanner"></div>
+    <div class="pbody" style="padding-top:2px">
+      <div class="disc">Scanner melacak level harga tempat order menumpuk paling tebal di buku 20 level: ukuran berjalan, puncak ukuran selama dilacak, jarak dari mid, dan durasi tumpukan bertahan. Tumpukan yang hilang dari buku &gt;20 detik dihapus dari daftar. Dinding besar bisa berarti support/resistance kuat — atau jebakan (spoofing) bila hilang tiba-tiba; selalu konfirmasi dengan Zona Pantau MSNR.</div>
+    </div>
+  </section>
+
   <!-- ZONA PANTAU -->
   <section class="panel" aria-label="Zona pantau MSNR">
     <div class="phead">
@@ -255,7 +292,8 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Chart menggambar harga mid dari feed live sejak halaman dibuka (bukan histori bursa).</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Chart menggambar harga mid dari feed live sejak halaman dibuka (bukan histori bursa).</p>
+      <p>Scanner Tumpukan melacak semua level buku dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
 </div>
@@ -268,10 +306,10 @@ var MARKETS=[
   {id:"btc", coin:"BTC", name:"BTC PERP", tag:"HYPERLIQUID · BITCOIN PERPETUAL", unit:"BTC", dec:0, szDec:3},
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · xyz:GOLD · XAU PERPETUAL (BUKAN SPOT)", unit:"oz", dec:1, szDec:2}
 ];
-var state={ mode:"live", ws:null, wsOk:false, pollTimer:null };
+var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000 };
 var chart={ sym:"btc", tf:300 };
 var M={};
-MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null}; });
+MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}}; });
 
 /* ============ ZONA PANTAU (statis, dari laporan pemilik) ============ */
 var ZONEGROUPS=[
@@ -369,6 +407,77 @@ function renderZones(id){
   });
 }
 
+/* ============ scanner tumpukan likuiditas ============ */
+function updateStacks(id){
+  var s=M[id]; if(!s.book) return;
+  var now=Date.now();
+  [["bid",s.book.bids],["ask",s.book.asks]].forEach(function(pair){
+    var side=pair[0], levels=pair[1];
+    var med=median(levels.map(function(l){return l.sz;}));
+    if(med<=0) return;
+    levels.forEach(function(l){
+      if(l.sz < 2*med) return;
+      var key=side+"|"+l.px.toFixed(4);
+      var st=s.stacks[key];
+      if(!st){ st=s.stacks[key]={side:side, px:l.px, sz:l.sz, peak:l.sz, first:now, last:now, hits:1}; }
+      else { st.sz=l.sz; if(l.sz>st.peak) st.peak=l.sz; st.last=now; st.hits++; }
+    });
+  });
+  /* buang tumpukan yang sudah hilang dari buku >20 detik */
+  Object.keys(s.stacks).forEach(function(k){ if(now-s.stacks[k].last>20000) delete s.stacks[k]; });
+  /* batasi jumlah entri per simbol */
+  var keys=Object.keys(s.stacks);
+  if(keys.length>60){
+    keys.sort(function(a,b){ return s.stacks[a].last-s.stacks[b].last; });
+    keys.slice(0,keys.length-60).forEach(function(k){ delete s.stacks[k]; });
+  }
+}
+function fmtDur(ms){
+  var sec=Math.floor(ms/1000);
+  if(sec<60) return sec+" dtk";
+  var mnt=Math.floor(sec/60), sisa=sec%60;
+  if(mnt<60) return mnt+" mnt "+(sisa? sisa+" dtk":"");
+  return Math.floor(mnt/60)+" jam "+(mnt%60)+" mnt";
+}
+var scanEl=$("scanner");
+MARKETS.forEach(function(m){
+  var div=document.createElement("div"); div.className="scangroup"; div.id="scan-"+m.id;
+  div.innerHTML='<div class="scanhead"><span class="a">'+m.name+' — TUMPUKAN TERBESAR</span><span class="b" data-sf="mid">MID —</span></div>'+
+    '<div class="scancols">'+
+    '<div class="scanside bid"><div class="sk">BID — PENAHAN DI BAWAH</div><div data-sf="bids"><div class="scanempty">Menunggu data orderbook…</div></div></div>'+
+    '<div class="scanside ask"><div class="sk">ASK — PENAHAN DI ATAS</div><div data-sf="asks"><div class="scanempty">Menunggu data orderbook…</div></div></div>'+
+    '</div>';
+  scanEl.appendChild(div);
+});
+function scanRowsHtml(list, side, mid, m, maxSz){
+  if(!list.length) return '<div class="scanempty">Belum ada tumpukan ≥2× median terdeteksi sisi ini.</div>';
+  var html="";
+  list.forEach(function(st,i){
+    var dist=Math.abs(st.px-mid), pct=dist/mid*100;
+    var w=maxSz>0? Math.max(5, st.sz/maxSz*100):0;
+    html+='<div class="srow'+(i===0?" top":"")+'"><span class="sp">$'+fmt(st.px,m.dec)+(i===0?'<span class="stop-tag">TERBESAR</span>':"")+'</span>'+
+      '<span class="sbar"><i style="width:'+w.toFixed(0)+'%"></i></span>'+
+      '<span class="ssz">'+fmt(st.sz,m.szDec)+' '+m.unit+'</span>'+
+      '<span class="sm"><span>Jarak dari mid: <b>$'+fmt(dist,m.dec)+' ('+pct.toFixed(2)+'%)</b></span>'+
+      '<span>Puncak: <b>'+fmt(st.peak,m.szDec)+' '+m.unit+'</b></span>'+
+      '<span>Bertahan: <b>'+fmtDur(Date.now()-st.first)+'</b></span></span></div>';
+  });
+  return html;
+}
+function renderScanner(id){
+  var s=M[id]; if(!s.book) return;
+  var m=s.def, wrap=$("scan-"+id); if(!wrap) return;
+  var mid=(s.book.bids[0].px+s.book.asks[0].px)/2;
+  function sf(name){ return wrap.querySelector('[data-sf="'+name+'"]'); }
+  sf("mid").textContent="MID $"+fmt(mid,m.dec);
+  var all=Object.keys(s.stacks).map(function(k){ return s.stacks[k]; });
+  var bids=all.filter(function(x){return x.side==="bid";}).sort(function(a,b){return b.sz-a.sz;}).slice(0,4);
+  var asks=all.filter(function(x){return x.side==="ask";}).sort(function(a,b){return b.sz-a.sz;}).slice(0,4);
+  var maxSz=0; all.forEach(function(x){ if(x.sz>maxSz) maxSz=x.sz; });
+  sf("bids").innerHTML=scanRowsHtml(bids,"bid",mid,m,maxSz);
+  sf("asks").innerHTML=scanRowsHtml(asks,"ask",mid,m,maxSz);
+}
+
 /* ============ status ============ */
 var dot=$("statusDot"), stext=$("statusText"), upd=$("updatedText"), errBox=$("errBox");
 function setStatus(kind,text){ dot.className="dot "+kind; stext.textContent=text; }
@@ -388,6 +497,7 @@ function applyBook(id,data){
            asks:data.levels[1].slice(0,20).map(function(l){return{px:+l.px,sz:+l.sz};}) };
   var mid=(s.book.bids[0].px+s.book.asks[0].px)/2;
   if(s.firstMid==null) s.firstMid=mid;
+  updateStacks(id);
   var now=Date.now(), lastH=s.hist[s.hist.length-1];
   if(!lastH||now-lastH.t>=400||lastH.p!==mid){ s.hist.push({t:now,p:mid}); if(s.hist.length>4000) s.hist.splice(0,s.hist.length-4000); }
   render(id); markUpdated();
@@ -405,7 +515,7 @@ function fetchSnapshot(){
     return postInfo({type:"l2Book",coin:m.coin}).then(function(d){ applyBook(m.id,d); });
   });
   return Promise.all(jobs).then(function(){
-    if(state.mode==="live" && !state.wsOk) setStatus("poll","LIVE · POLLING REST ±2 DTK");
+    if(state.mode==="live" && !state.wsOk) setStatus("poll","CADANGAN · POLLING REST 2 DTK (WS BELUM JALAN)");
     if(state.mode==="refresh") setStatus("poll","MODE REFRESH · MANUAL");
   }).catch(function(){
     setStatus("off","TIDAK TERHUBUNG");
@@ -428,38 +538,65 @@ function fetchRecentTrades(){
   });
 }
 
-/* ============ websocket + polling fallback ============ */
+/* ============ websocket (jalur utama, per tick) + polling REST cadangan terakhir ============ */
 function startWS(){
   stopWS();
   var ws;
-  try{ ws=new WebSocket(WSURL); }catch(e){ startPolling(); return; }
+  try{ ws=new WebSocket(WSURL); }catch(e){ startPolling(); scheduleReconnect(); return; }
   state.ws=ws;
   var opened=false;
   ws.onopen=function(){
-    opened=true; state.wsOk=true; stopPolling();
-    if(state.mode==="live") setStatus("live","LIVE · WEBSOCKET");
+    opened=true; state.wsOk=true; state.retryDelay=3000;
+    stopPolling(); stopReconnect();
+    if(state.mode==="live") setStatus("live","LIVE PER TICK · WEBSOCKET");
     MARKETS.forEach(function(m){
       ws.send(JSON.stringify({method:"subscribe",subscription:{type:"l2Book",coin:m.coin}}));
       ws.send(JSON.stringify({method:"subscribe",subscription:{type:"trades",coin:m.coin}}));
     });
+    /* jaga koneksi tetap hidup: ping berkala ke server Hyperliquid */
+    stopPing();
+    state.pingTimer=setInterval(function(){
+      if(state.ws===ws && ws.readyState===1){ try{ ws.send(JSON.stringify({method:"ping"})); }catch(e){} }
+    },25000);
   };
   ws.onmessage=function(ev){
     if(state.mode!=="live") return;
     var msg; try{ msg=JSON.parse(ev.data); }catch(e){ return; }
     if(!msg||!msg.data) return;
     var mk=MARKETS.filter(function(m){return m.coin===msg.data.coin;})[0]; if(!mk) return;
+    /* setiap pesan book/trade langsung dirender saat itu juga (per tick):
+       applyBook -> render panel + chart + scanner tumpukan */
     if(msg.channel==="l2Book") applyBook(mk.id,msg.data);
     else if(msg.channel==="trades"&&Array.isArray(msg.data)) msg.data.forEach(function(t){ applyTrade(mk.id,t); });
   };
   ws.onclose=function(){
-    state.wsOk=false;
-    if(state.mode==="live"){ startPolling(); setTimeout(function(){ if(state.mode==="live"&&!state.wsOk) startWS(); },5000); }
+    state.wsOk=false; stopPing();
+    if(state.mode==="live"){
+      setStatus("poll","WS PUTUS · CADANGAN POLLING REST 2 DTK — MENYAMBUNG LAGI…");
+      startPolling(); scheduleReconnect();
+    }
   };
   ws.onerror=function(){ try{ws.close();}catch(e){} };
-  setTimeout(function(){ if(!opened&&state.mode==="live") startPolling(); },4000);
+  setTimeout(function(){ if(!opened&&state.mode==="live"&&!state.wsOk) startPolling(); },4000);
 }
-function stopWS(){ if(state.ws){ try{state.ws.onclose=null; state.ws.close();}catch(e){} state.ws=null; } state.wsOk=false; }
-function startPolling(){ if(state.pollTimer) return; state.pollTimer=setInterval(function(){ if(state.mode==="live") fetchSnapshot(); },2000); }
+function stopPing(){ if(state.pingTimer){ clearInterval(state.pingTimer); state.pingTimer=null; } }
+function stopReconnect(){ if(state.retryTimer){ clearTimeout(state.retryTimer); state.retryTimer=null; } }
+function scheduleReconnect(){
+  stopReconnect();
+  var delay=state.retryDelay;
+  state.retryDelay=Math.min(30000, Math.round(state.retryDelay*1.7));
+  state.retryTimer=setTimeout(function(){
+    state.retryTimer=null;
+    if(state.mode==="live"&&!state.wsOk) startWS();
+  },delay);
+}
+function stopWS(){
+  stopPing(); stopReconnect();
+  if(state.ws){ try{state.ws.onclose=null; state.ws.close();}catch(e){} state.ws=null; }
+  state.wsOk=false;
+}
+/* CADANGAN TERAKHIR: hanya berjalan saat WebSocket putus/belum tersambung */
+function startPolling(){ if(state.pollTimer) return; state.pollTimer=setInterval(function(){ if(state.mode==="live"&&!state.wsOk) fetchSnapshot(); },2000); }
 function stopPolling(){ if(state.pollTimer){ clearInterval(state.pollTimer); state.pollTimer=null; } }
 
 /* ============ render market ============ */
@@ -520,6 +657,7 @@ function render(id){
   if(tc&&s.firstMid){ var ch=(mid-s.firstMid)/s.firstMid*100; tc.textContent=(ch>=0?"+":"")+ch.toFixed(2)+"% SESI"; tc.className="chg "+(ch>=0?"up":"dn"); }
   updateReco(id);
   renderZones(id);
+  renderScanner(id);
   if(chart.sym===id) drawChart();
 }
 
@@ -695,6 +833,15 @@ document.addEventListener("visibilitychange",function(){
 /* ============ boot ============ */
 setChartSym("btc");
 setMode("live");
+/* segarkan durasi tumpukan & buang yang basi tiap detik */
+setInterval(function(){
+  MARKETS.forEach(function(m){
+    var s=M[m.id]; if(!s.book) return;
+    var now=Date.now(), changed=false;
+    Object.keys(s.stacks).forEach(function(k){ if(now-s.stacks[k].last>20000){ delete s.stacks[k]; changed=true; } });
+    renderScanner(m.id);
+  });
+},1000);
 })();
 </script>
 </body>
