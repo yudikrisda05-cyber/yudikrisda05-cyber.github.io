@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Konsep Banner Gabungan — Orderbook Jamet</title>
+<title>Konsep Banner Gabungan v3 — Orderbook Jamet</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { background:#000; color:#dbe4f0; font-family:-apple-system,'Segoe UI',Roboto,sans-serif; }
@@ -11,86 +11,63 @@
   h1 { font-size:15px; text-align:center; color:#f0c84b; letter-spacing:1px; margin:6px 0 2px; }
   .sub { text-align:center; font-size:11px; color:#7d8fa6; margin-bottom:18px; line-height:1.6; }
 
-  /* ===== BANNER GABUNGAN ===== */
-  .banner { border-radius:16px; overflow:hidden; position:relative; border:1px solid #1b2637;
-    background:radial-gradient(130% 120% at 50% 0%, #0c2438 0%, #071420 48%, #04070c 100%); }
-  .wm { position:absolute; right:-14px; bottom:-30px; font-size:150px; font-weight:700; color:rgba(240,200,75,.05); line-height:1; pointer-events:none; }
-  .inner { position:relative; padding:20px 16px 0; display:flex; flex-direction:column; align-items:center; }
-
-  .logo { animation:pulse 3.4s ease-in-out infinite; }
-  @keyframes pulse { 0%,100%{ filter:drop-shadow(0 0 3px rgba(32,227,194,.40)); } 50%{ filter:drop-shadow(0 0 11px rgba(32,227,194,.80)); } }
-
-  .title { margin-top:13px; text-align:center; font-size:21px; font-weight:800; letter-spacing:2.6px; color:#eaf6ff; line-height:1.2; }
+  /* ===== BANNER GABUNGAN v3 — persegi panjang ===== */
+  .banner { border-radius:14px; overflow:hidden; position:relative; border:1px solid #1b2637;
+    background:radial-gradient(130% 190% at 16% 40%, #0c2438 0%, #071420 52%, #04070c 100%); }
+  .wm { position:absolute; right:-10px; top:-38px; font-size:120px; font-weight:700; color:rgba(240,200,75,.05); line-height:1; pointer-events:none; }
+  .main { position:relative; display:flex; align-items:center; gap:15px; padding:16px 16px 13px; }
+  .logo { flex:0 0 auto; animation:pulse 3.4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{ filter:drop-shadow(0 0 3px rgba(32,227,194,.40)); } 50%{ filter:drop-shadow(0 0 10px rgba(32,227,194,.80)); } }
+  .title { font-size:19px; font-weight:800; letter-spacing:2.2px; color:#eaf6ff; line-height:1.18; }
   .title span { color:#20e3c2; }
-  .quote { margin-top:9px; font-size:14.5px; font-style:italic; color:#f3e9cf; text-align:center; }
+  .quote { margin-top:7px; font-size:12.5px; font-style:italic; color:#f3e9cf; }
   .quote b { color:#f0c84b; font-weight:700; }
-  .tag { margin-top:8px; font-size:9.5px; letter-spacing:1.4px; color:#8fb0c9; text-align:center; line-height:1.7; }
+  .tag { margin-top:6px; font-size:9px; letter-spacing:1.2px; color:#8fb0c9; line-height:1.6; }
   .tag b { color:#f0c84b; font-weight:600; }
 
-  .ticker { position:relative; margin-top:16px; border-top:1px solid #14304a; background:rgba(4,10,16,.55); }
-  .thead { display:flex; align-items:center; gap:7px; padding:8px 13px 6px; }
+  .ticker { position:relative; border-top:1px solid #14304a; background:rgba(4,10,16,.55); display:flex; align-items:center; }
+  .thead { display:flex; align-items:center; gap:6px; padding:8px 10px 8px 13px; flex:0 0 auto; }
   .dot { width:6px; height:6px; border-radius:50%; background:#20e3a2; box-shadow:0 0 6px #20e3a2; }
-  .brand { font-size:11.5px; font-weight:800; letter-spacing:1.8px; color:#eaf6ff; }
+  .brand { font-size:10.5px; font-weight:800; letter-spacing:1.4px; color:#eaf6ff; white-space:nowrap; }
   .brand span { color:#f0c84b; }
-  .live { margin-left:auto; font-size:8.5px; color:#20e3a2; border:1px solid #14532d; padding:2px 7px; border-radius:20px; letter-spacing:1px; }
-  .track { overflow:hidden; padding:2px 0 10px; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); }
-  .move { display:flex; gap:32px; white-space:nowrap; animation:mq 26s linear infinite; padding-left:13px; width:max-content; }
+  .track { overflow:hidden; flex:1; -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 96%,transparent); mask-image:linear-gradient(90deg,transparent,#000 5%,#000 96%,transparent); }
+  .move { display:flex; gap:30px; white-space:nowrap; animation:mq 26s linear infinite; width:max-content; }
   @keyframes mq { from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
-  .it { font-size:12px; color:#a9bdd2; }
+  .it { font-size:11.5px; color:#a9bdd2; }
   .it b { color:#eaf6ff; font-weight:700; }
   .up { color:#20e3a2; } .dn { color:#ff4d6a; } .gd { color:#f0c84b; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>KONSEP GABUNGAN — v2</h1>
-  <div class="sub">Gabungan konsep 1 + 2 + 3 · logo Semar + siluet candle ·<br>judhul ticker: ORDERBOOK JAMET</div>
+  <h1>KONSEP GABUNGAN — v3</h1>
+  <div class="sub">Wujud persegi panjang kaya konsep awal · logo ring + candle (tanpa wajah) ·<br>ticker ORDERBOOK JAMET</div>
 
   <div class="banner">
     <div class="wm">ꦥꦏ꧀ꦥꦺꦴꦃ</div>
-    <div class="inner">
-      <!-- LOGO: ring HUD + wajah Semar + siluet candle -->
-      <svg class="logo" width="118" height="118" viewBox="0 0 120 120">
-        <circle cx="60" cy="60" r="55" fill="none" stroke="#12303f" stroke-width="2"/>
-        <circle cx="60" cy="60" r="55" fill="none" stroke="#20e3c2" stroke-width="4" stroke-linecap="round" stroke-dasharray="86 48 36 55 62 59" transform="rotate(-90 60 60)" opacity="0.95"/>
-        <circle cx="60" cy="60" r="46" fill="none" stroke="#f0c84b" stroke-width="1" stroke-dasharray="3 5" opacity="0.65"/>
-        <!-- siluet candle mburi -->
-        <g opacity="0.9">
-          <rect x="26" y="52" width="6" height="24" rx="1.5" fill="#20e3a2"/>
-          <line x1="29" y1="45" x2="29" y2="83" stroke="#20e3a2" stroke-width="1.6"/>
-          <rect x="88" y="46" width="6" height="26" rx="1.5" fill="#ff4d6a"/>
-          <line x1="91" y1="40" x2="91" y2="79" stroke="#ff4d6a" stroke-width="1.6"/>
-          <rect x="82" y="66" width="5" height="15" rx="1.2" fill="#f0c84b"/>
-          <line x1="84.5" y1="61" x2="84.5" y2="86" stroke="#f0c84b" stroke-width="1.4"/>
-        </g>
-        <!-- wajah Semar (line-art emas) -->
-        <g stroke="#f0c84b" stroke-width="2.4" stroke-linecap="round" fill="#0a141f">
-          <circle cx="60" cy="26" r="5.5" fill="#0a141f"/>
-          <path d="M38 58 C38 40 47 33 60 33 C73 33 82 40 82 58 C82 76 72 88 60 88 C48 88 38 76 38 58 Z"/>
-          <path d="M40 47 C48 41 72 41 80 47" fill="none" stroke-width="1.8" opacity="0.85"/>
-        </g>
-        <g stroke="#f0c84b" stroke-width="2.2" stroke-linecap="round" fill="none">
-          <path d="M47 57 C50 54.5 54 54.5 57 57"/>
-          <path d="M63 57 C66 54.5 70 54.5 73 57"/>
-          <path d="M59 62 C58 66 57.5 68 59.5 69.5"/>
-          <path d="M49 75 C54 80.5 66 80.5 71 75"/>
-          <path d="M46 50 C49.5 48 53.5 48 56.5 49.5" stroke-width="1.7" opacity="0.8"/>
-          <path d="M63.5 49.5 C66.5 48 70.5 48 74 50" stroke-width="1.7" opacity="0.8"/>
-        </g>
-        <circle cx="44.5" cy="68" r="2.6" fill="#f0c84b" opacity="0.28"/>
-        <circle cx="75.5" cy="68" r="2.6" fill="#f0c84b" opacity="0.28"/>
+    <div class="main">
+      <!-- LOGO: ring HUD + inti candle -->
+      <svg class="logo" width="88" height="88" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#12303f" stroke-width="2"/>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#f0c84b" stroke-width="1" stroke-dasharray="3 5" opacity="0.7"/>
+        <rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/>
+        <line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="1.6"/>
+        <rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/>
+        <line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="1.6"/>
+        <rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/>
+        <line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="1.6"/>
       </svg>
-
-      <div class="title">JARVIS<br><span>TRADING</span> INTELLIGENCE</div>
-      <div class="quote">"Sing tenang, <b>disawang wae</b> disik."</div>
-      <div class="tag">ANALISA WAE · <b>DUDU PERINTAH ORDER</b><br>MSNR · JSNR · ORDERFLOW</div>
+      <div>
+        <div class="title">JARVIS<br><span>TRADING</span> INTELLIGENCE</div>
+        <div class="quote">"Sing tenang, <b>disawang wae</b> disik."</div>
+        <div class="tag">ANALISA WAE · <b>DUDU PERINTAH ORDER</b> · MSNR · JSNR · ORDERFLOW</div>
+      </div>
     </div>
-
     <div class="ticker">
       <div class="thead">
         <div class="dot"></div>
         <div class="brand">ORDERBOOK <span>· JAMET</span></div>
-        <div class="live">LIVE</div>
       </div>
       <div class="track">
         <div class="move">
@@ -111,7 +88,7 @@
     </div>
   </div>
 
-  <div class="sub" style="margin-top:20px;">Nek wis cocok, sebut <b style="color:#f0c84b;">"pasang"</b> — langsung tak lebokne aplikasi<br>(ticker-e mengko nganggo data urip tenan, dudu conto iki).<br>Nek ana sing arep diganti — gedhe/cilike logo, werna, tulisan — sebut wae.</div>
+  <div class="sub" style="margin-top:20px;">Nek wis cocok, sebut <b style="color:#f0c84b;">"pasang"</b> — langsung tak lebokne aplikasi<br>(ticker-e mengko nganggo data urip tenan, dudu conto iki).</div>
 </div>
 </body>
 </html>
