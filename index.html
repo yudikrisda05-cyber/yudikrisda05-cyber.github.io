@@ -478,7 +478,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 03:30 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 03:40 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -3562,7 +3562,7 @@ function drawSMCData(d,m){
    0,1×ATR; peran level miturut posisine marang rega saiki — level
    sing kebobol ganti peran dhewe (mantan R ing ngisor rega dadi S,
    mantan S ing ndhuwur rega dadi R). Maks 3 R + 3 S paling cedhak.
-   Werna slate biru-abu — beda cetha karo ijo/pink zona JSNR. */
+   Werna miturut peran, padha konvensi JSNR: SUPPORT ijo mint #20e3a2, RESISTANCE abang/pink #ff4d6a; peran flip, werna melu peran anyar. Gaya tetep pedhot-pedhot (dashed) ben beda karo garis JSNR sing utuh. */
 function calcSNR(csAll){
   var n=csAll.length; if(n<30) return null;
   var atr=0, cnt=0;
@@ -3594,16 +3594,16 @@ function drawSNRData(d,m){
   var plotR=view.offset+view.plotW;
   ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
   ctx.font="bold 9px -apple-system,'Segoe UI',Roboto,sans-serif";
-  function snrLine(lv,tag){
+  function snrLine(lv,tag,col,colA){
     var y=Y(lv.px); if(y<4||y>view.H-34) return;
-    ctx.strokeStyle="rgba(125,143,166,.75)"; ctx.lineWidth=1; ctx.setLineDash([6,4]);
+    ctx.strokeStyle=colA; ctx.lineWidth=1; ctx.setLineDash([6,4]);
     ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(plotR,y); ctx.stroke(); ctx.setLineDash([]);
     var txt=tag+" "+fmt(lv.px,m.dec), tw=ctx.measureText(txt).width;
     ctx.fillStyle="rgba(5,8,13,.8)"; ctx.fillRect(4,y-8,tw+6,13);
-    ctx.fillStyle="#a9bedd"; ctx.fillText(txt,7,y+3);
+    ctx.fillStyle=col; ctx.fillText(txt,7,y+3);
   }
-  d.res.forEach(function(l){ snrLine(l,"R"); });
-  d.sup.forEach(function(l){ snrLine(l,"S"); });
+  d.res.forEach(function(l){ snrLine(l,"R","#ff4d6a","rgba(255,77,106,.8)"); });
+  d.sup.forEach(function(l){ snrLine(l,"S","#20e3a2","rgba(32,227,162,.8)"); });
   ctx.restore();
   ctx.font="10px ui-monospace,Menlo,monospace";
 }
