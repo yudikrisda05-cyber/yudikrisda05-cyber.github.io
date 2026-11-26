@@ -76,10 +76,10 @@
   /* ===== chart ===== */
   .tfbar{display:flex;flex-wrap:wrap;gap:0;align-items:center}
   .tfbar .grp{display:flex;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:2px;gap:2px}
-  .tfbar button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11.5px;font-weight:600;padding:0 11px;cursor:pointer;min-height:28px;letter-spacing:.02em}
+  .tfbar button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11px;font-weight:600;padding:0 9px;cursor:pointer;min-height:24px;letter-spacing:.02em}
   .tfbar button[aria-pressed="true"]{background:var(--teal-dim);color:var(--teal)}
   .symtabs{display:flex;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:2px;gap:2px}
-  .symtabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11.5px;font-weight:700;padding:0 14px;cursor:pointer;min-height:28px;letter-spacing:.03em}
+  .symtabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:0 11px;cursor:pointer;min-height:24px;letter-spacing:.03em}
   .symtabs button[aria-pressed="true"]{background:var(--teal);color:#04120c}
   .chartwrap{position:relative;background:#05080d}
   canvas#chart{display:block;width:100%;height:clamp(380px,62vh,680px);height:clamp(380px,62dvh,680px);touch-action:none;cursor:crosshair}
@@ -87,7 +87,12 @@
   /* panel terminal full-bleed: chart ombo koyo MT5 — tanpa margin samping,
      tinggi portrait ±62% layar; panel lain tetap di bawahnya & bisa di-scroll */
   .panel.term-panel{margin-left:0;margin-right:0;border-left:0;border-right:0;border-radius:0}
-  .basishint{font-size:11px;color:var(--gold);margin-top:7px;line-height:1.5}
+  /* catatan basis DIPADATKAN: chip satu baris kecil; teks lengkap hanya
+     muncul saat chip diketuk (tidak tampil default, termasuk fullscreen) */
+  .basiswrap{margin-top:4px}
+  .basischip{border:1px solid rgba(232,195,58,.45);background:rgba(232,195,58,.07);color:var(--gold);border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.02em;padding:0 10px;min-height:22px;cursor:pointer;white-space:nowrap}
+  .basischip:active{filter:brightness(1.2)}
+  .basisdetail{font-size:10.5px;color:var(--gold);margin-top:4px;line-height:1.45;max-width:640px}
   /* ===== mode LAYAR PENUH chart (Fullscreen API / fallback overlay) ===== */
   #termPanel:fullscreen,#termPanel:-webkit-full-screen{margin:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
   #termPanel.fs-fallback{position:fixed;inset:0;z-index:300;margin:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
@@ -96,17 +101,32 @@
   #termPanel:fullscreen .chartwrap,#termPanel:-webkit-full-screen .chartwrap,#termPanel.fs-fallback .chartwrap{flex:1;min-height:0}
   #termPanel:fullscreen canvas#chart,#termPanel:-webkit-full-screen canvas#chart,#termPanel.fs-fallback canvas#chart{height:100%}
   #termPanel:fullscreen .term-hint,#termPanel:-webkit-full-screen .term-hint,#termPanel.fs-fallback .term-hint{display:none}
+  /* chrome di atas chart DIPADATKAN di fullscreen: header, toolbar, strip
+     OHLC dan drawbar menyusut supaya chart + RSI/MACD mengisi hampir
+     seluruh layar */
+  #termPanel:fullscreen .phead,#termPanel:-webkit-full-screen .phead,#termPanel.fs-fallback .phead{padding:3px 10px;min-height:26px}
+  #termPanel:fullscreen>.pbody,#termPanel:-webkit-full-screen>.pbody,#termPanel.fs-fallback>.pbody{padding:3px 6px !important}
+  #termPanel:fullscreen .ohlc div,#termPanel:-webkit-full-screen .ohlc div,#termPanel.fs-fallback .ohlc div{padding:3px 8px;font-size:10px}
+  #termPanel:fullscreen .drawbar,#termPanel:-webkit-full-screen .drawbar,#termPanel.fs-fallback .drawbar{padding:3px}
+  #termPanel:fullscreen canvas#rsiChart,#termPanel:-webkit-full-screen canvas#rsiChart,#termPanel.fs-fallback canvas#rsiChart{height:56px}
+  #termPanel:fullscreen canvas#macdChart,#termPanel:-webkit-full-screen canvas#macdChart,#termPanel.fs-fallback canvas#macdChart{height:64px}
   canvas#rsiChart{display:block;width:100%;height:84px;background:#05080d;border-top:1px solid var(--line2);touch-action:none}
   canvas#macdChart{display:block;width:100%;height:96px;background:#05080d;border-top:1px solid var(--line2);touch-action:none}
   .latestbtn{position:absolute;right:74px;bottom:40px;z-index:4;display:none;border:1px solid var(--teal);background:rgba(3,26,18,.94);color:var(--teal);font-weight:800;font-size:11px;letter-spacing:.05em;border-radius:999px;padding:0 14px;min-height:32px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.5)}
   .latestbtn:active{filter:brightness(1.2)}
   /* ===== terminal analisa (gaya TradingView) ===== */
-  .termtools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  /* toolbar terminal DIPADATKAN: satu baris, bisa di-scroll horizontal
+     bila tidak muat — tidak lagi bertumpuk memakan tinggi chart */
+  .termtools{display:flex;flex-wrap:nowrap;gap:5px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  .termtools::-webkit-scrollbar{display:none}
+  .termtools>*{flex:none}
+  .termtools .mini{min-height:24px;font-size:10.5px;padding:0 10px}
+  .term-panel .phead{padding:6px 12px;min-height:30px}
   .tgl{display:flex;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:2px;gap:2px}
-  .tgl button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;padding:0 10px;cursor:pointer;min-height:26px;letter-spacing:.03em}
+  .tgl button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:10.5px;font-weight:700;padding:0 8px;cursor:pointer;min-height:22px;letter-spacing:.02em}
   .tgl button[aria-pressed="true"]{background:var(--gold);color:#171200}
-  .drawbar{display:flex;gap:4px;padding:8px;background:var(--head);border-right:1px solid var(--line2);flex-direction:column;align-items:stretch}
-  .drawbar button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:9px;font-size:10.5px;font-weight:700;padding:7px 8px;cursor:pointer;min-height:34px;letter-spacing:.02em;white-space:nowrap;text-align:left}
+  .drawbar{display:flex;gap:3px;padding:5px;background:var(--head);border-right:1px solid var(--line2);flex-direction:column;align-items:stretch}
+  .drawbar button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:7px;font-size:10px;font-weight:700;padding:4px 7px;cursor:pointer;min-height:26px;letter-spacing:.02em;white-space:nowrap;text-align:left}
   .drawbar button[aria-pressed="true"]{background:var(--teal);color:#04120c;border-color:var(--teal)}
   .drawbar button.danger{color:#f0a6f7}
   .term-main{display:flex;align-items:stretch}
@@ -116,8 +136,9 @@
   .term-hint{font-size:11px;color:var(--dim);padding:7px 14px;border-top:1px solid var(--line2);line-height:1.55}
   @media(max-width:640px){
     .term-main{flex-direction:column}
-    .drawbar{flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line2)}
-    .drawbar button{text-align:center}
+    .drawbar{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-right:0;border-bottom:1px solid var(--line2)}
+    .drawbar::-webkit-scrollbar{display:none}
+    .drawbar button{text-align:center;flex:none}
   }
   .ohlc{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line2)}
   .ohlc div{padding:7px 14px;border-right:1px solid var(--line2);font-size:11px;color:var(--dim);letter-spacing:.06em}
@@ -246,7 +267,7 @@
 
   <!-- COMMAND BAR -->
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 15:14 JST</span></div>
+    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 15:26 JST</span></div>
     <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
     <div class="cell grow">
       <span id="updatedText">UPDATE: —</span>
@@ -291,7 +312,7 @@
       <span class="t">Terminal Analisa — Candlestick</span>
       <span class="r" id="chartSymLabel">BTC PERP · CANDLE HYPERLIQUID · LIVE PER TICK</span>
     </div>
-    <div class="pbody" style="padding-bottom:8px">
+    <div class="pbody" style="padding:5px 8px">
       <div class="termtools">
         <div class="symtabs" role="group" aria-label="Pilih simbol terminal">
           <button id="tab-btc" aria-pressed="true">BTC</button>
@@ -317,7 +338,10 @@
         <button class="mini" id="btnCandles" style="margin-top:0">↻ MUAT ULANG CANDLE</button>
         <button class="mini" id="btnFs" style="margin-top:0">⛶ LAYAR PENUH</button>
       </div>
-      <div class="basishint" id="zoneBasisNote" style="display:none">Catatan basis: Zona MSNR XAU memakai harga <b>spot OANDA</b>, sedangkan chart ini perpetual Hyperliquid — basis perp bisa bergeser beberapa dolar dari spot. Zona digambar <b>apa adanya</b> (angka tidak digeser), jadi posisi pita terhadap candle bersifat pendekatan; keputusan tetap pada close candle acuan OANDA.</div>
+      <div class="basiswrap" id="zoneBasisNote" style="display:none">
+        <button class="basischip" id="basisChip" aria-expanded="false" aria-controls="basisDetail">Basis: zona XAU = spot OANDA ⓘ</button>
+        <div class="basisdetail" id="basisDetail" hidden>Zona MSNR XAU memakai harga <b>spot OANDA</b>, sedangkan chart ini perpetual Hyperliquid — basis perp bisa bergeser beberapa dolar dari spot. Zona digambar <b>apa adanya</b> (angka tidak digeser), jadi posisi pita terhadap candle bersifat pendekatan; keputusan tetap pada close candle acuan OANDA.</div>
+      </div>
     </div>
     <div class="term-main">
       <div class="drawbar" role="group" aria-label="Piranti gambar">
@@ -1589,7 +1613,7 @@ $("btnLatest").addEventListener("click",function(){ chart.pan=0; chart.drag=null
    gambar, dinding, zona MSNR) bekerja apa adanya di mode ini. */
 var termPanel=$("termPanel"), fsFallback=false;
 function fsActive(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||fsFallback); }
-function updateFsBtn(){ var b=$("btnFs"); if(b) b.textContent= fsActive()? "✕ KELUAR LAYAR PENUH" : "⛶ LAYAR PENUH"; }
+function updateFsBtn(){ var b=$("btnFs"); if(b) b.textContent= fsActive()? "✕ KELUAR LAYAR PENUH" : "⛶ LAYAR PENUH"; if(fsActive()) collapseBasis(); }
 function fsRedraw(){ requestAnimationFrame(function(){ drawChart(); }); setTimeout(drawChart,200); setTimeout(drawChart,600); }
 function fsFallbackOn(){ fsFallback=true; termPanel.classList.add("fs-fallback"); document.body.style.overflow="hidden"; updateFsBtn(); fsRedraw(); }
 function enterFs(){
@@ -1603,6 +1627,19 @@ function exitFs(){
   if(fsFallback){ fsFallback=false; termPanel.classList.remove("fs-fallback"); document.body.style.overflow=""; updateFsBtn(); fsRedraw(); }
 }
 $("btnFs").addEventListener("click",function(){ fsActive()? exitFs() : enterFs(); });
+/* ---- catatan basis: chip lipat ----
+   Teks lengkap catatan basis hanya muncul saat chip diketuk; masuk
+   mode layar penuh selalu melipatknya lagi (collapseBasis dipanggil
+   dari updateFsBtn) supaya chrome di atas chart seminimal mungkin. */
+var basisChip=$("basisChip"), basisDetail=$("basisDetail");
+function collapseBasis(){ if(basisDetail) basisDetail.hidden=true; if(basisChip) basisChip.setAttribute("aria-expanded","false"); }
+if(basisChip&&basisDetail){
+  basisChip.addEventListener("click",function(){
+    var open=basisDetail.hidden;
+    basisDetail.hidden=!open;
+    basisChip.setAttribute("aria-expanded", open? "true":"false");
+  });
+}
 document.addEventListener("fullscreenchange",function(){ updateFsBtn(); fsRedraw(); });
 document.addEventListener("webkitfullscreenchange",function(){ updateFsBtn(); fsRedraw(); });
 document.addEventListener("keydown",function(ev){ if(ev.key==="Escape"&&fsFallback) exitFs(); });
