@@ -32,27 +32,43 @@
   body{margin:0;background:var(--bg);background-image:radial-gradient(1100px 480px at 75% -80px,rgba(46,230,168,.055),transparent 65%),radial-gradient(900px 420px at 8% -60px,rgba(217,70,239,.045),transparent 60%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.45;font-size:13.5px}
   button{min-height:36px;font-family:inherit}
   .wrap{max-width:1320px;margin:0 auto;padding:0 0 28px}
-  /* ===== top nav (SwiftEdge-style) ===== */
-  .cmdbar{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;border-bottom:1px solid var(--line);background:rgba(6,10,16,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);position:sticky;top:0;z-index:20;padding:8px 12px}
-  .cmdbar .cell{display:flex;align-items:center;gap:8px;font-size:12px;padding:2px 0}
-  .cmdbar .grow{flex:1;justify-content:flex-end;gap:8px;flex-wrap:wrap}
-  .brand{color:var(--ink);font-weight:700;letter-spacing:.01em;font-size:14.5px;display:flex;align-items:center;gap:8px}
-  .brand::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);flex:none}
-  .brand small{color:var(--muted);font-weight:500;letter-spacing:.02em;font-size:11.5px}
-  .statuschip{border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:4px 12px 4px 10px !important}
+  /* ===== header ramping satu baris + lipatan sembunyi =====
+     Seluruh chrome atas (cmdbar + baris status + diagnostik) dibungkus
+     .topwrap yang sticky. Tombol chevron melipatnya menjadi strip tipis
+     (hanya titik status + nama + chevron); keadaan lipatan disimpan di
+     localStorage (kunci obHeaderCollapsed). Info UPDATE/TICK WS kini
+     tinggal di baris status, bukan blok tersendiri. */
+  .topwrap{position:sticky;top:0;z-index:30}
+  .cmdbar{display:flex;flex-wrap:nowrap;gap:8px;align-items:center;border-bottom:1px solid var(--line);background:rgba(6,10,16,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding:5px 10px;min-height:40px}
+  .chevbtn{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:8px;min-width:28px;min-height:28px;width:28px;height:28px;font-size:13px;line-height:1;cursor:pointer;flex:none;padding:0}
+  .chevbtn:active{color:var(--teal);border-color:var(--teal)}
+  .brand{color:var(--ink);font-weight:700;letter-spacing:.01em;font-size:14px;display:flex;align-items:baseline;gap:6px;white-space:nowrap;flex:none}
+  .brand small{color:var(--muted);font-weight:500;letter-spacing:.02em;font-size:10.5px}
+  @media(max-width:560px){.brand small{display:none}}
   .dot{width:8px;height:8px;border-radius:50%;background:var(--dim);flex:none}
   .dot.live{background:var(--teal);box-shadow:0 0 7px var(--teal)}
   .dot.poll{background:var(--orange);box-shadow:0 0 7px var(--orange)}
   .dot.off{background:#f87171}
-  #statusText{font-weight:600;letter-spacing:.02em;font-size:11.5px;color:var(--ink)}
-  #updatedText{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+  #statusText{font-weight:600;letter-spacing:.02em;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  .cmd-right{margin-left:auto;display:flex;align-items:center;gap:6px;flex:none}
+  #updatedText{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .seg{display:flex;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:2px;gap:2px}
-  .seg button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-weight:600;font-size:12px;padding:0 14px;cursor:pointer;letter-spacing:.03em;min-height:30px}
+  .seg button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-weight:600;font-size:11px;padding:0 10px;cursor:pointer;letter-spacing:.03em;min-height:26px}
   .seg button[aria-pressed="true"]{background:var(--teal);color:#04120c;font-weight:700}
+  .iconbtn{border:1px solid var(--line);background:var(--panel2);color:var(--teal);border-radius:999px;width:30px;height:30px;min-height:30px;font-size:15px;line-height:1;cursor:pointer;flex:none;padding:0}
+  .iconbtn:active{border-color:var(--teal);filter:brightness(1.25)}
   .btn{border:0;border-radius:999px;background:var(--teal);color:#04120c;font-weight:700;font-size:12.5px;padding:0 18px;cursor:pointer;letter-spacing:.02em;box-shadow:0 0 14px rgba(46,230,168,.22)}
   .btn:active{filter:brightness(1.12)}
   .btn.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--muted);box-shadow:none}
-  .verlabel{border:1px solid var(--gold);color:var(--gold);background:rgba(232,195,58,.08);border-radius:999px;padding:3px 9px;font-size:10.5px;font-weight:800;letter-spacing:.04em;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .verlabel{border:1px solid rgba(232,195,58,.55);color:var(--gold);background:rgba(232,195,58,.07);border-radius:999px;padding:2px 7px;font-size:9.5px;font-weight:800;letter-spacing:.03em;white-space:nowrap;font-variant-numeric:tabular-nums}
+  @media(max-width:420px){.verlabel{display:none}}
+  /* keadaan TERLIPAT: hanya strip tipis — titik status + nama + chevron */
+  .topwrap.is-collapsed .cmdbar{padding-top:2px;padding-bottom:2px;min-height:32px}
+  .topwrap.is-collapsed .statusline,
+  .topwrap.is-collapsed .diagbar,
+  .topwrap.is-collapsed .cmd-right,
+  .topwrap.is-collapsed #statusText,
+  .topwrap.is-collapsed .brand small{display:none !important}
   /* ===== diagnostik live ===== */
   .diagbar{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding:7px 12px;background:#0a1220;border-bottom:1px solid var(--line);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:11.5px;color:var(--muted)}
   .diagbar .diag-title{color:var(--ink);font-weight:800;letter-spacing:.1em;font-size:10.5px;font-family:-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -344,28 +360,36 @@
 <body>
 <div class="wrap">
 
-  <!-- COMMAND BAR -->
+  <!-- HEADER RAMPING — satu baris: chevron lipat + titik status + nama
+       + teks status + (versi kecil · saklar LIVE/REFRESH kecil · tombol
+       refresh ikon). Chevron melipat seluruh header + baris status jadi
+       strip tipis; keadaan lipatan diingat di localStorage. -->
+  <div class="topwrap" id="topWrap">
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 21:20 JST</span></div>
-    <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
-    <div class="cell grow">
-      <span id="updatedText">UPDATE: —</span>
+    <button class="chevbtn" id="btnFoldHeader" aria-expanded="true" aria-controls="statusLine diagBar" aria-label="Sembunyikan header" title="Sembunyikan / tampilkan header">▾</button>
+    <span class="dot" id="statusDot"></span>
+    <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
+    <span id="statusText">MENGHUBUNGKAN…</span>
+    <div class="cmd-right">
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 21:20 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
       </div>
-      <button class="btn" id="btnRefresh">↻ REFRESH</button>
+      <button class="iconbtn" id="btnRefresh" aria-label="Refresh data" title="Refresh data">↻</button>
     </div>
   </div>
 
-  <!-- BARIS STATUS RINGKAS — satu-satunya tempat status koneksi,
-       sumber candle simbol aktif, dan nilai basis tampil ringkas -->
-  <div class="statusline" aria-label="Ringkasan status">
+  <!-- BARIS STATUS RINGKAS — status koneksi, sumber candle simbol aktif,
+       nilai basis, dan info update terakhir (UPDATE · TICK WS) -->
+  <div class="statusline" id="statusLine" aria-label="Ringkasan status">
     <span>WS: <b id="sumWs" class="ws-off">PUTUS</b></span>
     <span class="sep">·</span>
     <span>Sumber chart: <b id="sumSrc">—</b></span>
     <span class="sep">·</span>
     <span>Basis: <b id="sumBasis">—</b></span>
+    <span class="sep">·</span>
+    <span id="updatedText">UPDATE: —</span>
     <button class="infobtn diagbtn" id="btnDiag" aria-expanded="false" aria-controls="diagBar">Diagnostik ▾</button>
   </div>
 
@@ -389,6 +413,7 @@
     <span class="sep">·</span>
     <span>Sumber: <b id="diagSrc">—</b></span>
   </div>
+  </div><!-- /topwrap -->
 
   <!-- TICKER STRIP -->
   <div class="ticker">
@@ -3345,6 +3370,31 @@ if(btnDiagEl) btnDiagEl.addEventListener("click",function(){
   var open=d.hidden; d.hidden=!open;
   btnDiagEl.setAttribute("aria-expanded", open? "true":"false");
   btnDiagEl.textContent= open? "Diagnostik ▴" : "Diagnostik ▾";
+});
+
+/* ============ lipatan header (sembunyi/tampil blok atas) ============
+   Chevron di cmdbar melipat SELURUH header + baris status (+ diagnostik
+   bila sedang terbuka) menjadi strip tipis: hanya titik status, nama
+   "Orderbook", dan chevron yang tersisa. Keadaan disimpan di
+   localStorage (obHeaderCollapsed) supaya tetap terlipat saat aplikasi
+   dibuka lagi; ketuk chevron sekali lagi untuk membuka. Semua fungsi
+   (saklar LIVE/REFRESH, refresh manual, label versi, info UPDATE)
+   tetap ada di dalam lipatan dan kembali tampil saat dibuka. */
+var topWrapEl=$("topWrap"), btnFoldEl=$("btnFoldHeader");
+function applyHeaderFold(collapsed){
+  if(!topWrapEl||!btnFoldEl) return;
+  topWrapEl.classList.toggle("is-collapsed", !!collapsed);
+  btnFoldEl.textContent= collapsed? "▸" : "▾";
+  btnFoldEl.setAttribute("aria-expanded", collapsed? "false":"true");
+  btnFoldEl.setAttribute("aria-label", collapsed? "Tampilkan header" : "Sembunyikan header");
+}
+var hdrCollapsed=false;
+try{ hdrCollapsed= localStorage.getItem("obHeaderCollapsed")==="1"; }catch(e){}
+applyHeaderFold(hdrCollapsed);
+if(btnFoldEl) btnFoldEl.addEventListener("click",function(){
+  var now= !(topWrapEl && topWrapEl.classList.contains("is-collapsed"));
+  applyHeaderFold(now);
+  try{ localStorage.setItem("obHeaderCollapsed", now? "1":"0"); }catch(e){}
 });
 
 /* ============ boot ============ */
