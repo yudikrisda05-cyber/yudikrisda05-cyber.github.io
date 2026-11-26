@@ -77,6 +77,7 @@
   canvas#chart{display:block;width:100%;height:340px;touch-action:none;cursor:crosshair}
   @media(min-width:900px){canvas#chart{height:440px}}
   canvas#rsiChart{display:block;width:100%;height:84px;background:#05080d;border-top:1px solid var(--line2);touch-action:none}
+  canvas#macdChart{display:block;width:100%;height:96px;background:#05080d;border-top:1px solid var(--line2);touch-action:none}
   /* ===== terminal analisa (gaya TradingView) ===== */
   .termtools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
   .tgl{display:flex;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:2px;gap:2px}
@@ -262,6 +263,7 @@
           <button id="ind-vwap" aria-pressed="false">VWAP</button>
           <button id="ind-vol" aria-pressed="true">VOL</button>
           <button id="ind-rsi" aria-pressed="false">RSI</button>
+          <button id="ind-macd" aria-pressed="false">MACD</button>
         </div>
         <button class="mini" id="btnCandles" style="margin-top:0">↻ MUAT ULANG CANDLE</button>
       </div>
@@ -281,6 +283,7 @@
           <div class="term-legend" id="termLegend">Memuat candle…</div>
         </div>
         <canvas id="rsiChart" style="display:none" aria-label="Panel RSI"></canvas>
+        <canvas id="macdChart" style="display:none" aria-label="Panel MACD"></canvas>
       </div>
     </div>
     <div class="ohlc">
@@ -339,7 +342,7 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket per tick) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, dan panel RSI 14, plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket per tick) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
       <p>Scanner Tumpukan melacak semua level buku dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
@@ -354,7 +357,7 @@ var MARKETS=[
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · xyz:GOLD · XAU PERPETUAL (BUKAN SPOT)", unit:"oz", dec:1, szDec:2}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
-var chart={ sym:"btc", tf:300, itv:"15m", ema:true, vwap:false, vol:true, rsi:false, tool:"cursor", cross:null, draft:null, hoverIdx:-1 };
+var chart={ sym:"btc", tf:300, itv:"15m", ema:true, vwap:false, vol:true, rsi:false, macd:false, tool:"cursor", cross:null, draft:null, hoverIdx:-1 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, candles:[], drawings:[]}; });
@@ -784,6 +787,7 @@ function updateReco(id){
 /* ============ terminal analisa — candlestick Hyperliquid ============ */
 var cv=$("chart"), ctx=cv.getContext("2d");
 var rsiCv=$("rsiChart"), rsiCtx=rsiCv.getContext("2d");
+var macdCv=$("macdChart"), macdCtx=macdCv.getContext("2d");
 var view={min:0,max:1,t0:0,t1:1,W:0,H:0,plotW:0,step:0,offset:0, candles:[]};
 
 function mapCandle(c){ return {t:+c.t, o:+c.o, h:+c.h, l:+c.l, c:+c.c, v:+c.v||0}; }
@@ -846,6 +850,25 @@ function rsiSeries(cs,period){
   }
   return out;
 }
+/* EMA atas deret nilai (menghormati null di awal) — dipakai MACD & signal */
+function emaVals(vals,period){
+  var out=[], k=2/(period+1), prev=null;
+  vals.forEach(function(v){
+    if(v==null){ out.push(null); return; }
+    prev= prev==null? v : v*k+prev*(1-k);
+    out.push(prev);
+  });
+  return out;
+}
+/* MACD (12,26,9): garis = EMA12−EMA26, signal = EMA9 dari garis MACD, hist = garis−signal */
+function macdSeries(cs){
+  var closes=cs.map(function(c){return c.c;});
+  var e12=emaVals(closes,12), e26=emaVals(closes,26);
+  var line=closes.map(function(_,i){ return (e12[i]==null||e26[i]==null)? null : e12[i]-e26[i]; });
+  var sig=emaVals(line,9);
+  var hist=line.map(function(v,i){ return (v==null||sig[i]==null)? null : v-sig[i]; });
+  return {line:line, signal:sig, hist:hist};
+}
 /* ---- koordinat ---- */
 function X(t){ return view.offset + ((t-view.t0)/Math.max(1,(view.t1-view.t0)))*view.plotW; }
 function invX(x){ return view.t0 + ((x-view.offset)/Math.max(1,view.plotW))*(view.t1-view.t0); }
@@ -885,7 +908,7 @@ function drawChart(){
     $("oh-n").textContent=String(cs.length);
     $("oh-draw").textContent=String(s.drawings.length);
   }
-  if(cs.length<2){ setReadout(cs[cs.length-1]||null); ctx.fillStyle="#5b6b82"; ctx.font="12px -apple-system,'Segoe UI',Roboto,sans-serif"; ctx.fillText("MENUNGGU CANDLE DARI HYPERLIQUID…",12,28); drawRSI(); return; }
+  if(cs.length<2){ setReadout(cs[cs.length-1]||null); ctx.fillStyle="#5b6b82"; ctx.font="12px -apple-system,'Segoe UI',Roboto,sans-serif"; ctx.fillText("MENUNGGU CANDLE DARI HYPERLIQUID…",12,28); drawRSI(); drawMACD(); return; }
   var min=Infinity,max=-Infinity;
   cs.forEach(function(c){ if(c.l<min)min=c.l; if(c.h>max)max=c.h; });
   s.drawings.forEach(function(d){ [d.p,d.p1,d.p2].forEach(function(p){ if(p!=null){ if(p<min)min=p; if(p>max)max=p; } }); });
@@ -969,6 +992,7 @@ function drawChart(){
     chart.hoverIdx=cs.length-1; setReadout(last);
   }
   drawRSI();
+  drawMACD();
 }
 function drawOneObject(d,m,draft){
   ctx.save();
@@ -1012,6 +1036,61 @@ function drawRSI(){
   rsiCtx.strokeStyle="#d946ef"; rsiCtx.lineWidth=1.4; rsiCtx.stroke();
   rsiCtx.fillStyle="#e8eef5"; rsiCtx.font="bold 10px ui-monospace,Menlo,monospace";
   if(lastV!=null) rsiCtx.fillText("RSI 14 · "+lastV.toFixed(1), 8, 15);
+}
+/* ---- MACD ---- */
+function drawMACD(){
+  var show=chart.macd;
+  macdCv.style.display= show? "block":"none";
+  if(!show) return;
+  var s=M[chart.sym], m=s.def, cs=view.candles;
+  var W=macdCv.clientWidth, H=macdCv.clientHeight; if(!W) return;
+  var dpr=window.devicePixelRatio||1;
+  if(macdCv.width!==Math.round(W*dpr)||macdCv.height!==Math.round(H*dpr)){ macdCv.width=W*dpr; macdCv.height=H*dpr; }
+  macdCtx.setTransform(dpr,0,0,dpr,0,0);
+  macdCtx.clearRect(0,0,W,H); macdCtx.fillStyle="#05080d"; macdCtx.fillRect(0,0,W,H);
+  if(cs.length<35){ macdCtx.fillStyle="#5b6b82"; macdCtx.font="11px -apple-system,sans-serif"; macdCtx.fillText("MACD — data candle belum cukup (butuh ≥35)",10,20); return; }
+  var md=macdSeries(cs);
+  var maxAbs=0;
+  md.line.forEach(function(v){ if(v!=null&&Math.abs(v)>maxAbs) maxAbs=Math.abs(v); });
+  md.signal.forEach(function(v){ if(v!=null&&Math.abs(v)>maxAbs) maxAbs=Math.abs(v); });
+  md.hist.forEach(function(v){ if(v!=null&&Math.abs(v)>maxAbs) maxAbs=Math.abs(v); });
+  if(maxAbs<=0) maxAbs=1;
+  maxAbs*=1.15;
+  function MY(v){ return 8+(1-(v+maxAbs)/(2*maxAbs))*(H-20); }
+  /* garis nol + label skala */
+  macdCtx.strokeStyle="#1b2738"; macdCtx.lineWidth=1;
+  macdCtx.beginPath(); macdCtx.moveTo(0,MY(0)); macdCtx.lineTo(W-64,MY(0)); macdCtx.stroke();
+  macdCtx.fillStyle="#5b6b82"; macdCtx.font="9px ui-monospace,Menlo,monospace";
+  macdCtx.fillText(fmt(maxAbs,m.dec), W-60, MY(maxAbs)+8);
+  macdCtx.fillText("0", W-60, MY(0)+3);
+  macdCtx.fillText(fmt(-maxAbs,m.dec), W-60, MY(-maxAbs)-2);
+  /* histogram */
+  md.hist.forEach(function(v,i){
+    if(v==null) return;
+    var x=X(cs[i].t)+view.step*0.18, w=Math.max(1,view.step*0.64);
+    var y0=MY(0), y1=MY(v);
+    macdCtx.fillStyle= v>=0? "rgba(46,230,168,.45)" : "rgba(232,121,249,.45)";
+    macdCtx.fillRect(x, Math.min(y0,y1), w, Math.max(1,Math.abs(y1-y0)));
+  });
+  /* garis MACD & signal */
+  function mLine(vals,color){
+    macdCtx.beginPath(); var started=false;
+    vals.forEach(function(v,i){ if(v==null) return; var x=X(cs[i].t)+view.step/2, y=MY(v); if(!started){ macdCtx.moveTo(x,y); started=true; } else macdCtx.lineTo(x,y); });
+    macdCtx.strokeStyle=color; macdCtx.lineWidth=1.4; macdCtx.stroke();
+  }
+  mLine(md.line,"#38c6d9");
+  mLine(md.signal,"#f5a623");
+  /* legenda nilai terakhir */
+  var li=cs.length-1;
+  while(li>0&&md.line[li]==null) li--;
+  var lv=md.line[li], sv=md.signal[li], hv=md.hist[li];
+  macdCtx.font="bold 10px ui-monospace,Menlo,monospace";
+  macdCtx.fillStyle="#e8eef5"; macdCtx.fillText("MACD 12·26·9", 8, 15);
+  if(lv!=null){
+    macdCtx.fillStyle="#38c6d9"; macdCtx.fillText(fmt(lv,m.dec), 96, 15);
+    if(sv!=null){ macdCtx.fillStyle="#f5a623"; macdCtx.fillText("SIG "+fmt(sv,m.dec), 96+macdCtx.measureText(fmt(lv,m.dec)).width+14, 15); }
+    if(hv!=null){ macdCtx.fillStyle= hv>=0? "#2ee6a8":"#e879f9"; macdCtx.fillText("HIST "+(hv>=0?"+":"")+fmt(hv,m.dec), 96+macdCtx.measureText(fmt(lv,m.dec)).width+(sv!=null? macdCtx.measureText("SIG "+fmt(sv,m.dec)).width+28 : 14), 15); }
+  }
 }
 /* ---- interaksi gambar & crosshair ---- */
 function ptrPos(ev){ var r=cv.getBoundingClientRect(); return {x:ev.clientX-r.left, y:ev.clientY-r.top}; }
@@ -1070,7 +1149,7 @@ function bindToggle(id,key,after){
     drawChart();
   });
 }
-bindToggle("ind-ema","ema"); bindToggle("ind-vwap","vwap"); bindToggle("ind-vol","vol"); bindToggle("ind-rsi","rsi");
+bindToggle("ind-ema","ema"); bindToggle("ind-vwap","vwap"); bindToggle("ind-vol","vol"); bindToggle("ind-rsi","rsi"); bindToggle("ind-macd","macd");
 $("btnCandles").addEventListener("click",function(){ fetchAllCandles(); });
 document.querySelectorAll("[data-itv]").forEach(function(b){
   b.addEventListener("click",function(){
