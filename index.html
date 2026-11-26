@@ -225,7 +225,7 @@
 
   <!-- COMMAND BAR -->
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 12:28 JST</span></div>
+    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 12:36 JST</span></div>
     <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
     <div class="cell grow">
       <span id="updatedText">UPDATE: —</span>
@@ -247,6 +247,10 @@
     <span>BTC: <b id="diagBtcRate">0,0</b> msg/dtk <span style="color:var(--dim)">(tick <b id="diagBtcLast" style="color:var(--muted)">—</b>)</span></span>
     <span class="sep">·</span>
     <span>XAU: <b id="diagGoldRate">0,0</b> msg/dtk <span style="color:var(--dim)">(tick <b id="diagGoldLast" style="color:var(--muted)">—</b>)</span></span>
+    <span class="sep">·</span>
+    <span>Buku BTC: <b id="diagBookBtc">—</b></span>
+    <span class="sep">·</span>
+    <span>Buku XAU: <b id="diagBookGold">—</b></span>
     <span class="sep">·</span>
     <span>Total tick sesi: <b id="diagTicks">0</b></span>
   </div>
@@ -364,7 +368,7 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
       <p>Scanner Tumpukan melacak semua level buku dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
@@ -382,7 +386,7 @@ var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, re
 var chart={ sym:"btc", tf:300, itv:"15m", ema:true, vwap:false, vol:true, rsi:false, macd:false, tool:"cursor", cross:null, draft:null, hoverIdx:-1 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
-MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, candles:[], drawings:[], lastWsAt:0, wsTimes:[]}; });
+MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0}; });
 
 /* ============ ZONA PANTAU (statis, dari laporan pemilik) ============ */
 var ZONEGROUPS=[
@@ -566,6 +570,7 @@ function postInfo(body){
 function applyBook(id,data){
   if(!data||!data.levels||data.levels.length<2) return;
   var s=M[id];
+  s.lastBookAt=Date.now();
   s.book={ bids:data.levels[0].slice(0,20).map(function(l){return{px:+l.px,sz:+l.sz};}),
            asks:data.levels[1].slice(0,20).map(function(l){return{px:+l.px,sz:+l.sz};}) };
   var mid=(s.book.bids[0].px+s.book.asks[0].px)/2;
@@ -649,7 +654,11 @@ function startWS(){
     fetchAllCandles();
     if(state.mode==="live") setStatus("live","LIVE PER TICK · WEBSOCKET");
     MARKETS.forEach(function(m){
-      ws.send(JSON.stringify({method:"subscribe",subscription:{type:"l2Book",coin:m.coin}}));
+      /* fast:true WAJIB untuk l2Book — langganan default Hyperliquid hanya
+         mengirim snapshot buku ±0,13×/detik (terasa tidak live walau WS
+         nyambung); mode fast menaikkan laju update buku ±14× (diuji
+         langsung ke wss://api.hyperliquid.xyz/ws, 26 Nov 2026) */
+      ws.send(JSON.stringify({method:"subscribe",subscription:{type:"l2Book",coin:m.coin,fast:true}}));
       ws.send(JSON.stringify({method:"subscribe",subscription:{type:"trades",coin:m.coin}}));
       ws.send(JSON.stringify({method:"subscribe",subscription:{type:"candle",coin:m.coin,interval:chart.itv}}));
     });
@@ -1304,6 +1313,8 @@ function updateDiag(){
   var bl=$("diagBtcLast"); if(bl) bl.textContent=diagAgo(M.btc? M.btc.lastWsAt:0);
   var gr=$("diagGoldRate"); if(gr) gr.textContent=fmtRate(diagRate("gold"));
   var gl=$("diagGoldLast"); if(gl) gl.textContent=diagAgo(M.gold? M.gold.lastWsAt:0);
+  var bb=$("diagBookBtc"); if(bb) bb.textContent=diagAgo(M.btc? M.btc.lastBookAt:0);
+  var bg=$("diagBookGold"); if(bg) bg.textContent=diagAgo(M.gold? M.gold.lastBookAt:0);
   var tk=$("diagTicks"); if(tk) tk.textContent=state.ticks.toLocaleString("id-ID");
 }
 setInterval(updateDiag,1000);
