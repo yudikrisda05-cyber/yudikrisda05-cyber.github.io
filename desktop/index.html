@@ -179,7 +179,7 @@
   .termtools::-webkit-scrollbar{display:none}
   .termtools>*{flex:none}
   .termtools .mini{min-height:24px;font-size:10.5px;padding:0 10px}
-  .term-panel .phead{padding:6px 12px;min-height:30px}
+  .term-panel .phead{padding:6px 12px;min-height:30px;flex-wrap:wrap;row-gap:4px}
   .tgl{display:flex;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:2px;gap:2px}
   .tgl button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:10.5px;font-weight:700;padding:0 8px;cursor:pointer;min-height:22px;letter-spacing:.02em}
   .tgl button[aria-pressed="true"]{background:var(--gold);color:#171200}
@@ -331,31 +331,68 @@
   .hintline{font-size:11px;color:var(--dim);padding:7px 14px;border-top:1px solid var(--line2)}
   .flowgroup{padding:12px 14px 10px}
   .flowgroup+.flowgroup{border-top:1px solid var(--line2)}
-  /* ===== TATA LETAK DESKTOP (≥1024px) — kisi PC untuk file yang sama.
-     Di bawah 1024px pembungkus .desk-main/.desk-sub tidak menghasilkan
-     kotak (display:contents), jadi tata letak HP persis seperti sebelumnya;
-     urutan DOM tidak berubah di kedua tata letak. ===== */
-  .desk-main,.desk-sub{display:contents}
+  /* ===== MODEL TAB (ala SwiftEdge Terminal) =====
+     Mung panel tab aktif sing tampil (.tabpanel.on); liyane
+     display:none. Bar tab nempel ing njero .topwrap (sticky) ing
+     ngisor header + baris status, isa digeser mendatar ing HP.
+     Desktop (≥1024px): tetep model tab — panel aktif ditengahne
+     max-width ±1150px, chart dhuwure ±72vh. */
+  .tabbar{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:rgba(6,10,16,.97);border-bottom:1px solid var(--line);padding:5px 8px}
+  .tabbar::-webkit-scrollbar{display:none}
+  .tabbar button{flex:1 0 auto;min-width:58px;border:1px solid transparent;background:transparent;border-radius:9px;color:var(--muted);cursor:pointer;padding:4px 8px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-height:40px;font-family:inherit}
+  .tabbar .tc{font-size:13px;font-weight:800;letter-spacing:.06em;line-height:1.15}
+  .tabbar .tl{font-size:8.5px;font-weight:600;letter-spacing:.04em;color:var(--dim);white-space:nowrap}
+  .tabbar button[aria-pressed="true"]{background:rgba(34,211,238,.10);border-color:rgba(34,211,238,.5)}
+  .tabbar button[aria-pressed="true"] .tc{color:#22d3ee}
+  .tabbar button[aria-pressed="true"] .tl{color:#8fd8ea}
+  .tabpanel{display:none}
+  .tabpanel.on{display:block}
+  /* scroll internal kanggo panel daftar — kaca ora dadi scroll dowo */
+  .bookscroll{max-height:26vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .whalelist{max-height:230px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .liqlist{max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .keylist{max-height:250px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .flowgroup [data-f="trades"]{max-height:190px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  /* countdown tutup candle ing header panel PX */
+  .cdchip{display:inline-flex;align-items:center;gap:5px;border:1px solid rgba(240,200,75,.45);background:rgba(240,200,75,.07);color:var(--gold);border-radius:999px;padding:2px 9px;font-size:10px;font-weight:700;letter-spacing:.04em;white-space:nowrap;flex:none}
+  .cdchip b{font-variant-numeric:tabular-nums;color:var(--ink);font-size:11px}
+  /* ===== panel Gelombang 1 (FUND · LIQ · POS · KEY · CVD · WHALE) ===== */
+  .wgroup{padding:12px 14px 10px}
+  .wgroup+.wgroup{border-top:1px solid var(--line2)}
+  .kvgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  @media(min-width:640px){.kvgrid{grid-template-columns:repeat(3,1fr)}}
+  .kv{border:1px solid var(--line2);border-radius:10px;background:#080d14;padding:7px 10px}
+  .kv .k{font-size:9px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.12em}
+  .kv .v{font-size:13.5px;font-weight:700;margin-top:2px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sk2{font-size:9.5px;font-weight:800;letter-spacing:.13em;color:var(--dim);margin:11px 0 4px}
+  .sk2.ask{color:var(--jsnr-sell)} .sk2.bid{color:var(--jsnr-buy)}
+  .liqsum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+  .liqbox{border:1px solid var(--line2);border-radius:10px;background:#080d14;padding:8px 10px}
+  .liqbox .k{font-size:9px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.12em}
+  .liqbox .v{font-size:16px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+  .liqbox .s{font-size:10.5px;color:var(--muted);margin-top:1px}
+  .lrow,.wrow,.krow{display:flex;align-items:center;gap:8px;padding:4px 2px;font-size:12px;font-variant-numeric:tabular-nums;border-bottom:1px solid var(--line2)}
+  .lrow:last-child,.wrow:last-child,.krow:last-child{border-bottom:0}
+  .lrow .wt,.wrow .wt{color:var(--dim);font-size:11px;min-width:40px;flex:none}
+  .wrow .wsym{font-weight:800;color:var(--muted);min-width:30px;flex:none}
+  .lrow .wp,.wrow .wp{font-weight:700}
+  .lrow .wu,.wrow .wu{margin-left:auto;font-weight:700;white-space:nowrap}
+  .lg-long{color:var(--jsnr-sell);font-weight:800} .lg-short{color:var(--jsnr-buy);font-weight:800}
+  .krow .kp{font-weight:700;min-width:88px;flex:none}
+  .krow .kn{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px}
+  .krow .kd{font-weight:700;white-space:nowrap}
+  .prow{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px solid var(--line2);font-size:12.5px;font-variant-numeric:tabular-nums}
+  .prow:last-child{border-bottom:0}
+  .prow .pk{color:var(--muted);font-weight:600}
+  .prow .pv{margin-left:auto;font-weight:700;white-space:nowrap}
+  .prow .pd{color:var(--muted);white-space:nowrap;text-align:right}
+  .whaleblock{padding:12px 14px 6px;border-bottom:1px solid var(--line2)}
+  canvas.cvdspark{display:block;width:100%;height:44px;background:#05080d;border:1px solid var(--line2);border-radius:8px;margin-top:9px}
   @media(min-width:1024px){
-    .wrap{max-width:1600px}
-    /* kisi utama: chart lebar di kiri; kolom kanan = orderbook + scanner */
-    .desk-main{display:grid;grid-template-columns:minmax(0,1fr) 400px;grid-template-areas:"chart books" "chart scan";gap:12px;padding:12px 12px 0;align-items:start}
-    .desk-main>#termPanel{grid-area:chart;margin:0;border:1px solid var(--line);border-radius:14px;min-width:0}
-    .desk-main>#grid{grid-area:books;min-width:0}
-    .desk-main>.scanpanel{grid-area:scan;margin:0;min-width:0}
-    /* kolom kanan sempit: dua panel buku bertumpuk satu kolom */
-    .desk-main .tgrid{grid-template-columns:1fr;gap:12px}
-    .desk-main .tgrid>.panel{margin:0 !important}
-    .desk-main .scancols{grid-template-columns:1fr}
-    /* chart desktop lebih tinggi (±70vh); mode OANDA mengikuti */
-    .desk-main canvas#chart{height:clamp(520px,70vh,900px);height:clamp(520px,70dvh,900px)}
-    .desk-main .tvwrap.on{height:clamp(520px,70vh,900px);height:clamp(520px,70dvh,900px)}
-    /* kisi bawah: Zona Pantau JSNR | Setup & Transaksi Terakhir */
-    .desk-sub{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:12px 12px 0;align-items:start}
-    .desk-sub>.panel,.desk-sub #flowPanel{margin:0}
-    .desk-sub>#flowSlot{min-width:0}
-    /* layar penuh chart tetap memenuhi layar di tata letak desktop */
-    #termPanel:fullscreen,#termPanel:-webkit-full-screen,#termPanel.fs-fallback{border-radius:0;border-left:0;border-right:0}
+    .tabwrap{max-width:1150px;margin:0 auto}
+    .tabwrap canvas#chart{height:clamp(520px,72vh,940px);height:clamp(520px,72dvh,940px)}
+    .tabwrap .tvwrap.on{height:clamp(520px,72vh,940px);height:clamp(520px,72dvh,940px)}
+    .bookscroll{max-height:32vh}
   }
 </style>
 </head>
@@ -373,7 +410,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 22:15 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 01:10 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -417,6 +454,20 @@
     <span class="sep">·</span>
     <span>Sumber: <b id="diagSrc">—</b></span>
   </div>
+  <!-- BAR TAB — model terminal ala SwiftEdge: mung panel tab aktif
+       sing tampil; pilihan tab disimpen ing localStorage -->
+  <nav class="tabbar" id="tabBar" aria-label="Panel terminal">
+    <button data-tab="px" aria-pressed="true"><span class="tc">PX</span><span class="tl">Chart</span></button>
+    <button data-tab="dom" aria-pressed="false"><span class="tc">DOM</span><span class="tl">Orderbook</span></button>
+    <button data-tab="scan" aria-pressed="false"><span class="tc">SCAN</span><span class="tl">Tumpukan</span></button>
+    <button data-tab="jsnr" aria-pressed="false"><span class="tc">JSNR</span><span class="tl">Zona</span></button>
+    <button data-tab="tape" aria-pressed="false"><span class="tc">TAPE</span><span class="tl">Transaksi</span></button>
+    <button data-tab="cvd" aria-pressed="false"><span class="tc">CVD</span><span class="tl">Volume</span></button>
+    <button data-tab="fund" aria-pressed="false"><span class="tc">FUND</span><span class="tl">Funding·OI</span></button>
+    <button data-tab="liq" aria-pressed="false"><span class="tc">LIQ</span><span class="tl">Likuidasi</span></button>
+    <button data-tab="pos" aria-pressed="false"><span class="tc">POS</span><span class="tl">Positioning</span></button>
+    <button data-tab="key" aria-pressed="false"><span class="tc">KEY</span><span class="tl">Key Levels</span></button>
+  </nav>
   </div><!-- /topwrap -->
 
   <!-- TICKER STRIP -->
@@ -427,9 +478,10 @@
 
   <div class="err" id="errBox"></div>
 
-  <!-- KISI DESKTOP: chart | orderbook + scanner (≥1024px);
-       di HP pembungkus ini display:contents — urutan & tampilan tetap -->
-  <div class="desk-main">
+  <!-- MODEL TAB: saben panel manggon ing .tabpanel dhewe; mung sing
+       aktif (.on) sing tampil — kaca ora dadi scroll dowo -->
+  <div class="tabwrap">
+  <div class="tabpanel on" id="tp-px">
   <!-- TERMINAL ANALISA — GAYA TRADINGVIEW -->
   <section class="panel term-panel" id="termPanel" aria-label="Terminal analisa">
     <div class="phead">
@@ -438,6 +490,7 @@
         <button id="modeAnalisa" aria-pressed="true">ANALISA</button>
         <button id="modeOanda" aria-pressed="false">OANDA</button>
       </div>
+      <span class="cdchip" title="Sisa waktu nganti tutup candle timeframe aktif">TUTUP <b id="cdTime">--:--</b></span>
       <button class="infobtn" data-info="termInfo" aria-expanded="false" title="Panduan lengkap chart">ⓘ Panduan</button>
       <span class="r" id="chartSymLabel">BTC · CHART: BINANCE SPOT</span>
     </div>
@@ -526,9 +579,14 @@
     <div class="term-hint pinfo" id="termInfo" hidden>Sumber candle: <b style="color:var(--muted)">BTC = Binance Spot (BTCUSDT)</b> — klines REST + WebSocket kline resmi Binance — dan <b style="color:var(--muted)">XAU = PAXG Binance (PAXGUSDT) ≈ spot</b> — PAXG adalah emas token yang harganya mengikuti spot emas, dipakai sebagai proksi spot (percobaan TradingView sudah dihapus: servernya terbukti menolak koneksi dari halaman ini); keduanya candle resmi bursa apa adanya, <b style="color:var(--muted)">bukan rakitan lokal</b> — pembangunan candle dari tick dagang sudah dimatikan total (tick hanya untuk harga terakhir, CVD, dan panel lain). Chip di kanan atas chart menunjukkan sumber yang sedang aktif per simbol; bila sumber utama gagal/putus, chart otomatis memakai <b style="color:var(--muted)">candle resmi Hyperliquid (cadangan)</b> — snapshot + kanal candle resmi exchange, disinkron ulang berkala ±8 detik. Baris <b style="color:var(--muted)">DIAGNOSTIK LIVE</b> menampilkan label <b style="color:var(--muted)">Sumber:</b> — sumber candle aktif per simbol plus nilai basis terukur. Dinding &amp; bubble tetap dari buku perpetual Hyperliquid, tetapi yang digambar pada chart spot/proksi spot (BTC Binance / XAU PAXG) <b style="color:var(--muted)">digeser sebesar basis live terukur</b> — untuk posisi gambar dipakai versi halusnya (rata-rata bergerak lambat, berubah paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick (harga gambar = harga perp − basis halus, label bertanda ≈spot; chip “Basis perp–PAXG / perp–spot Binance” di pojok chart menampilkan nilai basis mentahnya) supaya selaras dengan sumbu harga chart; panel orderbook, ladder, scanner &amp; CVD tetap harga perp asli. Zona MSNR tidak digeser — zona memang harga spot OANDA dan chart PAXG ≈ spot. Ketuk chip basis di atas chart untuk catatan lengkapnya. Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (8–600 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. <b style="color:var(--muted)">Skala vertikal bisa diatur manual:</b> seret <b style="color:var(--muted)">sumbu harga</b> (strip angka di kanan) ke bawah untuk memampatkan chart atau ke atas untuk melebarkan candle, cubit dua jari secara vertikal juga bisa; label harga berubah teal dan tombol <b style="color:#e8c33a">SKALA AUTO</b> muncul — ketuk tombol itu atau ketuk ganda sumbu harga untuk kembali ke skala otomatis; selama skala manual aktif, seretan vertikal di area chart ikut menggeser rentang harga. Seret <b style="color:var(--muted)">sumbu waktu</b> (strip jam di bawah) ke kiri/kanan untuk mengubah spasi candle. Pan mengikuti jari 1:1 secara halus (sub-candle). Di sisi kanan chart selalu ada <b style="color:var(--muted)">ruang kosong tetap</b> (±8% jendela, 3–14 candle) antara candle terakhir dan sumbu harga — harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; tombol KE TERBARU mengembalikan ke tepi live dengan ruang kanan standar itu. <b style="color:var(--muted)">Lingkaran berwarna (bubble)</b> di chart = penanda likuiditas dari scan buku jeru, menempel pada candle yang buntutnya menyentuh level tumpukan itu (atau di tepi kanan bila belum tersentuh): teal = bid, ungu = ask; makin besar lingkaran makin besar tumpukannya (≥2× / ≥3× / ≥5× median sisinya), angka di dalamnya = ukuran tumpukan — hidup-matikan lewat tombol <b style="color:var(--muted)">BUBBLE</b>. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar kini <b style="color:var(--muted)">DISIMPAN permanen di perangkat ini</b> (penyimpanan lokal per simbol) dan dimuat lagi saat aplikasi dibuka — tidak hilang saat ditutup; kotak zona gambar Anda bergaya <b style="color:var(--muted)">PERSONAL</b>: tepi emas #f0c84b putus-putus dengan label PERSONAL atau nama yang Anda beri lewat bar nama yang muncul saat zona selesai digambar — sengaja berbeda dari zona JSNR; mode Hapus Objek menghapus item tersimpan juga, dan tombol Bersihkan menghapus semua gambar simbol aktif. <b style="color:var(--muted)">Mode OANDA</b> (toggle di header panel chart) menampilkan widget resmi TradingView — OANDA:XAUUSD untuk XAU, BINANCE:BTCUSDT untuk BTC, interval mengikuti timeframe aktif — sebagai referensi murni dari server TradingView; garis JSNR &amp; marking hanya ada di mode ANALISA. Zona Pantau MSNR digambar <b style="color:var(--muted)">sebagai garis kustom gaya JSNR</b>: garis horizontal tipis rapi (warna menurut sisi zona: hijau = support/BUY, merah muda = resistance/SELL — status flip SBR/RBS dibaca dari teks labelnya, bukan dari warna garis) pada level kunci zona — zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya — memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada <b style="color:var(--muted)">titik (dot) di ujung garisnya sendiri, tepat pada harga levelnya</b> — dot &amp; garis tidak pernah digeser dari levelnya dan garis <b style="color:var(--muted)">TERKUNCI ke skala harga chart</b> (posisinya dihitung ulang dari pemetaan harga yang sama dengan candle setiap kali chart digambar, jadi tetap menempel tepat di levelnya saat chart dipan/di-zoom) — dengan <b style="color:var(--muted)">label “harga level TIPE · fresh/tested”</b> di kanan titik pada ketinggian yang sama persis; label zona yang berdekatan hanya digeser mendatar (dengan garis penghubung mungil ke titiknya) supaya tidak bertumpuk. Status dihitung dari candle di buffer (tersentuh = tested, belum = fresh); zona <b style="color:var(--muted)">tested digambar lebih redup</b> (garis, dot &amp; label ±55%) supaya langsung beda dari zona fresh yang berwarna penuh; hidup-matikan lewat tombol <b style="color:var(--muted)">ZONA MSNR</b>. <b style="color:var(--muted)">Panel status JSNR</b> berbentuk tabel kecil di pojok kanan atas chart kini diisi <b style="color:var(--muted)">mesin JSNR V1.0 asli</b>: bias storyline W+D, zona BUY/SELL terbaik dengan ★skor rekomendasi, tahap sinyal menunggu → AWAS → DI ZONA → PEMICU → KONFIRMASI, dan baris kaki killzone waktu New York + hitungan sinyal terkonfirmasi/dihapus — hidup-matikan lewat tombol <b style="color:var(--muted)">PANEL</b> atau tombol ✕ di panel, lipat lewat tombol –. Zona yang sedang berada di luar rentang harga terlihat tetap ditandai <b style="color:var(--muted)">label tepi ▲ ZONA DI ATAS / ▼ ZONA DI BAWAH</b> lengkap dengan jarak % dari harga terakhir, jadi tidak pernah “hilang” dari chart. Tombol <b style="color:var(--muted)">LAYAR PENUH</b> memperluas chart memenuhi seluruh layar HP — pan, pinch zoom, crosshair, dinding order, dan zona MSNR tetap bekerja di mode itu. Garis putus-putus teal (bid) / ungu (ask) = <b style="color:var(--muted)">dinding order</b>: diambil dari daftar tumpukan buku jeru <b style="color:var(--muted)">yang sama persis dengan Scanner</b> (kisi harga tetap BTC $50 / XAU $5) dan hanya digambar setelah tumpukannya <b style="color:var(--muted)">bertahan ≥30 detik</b> — order sesaat dari buku dangkal yang berkedip tidak pernah menjadi garis; chip dinding memuat ukuran + <b style="color:var(--muted)">lama bertahan ("awet …")</b> supaya dinding awet langsung beda dari yang baru muncul, dan selama levelnya absen sesaat garisnya memudar (masa tenggang 45 detik), tidak melompat hilang. Posisi gambar dinding &amp; bubble digeser memakai <b style="color:var(--muted)">basis yang dihaluskan</b> (rata-rata bergerak lambat, berubah paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick — nilai basis mentah tetap tampil apa adanya di chip "Basis perp–…" — hidup-matikan lewat tombol DINDING.</div>
   </section>
 
-  <!-- MARKET PANELS -->
-  <div class="tgrid" id="grid"></div>
+  </div><!-- /tp-px -->
 
+  <!-- MARKET PANELS -->
+  <div class="tabpanel" id="tp-dom">
+  <div class="tgrid" id="grid"></div>
+  </div><!-- /tp-dom -->
+
+  <div class="tabpanel" id="tp-scan">
   <!-- SCANNER TUMPUKAN LIKUIDITAS -->
   <section class="panel scanpanel" aria-label="Scanner tumpukan likuiditas">
     <div class="phead">
@@ -541,10 +599,9 @@
       <div class="disc">Scanner melacak level harga tempat order menumpuk paling tebal di <b style="color:var(--muted)">buku JERU khususnya sendiri</b> — langganan l2Book nSigFigs 3 + fast yang selalu aktif (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder panel orderbook, jadi yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%: ukuran berjalan, puncak ukuran selama dilacak, jarak dari mid, dan durasi tumpukan bertahan. Tumpukan dilacak pada kisi harga absolut (BTC $50, XAU $5) dengan ambang dari median yang dihaluskan, dan dipertahankan selama masa tenggang 45 detik setelah terakhir terlihat di buku — di chart bubble-nya memudar, bukan lenyap seketika; ia hanya dihapus bila absen melewati tenggang itu atau ukurannya jatuh di bawah 1,2× median. Dinding besar bisa berarti support/resistance kuat — atau jebakan (spoofing) bila hilang tiba-tiba; selalu konfirmasi dengan Zona Pantau MSNR. Tumpukan terbesar per sisi dari scan jeru yang sama digambar juga di Terminal Analisa sebagai garis putus-putus dinding (tombol DINDING) — tetapi hanya setelah tumpukan itu bertahan ≥30 detik di kisinya, dengan chip berisi ukuran + lama bertahan ("awet …"), jadi yang digambar persis tumpukan awet yang sama dengan yang tampil di Scanner ini, bukan level buku dangkal yang berkedip; dan kolom jarak % menunjukkan seberapa jauh tumpukan itu dari mid.</div>
     </div>
   </section>
-  </div><!-- /desk-main -->
+  </div><!-- /tp-scan -->
 
-  <!-- KISI DESKTOP BAWAH: Zona Pantau JSNR | Setup & Transaksi Terakhir -->
-  <div class="desk-sub">
+  <div class="tabpanel" id="tp-jsnr">
   <!-- ZONA PANTAU -->
   <section class="panel" aria-label="Zona pantau MSNR">
     <div class="phead">
@@ -560,12 +617,74 @@
 
   <!-- SETUP & TRANSAKSI TERAKHIR — panel gabungan dibangun JS ke sini
        (di bawah panel Zona Pantau JSNR, sesuai urutan struktur) -->
+  </div><!-- /tp-jsnr -->
+
+  <!-- SETUP & TRANSAKSI TERAKHIR + WHALE — panel dibangun JS ke sini -->
+  <div class="tabpanel" id="tp-tape">
   <div id="flowSlot"></div>
-  </div><!-- /desk-sub -->
+  </div><!-- /tp-tape -->
+
+  <!-- CVD — ringkesan delta volume saka akumulator trade -->
+  <div class="tabpanel" id="tp-cvd">
+  <section class="panel" aria-label="CVD dan delta volume">
+    <div class="phead">
+      <span class="t">CVD — Volume Delta</span>
+      <span class="r">STREAM TRADE HYPERLIQUID · SESI INI</span>
+    </div>
+    <div id="cvdGroups"></div>
+    <div class="hintline">CVD sesi &amp; delta 5/15 menit dihitung dari akumulator trade sesi ini yang sedang berjalan — direset saat halaman dimuat ulang atau tombol RESET CVD di tab TAPE ditekan.</div>
+  </section>
+  </div><!-- /tp-cvd -->
+
+  <!-- FUND — funding rate & open interest (Gelombang 1) -->
+  <div class="tabpanel" id="tp-fund">
+  <section class="panel" aria-label="Funding dan open interest">
+    <div class="phead">
+      <span class="t">FUND — Funding &amp; Open Interest</span>
+      <span class="r">HYPERLIQUID · PERUBAHAN OI: SWIFTEDGE</span>
+    </div>
+    <div id="fundGroups"></div>
+  </section>
+  </div><!-- /tp-fund -->
+
+  <!-- LIQ — likuidasi nyata (Gelombang 1) -->
+  <div class="tabpanel" id="tp-liq">
+  <section class="panel" aria-label="Likuidasi">
+    <div class="phead">
+      <span class="t">LIQ — Likuidasi</span>
+      <span class="r">SWIFTEDGE · POLL 60 DTK</span>
+    </div>
+    <div id="liqGroups"></div>
+  </section>
+  </div><!-- /tp-liq -->
+
+  <!-- POS — positioning (Gelombang 1) -->
+  <div class="tabpanel" id="tp-pos">
+  <section class="panel" aria-label="Positioning">
+    <div class="phead">
+      <span class="t">POS — Positioning</span>
+      <span class="r">SWIFTEDGE · POLL 60 DTK</span>
+    </div>
+    <div id="posGroups"></div>
+    <div class="hintline">estimasi posisi publik (SwiftEdge)</div>
+  </section>
+  </div><!-- /tp-pos -->
+
+  <!-- KEY — key levels (Gelombang 1) -->
+  <div class="tabpanel" id="tp-key">
+  <section class="panel" aria-label="Key levels">
+    <div class="phead">
+      <span class="t">KEY — Key Levels</span>
+      <span class="r">SWIFTEDGE · POLL 60 DTK</span>
+    </div>
+    <div id="keyGroups"></div>
+  </section>
+  </div><!-- /tp-key -->
+  </div><!-- /tabwrap -->
 
   <footer class="panel">
     <div class="phead"><span class="t">Info</span><span class="r">ANALISA SAJA · BUKAN PERINTAH ORDER</span><button class="infobtn" data-info="footInfo" aria-expanded="false">ⓘ Metodologi &amp; Pasang di HP</button></div>
-    <div class="pbody" style="padding:8px 14px"><span class="note">Orderbook: perpetual Hyperliquid · Candle: BTC Binance Spot, XAU PAXG ≈ spot · Zona: mesin JSNR V1.0.</span></div>
+    <div class="pbody" style="padding:8px 14px"><span class="note">Orderbook: perpetual Hyperliquid · Candle: BTC Binance Spot, XAU PAXG ≈ spot · Zona: mesin JSNR V1.0.</span><br><span class="note">Positioning, likuidasi &amp; key levels: SwiftEdge (swiftedge.uk) · Orderbook &amp; CVD: Hyperliquid · Candle: Binance</span></div>
     <div class="pinfo" id="footInfo" hidden>
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
       <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar candle dari <b>sumber resmi per simbol</b>: untuk <b>BTC, Binance Spot (BTCUSDT)</b> — muat awal dari REST klines resmi Binance (data-api.binance.vision, cadangan api.binance.com) dan candle berjalan dari WebSocket kline resmi Binance (data-stream.binance.vision, cadangan stream.binance.com:9443), jadi bentuk candle persis pasar spot asli; untuk <b>emas, PAXG dari Binance</b> — simbol <b>PAXGUSDT</b> lewat pipa Binance yang sama dengan BTC (REST klines + WebSocket kline resmi); PAXG adalah emas token yang harganya mengikuti spot emas sehingga menjadi proksi spot untuk XAU (label simbol chart tetap XAU), dekat dengan acuan spot OANDA Zona Pantau MSNR — zona tidak digeser dan duduk apa adanya di chart PAXG ≈ spot. Percobaan koneksi TradingView sudah dihapus dari alur muat XAU: server TradingView terbukti menolak koneksi dari halaman ini (WebSocket tutup kode 1006 pada dua varian URL, tercatat di foto diagnostik pengguna). <b>Pembangunan candle lokal dari tick dagang sudah dihapus total</b> — jalur rakitan itulah yang dulu membuat candle tidak beraturan; tick dagang Hyperliquid kini hanya dipakai untuk harga terakhir, CVD, dan panel-panel lain, tidak pernah membentuk atau mengubah candle. Bila sumber utama sebuah simbol gagal tersambung, tidak mengirim candle dalam ±8–10 detik, atau putus di tengah, chart simbol itu <b>otomatis jatuh ke candle RESMI Hyperliquid (cadangan)</b> — hanya snapshot candleSnapshot REST + langganan WebSocket kanal candle resmi exchange, dengan snapshot disinkronkan ulang berkala tiap ±8 detik untuk mengoreksi candle berjalan, tanpa penggabungan rakitan lokal apa pun — dan sumber utama dicoba lagi berkala ±30 detik. Keheningan kline diawasi <b>watchdog khusus</b>: socket Binance yang tetap terbuka tapi tidak mengirim kline lebih dari 10 detik dinyatakan mati dan chart dialihkan ke cadangan saat itu juga (tidak menunggu socket tertutup); baris status menampilkan umur data candle terakhir sebagai <b>“Chart: X dtk lalu”</b> (merah bila &gt;10 detik). Di antara pembaruan kline, garis harga terakhir &amp; close candle tampilan di tepi live mengikuti <b>tick dagang Hyperliquid per tick</b> (tampilan saja, digeser sebesar basis terukur; candle tersimpan tetap murni dari sumber resmi). Mengganti timeframe meminta ulang candle dari sumber aktif untuk interval terpilih (nama interval chart 1m/5m/15m/1H/4H/1D sama dengan nama interval Binance &amp; kanal candle Hyperliquid). Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; sisi kanan chart selalu menyisakan ruang kosong tetap (±8% jendela tampil, 3–14 candle) antara candle terakhir dan sumbu harga ala offset kanan TradingView, jadi harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live dengan ruang kanan standar itu. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar personal yang tersimpan lokal per simbol di perangkat ini (trendline, garis harga, kotak zona personal bertepi emas putus-putus berlabel PERSONAL/nama sendiri) — data candle dari Binance Spot untuk BTC dan PAXG Binance untuk XAU (chip sumber di chart selalu menunjukkan sumber yang sedang aktif per simbol — “BINANCE SPOT” / “PAXG BINANCE ≈ SPOT” — termasuk saat jatuh ke cadangan Hyperliquid). Keselarasan orderbook di chart dijaga dengan <b>basis live terukur</b>: basis = mid perpetual Hyperliquid − mid spot Binance (BTC) atau mid PAXG (XAU, dari close bar terakhir); dinding &amp; bubble yang digambar di chart digeser sebesar basis itu — untuk gambar dipakai versi HALUSnya (rata-rata bergerak lambat dari basis mentah, diperbarui paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick (harga gambar = harga perp − basis halus, label harga bertanda ≈spot; nilai basis mentah tampil apa adanya sebagai chip kecil di area chart dan di label “Sumber:” pada baris DIAGNOSTIK LIVE), sedangkan panel orderbook, ladder, scanner, dan CVD selalu memakai harga perpetual Hyperliquid asli tanpa digeser. Label “Sumber:” menggantikan kolom TV lama — percobaan TradingView tidak lagi ditampilkan karena tidak lagi dilakukan. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
@@ -587,7 +706,7 @@ var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, re
 var chart={ sym:"btc", tf:300, itv:"15m", viewMode:"analisa", ema:true, vwap:false, vol:true, rsi:false, macd:false, walls:true, zones:true, bubbles:true, panel:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
-MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
+MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, cvdLog:[], cvdSeries:[], el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
 
 /* ============ MARKING PERSONAL PERSISTEN (localStorage, per simbol) ============
    Gambar pengguna (garis tren, garis harga, kotak zona personal)
@@ -726,9 +845,9 @@ MARKETS.forEach(function(m){
     '<span class="deff" data-f="depthEff">AUTO → SEDANG · IKUT TF 15M</span>'+
     '<span class="drange" data-f="depthRange">JANGKAUAN —</span></div>'+
     '<div class="bookhead"><span>Harga</span><span>Ukuran ('+m.unit+')</span><span>Kumulatif</span></div>'+
-    '<div data-f="asks"></div>'+
+    '<div class="bookscroll"><div data-f="asks"></div></div>'+
     '<div class="midrow"><span class="mid" data-f="midRow">MID —</span><span data-f="spreadRow" style="color:var(--muted)">SPREAD —</span></div>'+
-    '<div data-f="bids"></div>'+
+    '<div class="bookscroll"><div data-f="bids"></div></div>'+
     '<div class="empty" data-f="empty">MENUNGGU DATA ORDERBOOK…</div>';
   grid.appendChild(sec);
   M[m.id].el=sec;
@@ -743,7 +862,8 @@ MARKETS.forEach(function(m){
 var flowSec=document.createElement("section");
 flowSec.className="panel"; flowSec.id="flowPanel";
 flowSec.setAttribute("aria-label","Setup teknikal dan transaksi terakhir");
-flowSec.innerHTML='<div class="phead"><span class="t">Setup &amp; Transaksi Terakhir</span><span class="r">ANALISA ORDERBOOK · BUKAN PERINTAH ORDER</span></div>';
+flowSec.innerHTML='<div class="phead"><span class="t">Setup &amp; Transaksi Terakhir</span><span class="r">ANALISA ORDERBOOK · BUKAN PERINTAH ORDER</span></div>'+
+  '<div class="whaleblock"><div class="zgh"><span class="a">WHALE — TRADE BESAR SESI INI</span><span class="b">BTC ≥ $250 RB · XAU ≥ $100 RB</span></div><div class="whalelist" id="whaleList"><div class="scanempty">durung ana trade gedhe sesi iki</div></div></div>';
 MARKETS.forEach(function(m){
   var fg=document.createElement("div"); fg.className="flowgroup";
   fg.innerHTML='<div class="zgh"><span class="a">'+m.name+' — SETUP TEKNIKAL</span><span class="b">SKOR: IMBALANCE + CVD + DINDING</span></div>'+
@@ -755,7 +875,7 @@ MARKETS.forEach(function(m){
   flowSec.appendChild(fg);
   M[m.id].flowEl=fg;
   fg.querySelector('[data-act="reset"]').addEventListener("click",function(){
-    var s=M[m.id]; s.cvd=0; s.cvdN=0; s.trades=[]; render(m.id);
+    var s=M[m.id]; s.cvd=0; s.cvdN=0; s.trades=[]; s.cvdLog=[]; s.cvdSeries=[]; render(m.id); renderCvd();
   });
 });
 var flowSlot=$("flowSlot"); if(flowSlot) flowSlot.appendChild(flowSec);
@@ -975,6 +1095,10 @@ function applyTrade(id,t){
   if(!tr.px||!tr.sz) return;
   s.trades.unshift(tr); if(s.trades.length>10) s.trades.length=10;
   s.cvd += tr.buy? tr.sz : -tr.sz; s.cvdN++;
+  /* akumulator CVD (delta 5/15 menit + seri sparkline tab CVD) lan
+     tangkapan WHALE (tab TAPE) — loro-lorone saka stream trade sing
+     padha, di-isolasi try/catch ing njero fungsine dhewe */
+  noteCvd(id,tr); noteWhale(id,tr);
   /* trade tick TIDAK lagi membentuk/memodifikasi candle — candle hanya
      dari sumber resmi (Binance Spot untuk BTC, PAXG Binance untuk XAU,
      kanal candle resmi Hyperliquid saat cadangan). Tick dagang hanya
@@ -1011,6 +1135,7 @@ function fetchRecentTrades(){
         var tr={px:+t.px,sz:+t.sz,buy:(t.side==="B"),time:t.time||Date.now()};
         if(tr.px&&tr.sz && !s.trades.some(function(x){return x.time===tr.time&&x.px===tr.px&&x.sz===tr.sz;})){
           s.trades.unshift(tr); s.cvd+= tr.buy? tr.sz:-tr.sz; s.cvdN++;
+          noteCvd(m.id,tr); noteWhale(m.id,tr);
         }
       });
       s.trades=s.trades.slice(0,10); render(m.id);
@@ -1194,6 +1319,10 @@ function flushRender(){
   var ids=Object.keys(dirtyBook); dirtyBook={};
   ids.forEach(function(id){ render(id); });
   if(ids.length) markUpdated();
+  /* panel tab CVD & WHALE melu dianyari saka aliran trade sing padha —
+     di-isolasi supaya kesalahan ing kana ora ngganggu render utama */
+  try{ renderCvd(); }catch(e){}
+  if(whaleDirty){ whaleDirty=false; try{ renderWhales(); }catch(e){} }
   if(chartDirty){ chartDirty=false; drawChart(); }
 }
 
@@ -3596,12 +3725,407 @@ if(btnFoldEl) btnFoldEl.addEventListener("click",function(){
   try{ localStorage.setItem("obHeaderCollapsed", now? "1":"0"); }catch(e){}
 });
 
+/* ============ PANEL GELOMBANG 1 + CVD + WHALE + MODEL TAB ============
+   Kabeh panel anyar DI-ISOLASI: saben sumber data dibungkus try/catch
+   dhewe; gagal mung nampilake tulisan kalem "data durung kasedhiya"
+   ing bagean kuwi wae — ora tau mbuwang error sing ngendeg panel
+   liyane, stream utama, utawa etungan JSNR. Ganti tab uga ora mateni
+   stream/etungan apa wae: sing diganti mung tampilan (display). */
+var SE_API="https://swiftedge.uk/api/v1/";
+function seGet(path){
+  return fetch(SE_API+path).then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); });
+}
+function seMarket(id){ return id==="gold"? "gold" : "btc"; }
+function escHtml(s){ return String(s==null? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function fmtUsd(v){
+  if(v==null||!isFinite(v)) return "—";
+  var a=Math.abs(v), s= v<0? "−$" : "$";
+  if(a>=1e9) return s+(a/1e9).toFixed(2).replace(".",",")+" M";
+  if(a>=1e6) return s+(a/1e6).toFixed(2).replace(".",",")+" jt";
+  if(a>=1e3) return s+(a/1e3).toFixed(1).replace(".",",")+" rb";
+  return s+fmt(a,0);
+}
+function fmtPct(v,dec){ if(v==null||!isFinite(v)) return "—"; return (v>=0? "+" : "")+Number(v).toFixed(dec==null? 2 : dec).replace(".",",")+"%"; }
+function jstTime(ts){
+  try{ return new Date(ts).toLocaleTimeString("id-ID",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; }
+}
+
+/* ---- akumulator CVD: log delta 20 menit + seri kumulatif sesi ----
+   Diisi noteCvd() saka applyTrade & fetchRecentTrades (stream trade
+   sing wis ana) — dadi delta 5/15 menit & sparkline tab CVD iku data
+   sesi nyata, dudu karangan. */
+function noteCvd(id,tr){
+  var s=M[id]; if(!s||!tr) return;
+  if(!s.cvdLog) s.cvdLog=[];
+  if(!s.cvdSeries) s.cvdSeries=[];
+  s.cvdLog.push({t:tr.time||Date.now(), d: tr.buy? tr.sz : -tr.sz});
+  var cut=Date.now()-20*60000;
+  while(s.cvdLog.length&&s.cvdLog[0].t<cut) s.cvdLog.shift();
+  var lastS=s.cvdSeries[s.cvdSeries.length-1];
+  if(!lastS||(tr.time||0)-lastS.t>=1000){
+    s.cvdSeries.push({t:tr.time||Date.now(), v:s.cvd});
+    if(s.cvdSeries.length>900) s.cvdSeries.splice(0,s.cvdSeries.length-900);
+  }
+}
+function cvdDelta(id,winMs){
+  var s=M[id]; if(!s||!s.cvdLog) return 0;
+  var cut=Date.now()-winMs, sum=0;
+  for(var i=s.cvdLog.length-1;i>=0;i--){ if(s.cvdLog[i].t<cut) break; sum+=s.cvdLog[i].d; }
+  return sum;
+}
+var cvdEls={};
+(function buildCvdGroups(){
+  var host=$("cvdGroups"); if(!host) return;
+  MARKETS.forEach(function(mk){
+    var g=document.createElement("div"); g.className="wgroup";
+    g.innerHTML='<div class="zgh"><span class="a">'+mk.name+' — CVD</span><span class="b" data-f="tn">0 trade sesi ini</span></div>'+
+      '<div class="kvgrid">'+
+      '<div class="kv"><div class="k">CVD Sesi</div><div class="v" data-f="sess">—</div></div>'+
+      '<div class="kv"><div class="k">Delta 5 Menit</div><div class="v" data-f="d5">—</div></div>'+
+      '<div class="kv"><div class="k">Delta 15 Menit</div><div class="v" data-f="d15">—</div></div>'+
+      '</div>'+
+      '<canvas class="cvdspark" data-f="spark" width="300" height="44" aria-label="Grafik CVD sesi"></canvas>';
+    host.appendChild(g); cvdEls[mk.id]=g;
+  });
+})();
+function cvdCell(el,val,mk){
+  if(!el) return;
+  el.textContent=(val>0? "+" : val<0? "−" : "")+fmt(Math.abs(val),mk.szDec)+" "+mk.unit;
+  el.style.color= val>0? "var(--jsnr-buy)" : val<0? "var(--jsnr-sell)" : "inherit";
+}
+function renderCvd(){
+  MARKETS.forEach(function(mk){
+    var s=M[mk.id], g=cvdEls[mk.id]; if(!g||!s) return;
+    cvdCell(f(g,"sess"), s.cvd, mk);
+    cvdCell(f(g,"d5"), cvdDelta(mk.id,5*60000), mk);
+    cvdCell(f(g,"d15"), cvdDelta(mk.id,15*60000), mk);
+    var tn=f(g,"tn"); if(tn) tn.textContent=s.cvdN.toLocaleString("id-ID")+" trade sesi ini";
+    /* sparkline saka seri kumulatif CVD sesi (data nyata akumulator) */
+    var cvs=f(g,"spark");
+    if(cvs&&cvs.clientWidth&&s.cvdSeries&&s.cvdSeries.length>1){
+      var dpr=window.devicePixelRatio||1, W=cvs.clientWidth, H=44;
+      if(cvs.width!==Math.round(W*dpr)||cvs.height!==Math.round(H*dpr)){ cvs.width=Math.round(W*dpr); cvs.height=Math.round(H*dpr); }
+      var cx2=cvs.getContext("2d"); if(!cx2) return;
+      cx2.setTransform(dpr,0,0,dpr,0,0);
+      cx2.clearRect(0,0,W,H);
+      var mn=Infinity, mx=-Infinity;
+      s.cvdSeries.forEach(function(p){ if(p.v<mn) mn=p.v; if(p.v>mx) mx=p.v; });
+      if(!(mx-mn>1e-9)){ mx+=1; mn-=1; }
+      var t0=s.cvdSeries[0].t, t1=s.cvdSeries[s.cvdSeries.length-1].t; if(t1<=t0) t1=t0+1;
+      cx2.beginPath();
+      s.cvdSeries.forEach(function(p,i){
+        var x=(p.t-t0)/(t1-t0)*(W-8)+4, y=4+(1-(p.v-mn)/(mx-mn))*(H-8);
+        if(i===0) cx2.moveTo(x,y); else cx2.lineTo(x,y);
+      });
+      cx2.strokeStyle= s.cvd>=0? "#20e3a2" : "#ff4d6a"; cx2.lineWidth=1.4; cx2.stroke();
+    }
+  });
+}
+
+/* ---- WHALE: trade gedhe saka stream trade sing wis ana ---- */
+var whales=[], whaleDirty=false;
+var WHALE_MIN={ btc:250000, gold:100000 };
+function noteWhale(id,tr){
+  if(!tr) return;
+  var usd=tr.px*tr.sz, th=WHALE_MIN[id];
+  if(!th||!(usd>=th)) return;
+  whales.unshift({t:tr.time||Date.now(), id:id, buy:!!tr.buy, px:tr.px, usd:usd});
+  if(whales.length>20) whales.length=20;
+  whaleDirty=true;
+}
+function renderWhales(){
+  var host=$("whaleList"); if(!host) return;
+  if(!whales.length){ host.innerHTML='<div class="scanempty">durung ana trade gedhe sesi iki</div>'; return; }
+  var html="";
+  whales.forEach(function(w){
+    var mk=M[w.id].def;
+    html+='<div class="wrow"><span class="wt">'+jstTime(w.t)+'</span><span class="wsym">'+(w.id==="gold"? "XAU" : "BTC")+'</span><span class="'+(w.buy? "lg-short" : "lg-long")+'">'+(w.buy? "BUY" : "SELL")+'</span><span class="wp">$'+fmt(w.px,mk.dec)+'</span><span class="wu">'+fmtUsd(w.usd)+'</span></div>';
+  });
+  host.innerHTML=html;
+}
+
+/* ---- FUND: funding & OI Hyperliquid (poll 30 dtk) + owahan OI SwiftEdge ---- */
+var fundEls={};
+(function buildFundGroups(){
+  var host=$("fundGroups"); if(!host) return;
+  MARKETS.forEach(function(mk){
+    var g=document.createElement("div"); g.className="wgroup";
+    g.innerHTML='<div class="zgh"><span class="a">'+mk.name+' — FUNDING &amp; OPEN INTEREST</span><span class="b" data-f="upd">—</span></div>'+
+      '<div class="kvgrid">'+
+      '<div class="kv"><div class="k">Funding / Jam</div><div class="v" data-f="f1h">—</div></div>'+
+      '<div class="kv"><div class="k">Funding 8 Jam</div><div class="v" data-f="f8h">—</div></div>'+
+      '<div class="kv"><div class="k">Open Interest</div><div class="v" data-f="oi">—</div></div>'+
+      '<div class="kv"><div class="k">Open Interest USD</div><div class="v" data-f="oiusd">—</div></div>'+
+      '<div class="kv"><div class="k">Volume 24 Jam</div><div class="v" data-f="vol">—</div></div>'+
+      '<div class="kv"><div class="k">Premium</div><div class="v" data-f="prem">—</div></div>'+
+      '<div class="kv"><div class="k">Δ OI 1 Jam</div><div class="v" data-f="oi1">—</div></div>'+
+      '<div class="kv"><div class="k">Δ OI 4 Jam</div><div class="v" data-f="oi4">—</div></div>'+
+      '<div class="kv"><div class="k">Δ OI 24 Jam</div><div class="v" data-f="oi24">—</div></div>'+
+      '</div>'+
+      '<div class="scanempty" data-f="nodata" hidden>data durung kasedhiya</div>';
+    host.appendChild(g); fundEls[mk.id]=g;
+  });
+})();
+function applyFundCtx(id,name,d){
+  try{
+    if(!Array.isArray(d)||!d[0]||!Array.isArray(d[0].universe)||!Array.isArray(d[1])) return;
+    var idx=-1;
+    d[0].universe.forEach(function(u,i){ if(u&&u.name===name) idx=i; });
+    if(idx<0||!d[1][idx]) return;
+    var c=d[1][idx], g=fundEls[id]; if(!g) return;
+    var mk=M[id].def;
+    function set(nm,txt,col){ var el=f(g,nm); if(el){ el.textContent=txt; if(col) el.style.color=col; } }
+    var fr=parseFloat(c.funding), oi=parseFloat(c.openInterest), mark=parseFloat(c.markPx);
+    if(isFinite(fr)){ var fc= fr>=0? "var(--jsnr-buy)" : "var(--jsnr-sell)"; set("f1h",fmtPct(fr*100,4),fc); set("f8h",fmtPct(fr*800,4),fc); }
+    if(isFinite(oi)) set("oi",fmt(oi,mk.szDec)+" "+mk.unit);
+    if(isFinite(oi)&&isFinite(mark)) set("oiusd",fmtUsd(oi*mark));
+    var vol=parseFloat(c.dayNtlVlm); if(isFinite(vol)) set("vol",fmtUsd(vol));
+    var prem=parseFloat(c.premium); if(isFinite(prem)) set("prem",fmtPct(prem*100,3));
+    var nd=f(g,"nodata"); if(nd) nd.hidden=true;
+    var up=f(g,"upd"); if(up) up.textContent="UPDATE "+jstNow();
+  }catch(e){}
+}
+function fundFail(id){ var g=fundEls[id]; if(!g) return; var nd=f(g,"nodata"); if(nd) nd.hidden=false; }
+function applyFundOi(id,d){
+  try{
+    if(!d||!d.open_interest) return;
+    var g=fundEls[id]; if(!g) return;
+    var oi=d.open_interest;
+    function set(nm,v){ var el=f(g,nm); if(el&&v!=null&&isFinite(+v)){ el.textContent=fmtPct(+v,2); el.style.color= (+v)>=0? "var(--jsnr-buy)" : "var(--jsnr-sell)"; } }
+    set("oi1",oi.change_1h_pct); set("oi4",oi.change_4h_pct); set("oi24",oi.change_24h_pct);
+  }catch(e){}
+}
+function fetchFund(){
+  /* BTC saka dex utama Hyperliquid; xyz:GOLD ana ing dex "xyz" —
+     saben panjaluk di-isolasi, gagal siji ora ngganggu liyane */
+  try{ postInfo({type:"metaAndAssetCtxs"}).then(function(d){ applyFundCtx("btc","BTC",d); }).catch(function(){ fundFail("btc"); }); }catch(e){}
+  try{ postInfo({type:"metaAndAssetCtxs",dex:"xyz"}).then(function(d){ applyFundCtx("gold","xyz:GOLD",d); }).catch(function(){ fundFail("gold"); }); }catch(e){}
+  MARKETS.forEach(function(mk){
+    try{ seGet("funding-and-open-interest?market="+seMarket(mk.id)).then(function(d){ applyFundOi(mk.id,d); }).catch(function(){}); }catch(e){}
+  });
+}
+
+/* ---- LIQ: likuidasi nyata SwiftEdge (poll 60 dtk) ---- */
+var liqEls={};
+(function buildLiqGroups(){
+  var host=$("liqGroups"); if(!host) return;
+  MARKETS.forEach(function(mk){
+    var g=document.createElement("div"); g.className="wgroup";
+    g.innerHTML='<div class="zgh"><span class="a">'+mk.name+' — LIKUIDASI <span data-f="range"></span></span><span class="b" data-f="upd">—</span></div>'+
+      '<div class="liqsum">'+
+      '<div class="liqbox"><div class="k">Long Kalikuidasi</div><div class="v" style="color:var(--jsnr-sell)" data-f="longUsd">—</div><div class="s" data-f="longN"></div></div>'+
+      '<div class="liqbox"><div class="k">Short Kalikuidasi</div><div class="v" style="color:var(--jsnr-buy)" data-f="shortUsd">—</div><div class="s" data-f="shortN"></div></div>'+
+      '</div>'+
+      '<div class="sk2">LIKUIDASI TERBESAR</div>'+
+      '<div class="liqlist" data-f="list"><div class="scanempty">data durung kasedhiya</div></div>';
+    host.appendChild(g); liqEls[mk.id]=g;
+  });
+})();
+function applyLiq(id,d){
+  try{
+    if(!d) return;
+    var g=liqEls[id]; if(!g) return;
+    var mk=M[id].def;
+    var rg=f(g,"range"); if(rg) rg.textContent= d.hours? "· "+d.hours+" JAM TERAKHIR" : "";
+    var lu=f(g,"longUsd"); if(lu) lu.textContent=fmtUsd(+d.longs_liquidated_usd);
+    var su=f(g,"shortUsd"); if(su) su.textContent=fmtUsd(+d.shorts_liquidated_usd);
+    var ln=f(g,"longN"); if(ln) ln.textContent= d.longs_count!=null? d.longs_count+" posisi" : "";
+    var sn=f(g,"shortN"); if(sn) sn.textContent= d.shorts_count!=null? d.shorts_count+" posisi" : "";
+    var list=f(g,"list");
+    if(list){
+      var arr=Array.isArray(d.largest)? d.largest.slice(0,10) : [];
+      if(!arr.length){ list.innerHTML='<div class="scanempty">data durung kasedhiya</div>'; }
+      else{
+        var html="";
+        arr.forEach(function(x){
+          var isLong= String(x.position||"").toLowerCase()==="long";
+          html+='<div class="lrow"><span class="wt">'+jstTime(x.time)+'</span><span class="'+(isLong? "lg-long" : "lg-short")+'">'+(isLong? "LONG" : "SHORT")+'</span><span class="wp">$'+fmt(+x.price,mk.dec)+'</span><span class="wu">'+fmtUsd(+x.usd)+'</span></div>';
+        });
+        list.innerHTML=html;
+      }
+    }
+    var up=f(g,"upd"); if(up) up.textContent="UPDATE "+jstNow();
+  }catch(e){}
+}
+function liqFail(id){ var g=liqEls[id]; if(!g) return; var list=f(g,"list"); if(list) list.innerHTML='<div class="scanempty">data durung kasedhiya</div>'; }
+
+/* ---- POS: positioning SwiftEdge snapshot + heatmap (poll 60 dtk) ---- */
+var posEls={};
+(function buildPosGroups(){
+  var host=$("posGroups"); if(!host) return;
+  MARKETS.forEach(function(mk){
+    var g=document.createElement("div"); g.className="wgroup";
+    g.innerHTML='<div class="zgh"><span class="a">'+mk.name+' — POSITIONING</span><span class="b" data-f="upd">—</span></div>'+
+      '<div data-f="walls"><div class="scanempty">data durung kasedhiya</div></div>'+
+      '<div class="sk2">LIKUIDASI DEKAT HARGA</div>'+
+      '<div class="kvgrid">'+
+      '<div class="kv"><div class="k">Long di Bawah · 1%</div><div class="v" data-f="lb1">—</div></div>'+
+      '<div class="kv"><div class="k">Short di Atas · 1%</div><div class="v" data-f="sa1">—</div></div>'+
+      '<div class="kv"><div class="k">Long di Bawah · 2%</div><div class="v" data-f="lb2">—</div></div>'+
+      '<div class="kv"><div class="k">Short di Atas · 2%</div><div class="v" data-f="sa2">—</div></div>'+
+      '<div class="kv"><div class="k">Long di Bawah · 5%</div><div class="v" data-f="lb5">—</div></div>'+
+      '<div class="kv"><div class="k">Short di Atas · 5%</div><div class="v" data-f="sa5">—</div></div>'+
+      '</div>'+
+      '<div class="sk2">DINDING ORDERBOOK TERBESAR (SNAPSHOT)</div>'+
+      '<div data-f="bigwalls"><div class="scanempty">data durung kasedhiya</div></div>'+
+      '<div class="sk2">KLASTER LIKUIDASI TERBESAR (HEATMAP)</div>'+
+      '<div data-f="clusters"><div class="scanempty">data durung kasedhiya</div></div>';
+    host.appendChild(g); posEls[mk.id]=g;
+  });
+})();
+function posRow(label,px,cur,dec){
+  var dist= (cur&&px)? (px/cur-1)*100 : null;
+  return '<div class="prow"><span class="pk">'+label+'</span><span class="pv">$'+fmt(px,dec)+'</span><span class="pd">'+(dist==null? "—" : fmtPct(dist,2))+'</span></div>';
+}
+function applyPosSnap(id,d){
+  try{
+    if(!d) return;
+    var g=posEls[id]; if(!g) return;
+    var mk=M[id].def, cur=+d.price_usd;
+    var pos=d.positioning||{};
+    var w=f(g,"walls");
+    if(w){
+      var html="";
+      if(pos.upper_wall!=null) html+=posRow("Upper Wall",+pos.upper_wall,cur,mk.dec);
+      if(pos.flip!=null) html+=posRow("Flip",+pos.flip,cur,mk.dec);
+      if(pos.lower_wall!=null) html+=posRow("Lower Wall",+pos.lower_wall,cur,mk.dec);
+      w.innerHTML= html|| '<div class="scanempty">data durung kasedhiya</div>';
+    }
+    var nb=d.liquidations_nearby||{}, lb=nb.longs_below_price_usd||{}, sa=nb.shorts_above_price_usd||{};
+    function set(nm,v){ var el=f(g,nm); if(el) el.textContent=fmtUsd(v==null? null : +v); }
+    set("lb1",lb.within_1pct); set("lb2",lb.within_2pct); set("lb5",lb.within_5pct);
+    set("sa1",sa.within_1pct); set("sa2",sa.within_2pct); set("sa5",sa.within_5pct);
+    var bw=f(g,"bigwalls");
+    if(bw&&d.order_book_walls){
+      var bh="";
+      var bb=(d.order_book_walls.bids||[])[0], ba=(d.order_book_walls.asks||[])[0];
+      if(bb) bh+='<div class="prow"><span class="pk" style="color:var(--jsnr-buy)">Bid terbesar</span><span class="pv">$'+fmt(+bb.price,mk.dec)+'</span><span class="pd">'+fmtUsd(+bb.size_usd)+'</span></div>';
+      if(ba) bh+='<div class="prow"><span class="pk" style="color:var(--jsnr-sell)">Ask terbesar</span><span class="pv">$'+fmt(+ba.price,mk.dec)+'</span><span class="pd">'+fmtUsd(+ba.size_usd)+'</span></div>';
+      if(bh) bw.innerHTML=bh;
+    }
+    var up=f(g,"upd"); if(up) up.textContent=(isFinite(cur)&&cur>0? "HARGA $"+fmt(cur,mk.dec)+" · " : "")+"UPDATE "+jstNow();
+  }catch(e){}
+}
+function applyPosHeat(id,d){
+  try{
+    if(!d) return;
+    var g=posEls[id]; if(!g) return;
+    var mk=M[id].def;
+    var host=f(g,"clusters"); if(!host) return;
+    var a=(d.largest_short_clusters_above||[])[0], b=(d.largest_long_clusters_below||[])[0];
+    var html="";
+    if(a) html+='<div class="prow"><span class="pk" style="color:var(--jsnr-sell)">Short di atas</span><span class="pv">$'+fmt(+a.price,mk.dec)+'</span><span class="pd">'+fmtUsd(+a.estimated_usd)+' · '+fmtPct(+a.distance_pct,2)+'</span></div>';
+    if(b) html+='<div class="prow"><span class="pk" style="color:var(--jsnr-buy)">Long di bawah</span><span class="pv">$'+fmt(+b.price,mk.dec)+'</span><span class="pd">'+fmtUsd(+b.estimated_usd)+' · '+fmtPct(+b.distance_pct,2)+'</span></div>';
+    host.innerHTML= html|| '<div class="scanempty">data durung kasedhiya</div>';
+  }catch(e){}
+}
+function posFail(id){ var g=posEls[id]; if(!g) return; var w=f(g,"walls"); if(w) w.innerHTML='<div class="scanempty">data durung kasedhiya</div>'; }
+
+/* ---- KEY: key levels SwiftEdge (poll 60 dtk) ---- */
+var keyEls={};
+(function buildKeyGroups(){
+  var host=$("keyGroups"); if(!host) return;
+  MARKETS.forEach(function(mk){
+    var g=document.createElement("div"); g.className="wgroup";
+    g.innerHTML='<div class="zgh"><span class="a">'+mk.name+' — KEY LEVELS</span><span class="b" data-f="upd">—</span></div>'+
+      '<div class="sk2 ask">DI ATAS HARGA — RESISTANCE</div>'+
+      '<div class="keylist" data-f="above"><div class="scanempty">data durung kasedhiya</div></div>'+
+      '<div class="sk2 bid">DI BAWAH HARGA — SUPPORT</div>'+
+      '<div class="keylist" data-f="below"><div class="scanempty">data durung kasedhiya</div></div>';
+    host.appendChild(g); keyEls[mk.id]=g;
+  });
+})();
+function keyRows(arr,mk){
+  if(!Array.isArray(arr)||!arr.length) return '<div class="scanempty">data durung kasedhiya</div>';
+  var a=arr.slice().sort(function(x,y){ return Math.abs(+x.distance_pct||0)-Math.abs(+y.distance_pct||0); });
+  var html="";
+  a.forEach(function(x){
+    html+='<div class="krow"><span class="kp">$'+fmt(+x.price,mk.dec)+'</span><span class="kn">'+escHtml(x.level)+'</span><span class="kd">'+fmtPct(+x.distance_pct,2)+'</span></div>';
+  });
+  return html;
+}
+function applyKey(id,d){
+  try{
+    if(!d) return;
+    var g=keyEls[id]; if(!g) return;
+    var mk=M[id].def;
+    var ab=f(g,"above"); if(ab) ab.innerHTML=keyRows(d.above,mk);
+    var bl=f(g,"below"); if(bl) bl.innerHTML=keyRows(d.below,mk);
+    var up=f(g,"upd");
+    if(up) up.textContent=(d.price_usd? "HARGA $"+fmt(+d.price_usd,mk.dec)+" · " : "")+"UPDATE "+jstNow();
+  }catch(e){}
+}
+function keyFail(id){
+  var g=keyEls[id]; if(!g) return;
+  var ab=f(g,"above"); if(ab) ab.innerHTML='<div class="scanempty">data durung kasedhiya</div>';
+  var bl=f(g,"below"); if(bl) bl.innerHTML='<div class="scanempty">data durung kasedhiya</div>';
+}
+function fetchWave1Slow(){
+  MARKETS.forEach(function(mk){
+    try{ seGet("liquidations?market="+seMarket(mk.id)).then(function(d){ applyLiq(mk.id,d); }).catch(function(){ liqFail(mk.id); }); }catch(e){}
+    try{ seGet("snapshot?market="+seMarket(mk.id)).then(function(d){ applyPosSnap(mk.id,d); }).catch(function(){ posFail(mk.id); }); }catch(e){}
+    try{ seGet("liquidation-heatmap?market="+seMarket(mk.id)).then(function(d){ applyPosHeat(mk.id,d); }).catch(function(){}); }catch(e){}
+    try{ seGet("key-levels?market="+seMarket(mk.id)).then(function(d){ applyKey(mk.id,d); }).catch(function(){ keyFail(mk.id); }); }catch(e){}
+  });
+}
+/* poller panel Gelombang 1 — mlaku terus ing latar (ora peduli tab
+   aktif), mung leren nalika kaca didhelikne */
+fetchFund();
+fetchWave1Slow();
+setInterval(function(){ if(!document.hidden) fetchFund(); },30000);
+setInterval(function(){ if(!document.hidden) fetchWave1Slow(); },60000);
+setInterval(function(){ if(!document.hidden){ try{ renderCvd(); }catch(e){} } },5000);
+
+/* ---- COUNTDOWN tutup candle (header panel PX), dianyari saben detik ---- */
+function updateCountdown(){
+  var el=$("cdTime"); if(!el) return;
+  var ms=ITV_MS[chart.itv]||900000;
+  var s=Math.ceil(Math.max(0,ms-(Date.now()%ms))/1000);
+  var hh=Math.floor(s/3600), mm=Math.floor((s%3600)/60), ss=s%60;
+  function p2(n){ return (n<10? "0" : "")+n; }
+  el.textContent= hh>0? p2(hh)+":"+p2(mm)+":"+p2(ss) : p2(mm)+":"+p2(ss);
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+/* ---- MODEL TAB ----
+   Pilihan tab disimpen ing localStorage (obhp_tab_v1) lan dibalekne
+   pas aplikasi dibukak maneh. Mlebu maneh tab PX sawise didhelikne:
+   chart WAJIB digambar ulang + di-resize (ukuran canvas 0 nalika
+   display:none) — digambar liwat rAF + rong gambar susulan, lan
+   widget OANDA digawe ulang nek mode kuwi sing lagi aktif. */
+var TAB_KEY="obhp_tab_v1";
+var TAB_NAMES=["px","dom","scan","jsnr","tape","cvd","fund","liq","pos","key"];
+function setTab(name){
+  if(TAB_NAMES.indexOf(name)<0) name="px";
+  TAB_NAMES.forEach(function(t){
+    var p=$("tp-"+t); if(p) p.classList.toggle("on", t===name);
+    document.querySelectorAll('[data-tab="'+t+'"]').forEach(function(b){ b.setAttribute("aria-pressed", t===name? "true" : "false"); });
+  });
+  try{ localStorage.setItem(TAB_KEY,name); }catch(e){}
+  var ab=document.querySelector('[data-tab="'+name+'"]');
+  if(ab&&ab.scrollIntoView){ try{ ab.scrollIntoView({block:"nearest",inline:"center"}); }catch(e){} }
+  if(name==="px"){
+    requestAnimationFrame(function(){ drawChart(); });
+    setTimeout(drawChart,150);
+    setTimeout(drawChart,500);
+    if(chart.viewMode==="oanda") buildTvWidget();
+  }
+  if(name==="cvd"){ try{ renderCvd(); }catch(e){} }
+}
+document.querySelectorAll("[data-tab]").forEach(function(b){
+  b.addEventListener("click",function(){ setTab(b.getAttribute("data-tab")); });
+});
+
 /* ============ boot ============ */
 setChartSym("btc");
 ensureJsnr("gold");
 MARKETS.forEach(function(m){ updateDepthUI(m.id); });
 fetchAllCandles();
 setMode("live");
+/* balekne tab terakhir sing dipilih pengguna (bawaan PX) */
+var savedTab="px"; try{ savedTab=localStorage.getItem(TAB_KEY)||"px"; }catch(e){}
+setTab(savedTab);
 /* RESYNC CADANGAN: selama sebuah simbol berada di mode cadangan
    Hyperliquid ("hl"), snapshot candleSnapshot resmi ditarik ulang
    tiap ±8 detik untuk mengoreksi candle berjalan — satu-satunya
