@@ -48,6 +48,14 @@
   .btn{border:0;border-radius:999px;background:var(--teal);color:#04120c;font-weight:700;font-size:12.5px;padding:0 18px;cursor:pointer;letter-spacing:.02em;box-shadow:0 0 14px rgba(46,230,168,.22)}
   .btn:active{filter:brightness(1.12)}
   .btn.ghost{background:var(--panel2);border:1px solid var(--line);color:var(--muted);box-shadow:none}
+  .verlabel{border:1px solid var(--gold);color:var(--gold);background:rgba(232,195,58,.08);border-radius:999px;padding:3px 9px;font-size:10.5px;font-weight:800;letter-spacing:.04em;white-space:nowrap;font-variant-numeric:tabular-nums}
+  /* ===== diagnostik live ===== */
+  .diagbar{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding:7px 12px;background:#0a1220;border-bottom:1px solid var(--line);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:11.5px;color:var(--muted)}
+  .diagbar .diag-title{color:var(--ink);font-weight:800;letter-spacing:.1em;font-size:10.5px;font-family:-apple-system,"Segoe UI",Roboto,sans-serif}
+  .diagbar b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .diagbar .ws-on{color:var(--teal)}
+  .diagbar .ws-off{color:#f87171}
+  .diagbar .sep{color:var(--dim)}
   /* ===== ticker cards ===== */
   .ticker{display:flex;flex-wrap:wrap;gap:10px;padding:12px 12px 0;background:transparent}
   .tick{flex:1;min-width:170px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);display:flex;flex-direction:column;gap:1px}
@@ -217,7 +225,7 @@
 
   <!-- COMMAND BAR -->
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span></div>
+    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 12:28 JST</span></div>
     <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
     <div class="cell grow">
       <span id="updatedText">UPDATE: —</span>
@@ -227,6 +235,20 @@
       </div>
       <button class="btn" id="btnRefresh">↻ REFRESH</button>
     </div>
+  </div>
+
+  <!-- DIAGNOSTIK LIVE — bukti aliran WebSocket di layar -->
+  <div class="diagbar" id="diagBar" aria-label="Diagnostik live WebSocket">
+    <span class="diag-title">DIAGNOSTIK LIVE</span>
+    <span>WS: <b id="diagWs" class="ws-off">PUTUS</b></span>
+    <span class="sep">·</span>
+    <span>Tick terakhir: <b id="diagLast">—</b></span>
+    <span class="sep">·</span>
+    <span>BTC: <b id="diagBtcRate">0,0</b> msg/dtk <span style="color:var(--dim)">(tick <b id="diagBtcLast" style="color:var(--muted)">—</b>)</span></span>
+    <span class="sep">·</span>
+    <span>XAU: <b id="diagGoldRate">0,0</b> msg/dtk <span style="color:var(--dim)">(tick <b id="diagGoldLast" style="color:var(--muted)">—</b>)</span></span>
+    <span class="sep">·</span>
+    <span>Total tick sesi: <b id="diagTicks">0</b></span>
   </div>
 
   <!-- TICKER STRIP -->
@@ -342,7 +364,7 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
       <p>Scanner Tumpukan melacak semua level buku dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
@@ -360,7 +382,7 @@ var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, re
 var chart={ sym:"btc", tf:300, itv:"15m", ema:true, vwap:false, vol:true, rsi:false, macd:false, tool:"cursor", cross:null, draft:null, hoverIdx:-1 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
-MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, candles:[], drawings:[]}; });
+MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, candles:[], drawings:[], lastWsAt:0, wsTimes:[]}; });
 
 /* ============ ZONA PANTAU (statis, dari laporan pemilik) ============ */
 var ZONEGROUPS=[
@@ -551,7 +573,7 @@ function applyBook(id,data){
   updateStacks(id);
   var now=Date.now(), lastH=s.hist[s.hist.length-1];
   if(!lastH||now-lastH.t>=400||lastH.p!==mid){ s.hist.push({t:now,p:mid}); if(s.hist.length>4000) s.hist.splice(0,s.hist.length-4000); }
-  render(id); markUpdated();
+  markDirty(id);
 }
 function applyTrade(id,t){
   var s=M[id]; if(!t) return;
@@ -560,7 +582,7 @@ function applyTrade(id,t){
   s.trades.unshift(tr); if(s.trades.length>10) s.trades.length=10;
   s.cvd += tr.buy? tr.sz : -tr.sz; s.cvdN++;
   tickCandle(id,tr);
-  render(id);
+  markDirty(id);
 }
 /* Candle berjalan dibangun dari SETIAP trade tick yang masuk (jalur trades
    WebSocket yang terbukti hidup per tick) — bukan hanya mengandalkan channel
@@ -660,8 +682,13 @@ function startWS(){
        elemen), channel l2Book sebagai objek — tangani keduanya */
     var coin= Array.isArray(msg.data)? (msg.data[0]&&msg.data[0].coin) : (msg.data.coin||msg.data.s);
     var mk=MARKETS.filter(function(m){return m.coin===coin;})[0]; if(!mk) return;
-    /* setiap pesan book/trade langsung dirender saat itu juga (per tick):
-       applyBook -> render panel + chart + scanner tumpukan */
+    /* diagnostik live: catat waktu + laju pesan WS per simbol */
+    var wsNow=Date.now(), msym=M[mk.id];
+    msym.lastWsAt=wsNow; msym.wsTimes.push(wsNow);
+    while(msym.wsTimes.length&&wsNow-msym.wsTimes[0]>6000) msym.wsTimes.shift();
+    /* setiap pesan book/trade diolah ke state saat itu juga (per tick);
+       gambar ulang dijadwalkan per frame oleh markDirty di dalam
+       applyBook/applyTrade — bukan render paksa per pesan */
     if(msg.channel==="l2Book") applyBook(mk.id,msg.data);
     else if(msg.channel==="trades"&&Array.isArray(msg.data)) msg.data.forEach(function(t){ applyTrade(mk.id,t); });
     else if(msg.channel==="candle") applyCandle(mk.id,msg.data);
@@ -682,7 +709,7 @@ function stopReconnect(){ if(state.retryTimer){ clearTimeout(state.retryTimer); 
 function scheduleReconnect(){
   stopReconnect();
   var delay=state.retryDelay;
-  state.retryDelay=Math.min(30000, Math.round(state.retryDelay*1.7));
+  state.retryDelay=Math.min(10000, Math.round(state.retryDelay*1.7));
   state.retryTimer=setTimeout(function(){
     state.retryTimer=null;
     if(state.mode==="live"&&!state.wsOk) startWS();
@@ -696,6 +723,29 @@ function stopWS(){
 /* CADANGAN TERAKHIR: hanya berjalan saat WebSocket putus/belum tersambung */
 function startPolling(){ if(state.pollTimer) return; state.pollTimer=setInterval(function(){ if(state.mode==="live"&&!state.wsOk) fetchSnapshot(); },2000); }
 function stopPolling(){ if(state.pollTimer){ clearInterval(state.pollTimer); state.pollTimer=null; } }
+
+/* ============ render terjadwal (batching per frame animasi) ============
+   Pesan WebSocket bisa datang belasan kali per detik, dan satu pesan
+   trades bisa berisi banyak trade sekaligus. Me-render DOM + canvas
+   setiap pesan membuat thread utama HP jenuh: tampilan berkedip seperti
+   halaman di-refresh terus dan browser bisa membuang tab. Karena itu
+   data tetap diterima & diolah per tick ke state, tapi gambar ulang
+   digabung: maksimal satu kali per frame animasi (~60×/detik), hanya
+   untuk simbol yang datanya benar-benar berubah. */
+var dirtyBook={}, chartDirty=false, rafId=0;
+function markDirty(id){
+  if(id){ dirtyBook[id]=true; if(id===chart.sym) chartDirty=true; }
+  scheduleFlush();
+}
+function markChartDirty(){ chartDirty=true; scheduleFlush(); }
+function scheduleFlush(){ if(!rafId) rafId=requestAnimationFrame(flushRender); }
+function flushRender(){
+  rafId=0;
+  var ids=Object.keys(dirtyBook); dirtyBook={};
+  ids.forEach(function(id){ render(id); });
+  if(ids.length) markUpdated();
+  if(chartDirty){ chartDirty=false; drawChart(); }
+}
 
 /* ============ render market ============ */
 function rowsHtml(levels,isAsk,dec,szDec){
@@ -756,7 +806,6 @@ function render(id){
   updateReco(id);
   renderZones(id);
   renderScanner(id);
-  if(chart.sym===id) drawChart();
 }
 
 /* ============ setup teknikal ============ */
@@ -817,15 +866,21 @@ var macdCv=$("macdChart"), macdCtx=macdCv.getContext("2d");
 var view={min:0,max:1,t0:0,t1:1,W:0,H:0,plotW:0,step:0,offset:0, candles:[]};
 
 function mapCandle(c){ return {t:+c.t, o:+c.o, h:+c.h, l:+c.l, c:+c.c, v:+c.v||0}; }
+var candleFetchAt={};
 function fetchCandles(id){
   var s=M[id], m=s.def, now=Date.now(), span=ITV_MS[chart.itv]||900000;
+  /* dedupe: boot + reconnect bisa memanggil snapshot yang sama beruntun —
+     satu permintaan per simbol+timeframe per 3 detik sudah cukup */
+  var key=id+"|"+chart.itv;
+  if(candleFetchAt[key]&&now-candleFetchAt[key]<3000) return Promise.resolve();
+  candleFetchAt[key]=now;
   var start=now-span*220;
   return postInfo({type:"candleSnapshot",req:{type:"candleSnapshot",coin:m.coin,interval:chart.itv,startTime:start,endTime:now}})
     .then(function(list){
       if(!Array.isArray(list)) return;
       s.candles=list.map(mapCandle).filter(function(c){return c.t&&c.o;}).sort(function(a,b){return a.t-b.t;});
-      if(chart.sym===id) drawChart();
-    }).catch(function(){ if(chart.sym===id) drawChart(); });
+      if(chart.sym===id) markChartDirty();
+    }).catch(function(){});
 }
 function fetchAllCandles(){ MARKETS.forEach(function(m){ fetchCandles(m.id); }); }
 function applyCandle(id,data){
@@ -834,7 +889,7 @@ function applyCandle(id,data){
   var last=s.candles[s.candles.length-1];
   if(last&&last.t===c.t) s.candles[s.candles.length-1]=c;
   else if(!last||c.t>last.t){ s.candles.push(c); if(s.candles.length>400) s.candles.splice(0,s.candles.length-400); }
-  if(chart.sym===id) drawChart();
+  if(chart.sym===id) markChartDirty();
 }
 function resubCandles(){
   if(state.ws&&state.wsOk){
@@ -1216,8 +1271,42 @@ bLive.addEventListener("click",function(){ setMode("live"); });
 bRef.addEventListener("click",function(){ setMode("refresh"); });
 $("btnRefresh").addEventListener("click",function(){ fetchSnapshot(); fetchRecentTrades(); fetchAllCandles(); });
 document.addEventListener("visibilitychange",function(){
-  if(!document.hidden && state.mode==="live" && !state.wsOk){ fetchSnapshot(); startWS(); }
+  if(document.hidden||state.mode!=="live") return;
+  if(!state.wsOk){ fetchSnapshot(); startWS(); }
+  /* socket terlihat tersambung tapi aliran sudah mati selama halaman
+     tertidur di latar — tutup paksa supaya onclose menyambung ulang
+     sekarang, bukan menunggu watchdog */
+  else if(Date.now()-state.lastMsg>10000&&state.ws){ try{ state.ws.close(); }catch(e){} }
 });
+window.addEventListener("online",function(){
+  if(state.mode==="live"&&!state.wsOk){ state.retryDelay=3000; fetchSnapshot(); startWS(); }
+});
+
+/* ============ diagnostik live (diperbarui tiap 1 detik) ============ */
+function diagAgo(ts){
+  if(!ts) return "belum ada";
+  var s=Math.max(0,Math.floor((Date.now()-ts)/1000));
+  return s+" dtk lalu";
+}
+function diagRate(id){
+  var s=M[id]; if(!s) return 0;
+  var now=Date.now();
+  while(s.wsTimes.length&&now-s.wsTimes[0]>5000) s.wsTimes.shift();
+  return s.wsTimes.length/5;
+}
+function fmtRate(r){ return r.toFixed(1).replace(".",","); }
+function updateDiag(){
+  var on= !!(state.wsOk&&state.ws&&state.ws.readyState===1&&state.mode==="live");
+  var wsEl=$("diagWs");
+  if(wsEl){ wsEl.textContent= on? "NYAMBUNG":"PUTUS"; wsEl.className= on? "ws-on":"ws-off"; }
+  var lastEl=$("diagLast"); if(lastEl) lastEl.textContent=diagAgo(state.lastMsg);
+  var br=$("diagBtcRate"); if(br) br.textContent=fmtRate(diagRate("btc"));
+  var bl=$("diagBtcLast"); if(bl) bl.textContent=diagAgo(M.btc? M.btc.lastWsAt:0);
+  var gr=$("diagGoldRate"); if(gr) gr.textContent=fmtRate(diagRate("gold"));
+  var gl=$("diagGoldLast"); if(gl) gl.textContent=diagAgo(M.gold? M.gold.lastWsAt:0);
+  var tk=$("diagTicks"); if(tk) tk.textContent=state.ticks.toLocaleString("id-ID");
+}
+setInterval(updateDiag,1000);
 
 /* ============ boot ============ */
 setChartSym("btc");
@@ -1225,6 +1314,7 @@ fetchAllCandles();
 setMode("live");
 /* segarkan durasi tumpukan & buang yang basi tiap detik */
 setInterval(function(){
+  if(document.hidden) return;
   MARKETS.forEach(function(m){
     var s=M[m.id]; if(!s.book) return;
     var now=Date.now(), changed=false;
