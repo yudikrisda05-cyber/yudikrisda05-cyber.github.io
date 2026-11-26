@@ -169,14 +169,20 @@
   .mp-foot{padding:4px 8px;color:var(--muted);font-size:10px;text-align:center;letter-spacing:.02em;background:rgba(240,200,75,.05);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .mp-foot b{color:var(--jsnr-rec)}
   /* teks basis live ing njero bar kontrol NDHUWUR chart (dudu chip
-     ngambang maneh): mono cilik warna emas, manggon ing tengah bar
-     antarane tombol GAMBAR lan KE TERBARU, di-truncate nek sempit */
+     ngambang maneh): mono cilik warna emas, manggon ing sisih tengen
+     bar sakwise kelompok tombol ikon, ngisi papan turah lan
+     di-truncate nek sempit */
   .ovlbasis{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px;font-weight:700;color:var(--gold);letter-spacing:.02em;white-space:nowrap;font-variant-numeric:tabular-nums;padding:0 2px;max-width:82px;overflow:hidden;text-overflow:ellipsis}
   /* tombol aksi ing bar kontrol ndhuwur chart (KE TERBARU / SKALA AUTO) —
      tampil/dhelik diatur drawChart liwat style.display kaya sadurunge */
   .ovlact{border:1px solid var(--teal);background:rgba(3,26,18,.94);color:var(--teal);font-weight:800;font-size:9.5px;letter-spacing:.04em;border-radius:999px;padding:0 8px;min-height:22px;cursor:pointer;flex:none;pointer-events:auto;white-space:nowrap}
   .ovlact:active{filter:brightness(1.2)}
   .ovlact.gold{border-color:#e8c33a;color:#e8c33a;background:rgba(23,18,0,.94)}
+  /* varian ikon kompak (arahan pemilik): KE TERBARU dadi tombol kothak
+     cilik mung isi simbol "▶", SKALA AUTO mung isi "↕" — gaya werna
+     persis sadurunge (ijo teal / emas .gold), dhuwur & ambane sejajar
+     tombol ikon fx/✎; fungsi tombol dijelasne liwat title+aria-label */
+  .ovlact.ovlicon{width:30px;padding:0;text-align:center;font-size:12.5px;letter-spacing:0;border-radius:8px}
   /* ===== terminal analisa: FULL-BLEED + OVERLAY ing njero chart =====
      Ora ana toolbar numpuk ing ndhuwur chart maneh: kabeh menu chart
      ngambang ing njero .chartstage (gaya SwiftEdge Depth). Kontainer
@@ -196,14 +202,15 @@
   .ovl-ctrl{top:44px;left:8px;right:74px;align-items:center;flex-wrap:nowrap;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;scrollbar-width:none;background:rgba(8,13,20,.88);border:1px solid rgba(27,39,56,.9);border-radius:10px;padding:3px 5px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:auto;touch-action:pan-x}
   .ovl-ctrl::-webkit-scrollbar{display:none}
   .ovl-ctrl>*{flex:none}
-  .ovl-ctrl .ovlbasis{flex:0 1 auto;min-width:0}
+  .ovl-ctrl .ovlbasis{flex:1 1 auto;min-width:0;max-width:none}
   .ovl-ctrl .tgl{background:transparent;border:0;padding:0}
   .ovl-ctrl .mini{min-height:24px;font-size:10.5px;padding:0 10px;margin-top:0}
   /* ===== BAR KONTROL NDHUWUR chart (arahan pemilik): bar sing biyen
      ing ngisor chart saiki PINDAH dadi sakbaris overlay ngambang ing
      sisih NDHUWUR chart, persis ngisore bar chip simbol/timeframe —
-     kiwa fx INDIKATOR + GAMBAR, tengah teks BASIS, tengen KE TERBARU
-     + SKALA AUTO. Bar ngisor lawas dibusak total (chart oleh papan
+     kiwa kelompok tombol ikon fx + GAMBAR + KE TERBARU + SKALA AUTO,
+     banjur teks BASIS ngisi papan turah ing tengen. Bar ngisor lawas
+     dibusak total (chart oleh papan
      vertikal luwih). Kabeh toggle indikator manggon ing POPUP .indpop
      sing nggantung ing ngisore bar kontrol iki (njero area chart,
      kiwa-ndhuwur) — id & handler toggle tetep. */
@@ -471,7 +478,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 03:20 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 03:30 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -566,9 +573,9 @@
         </div>
         <!-- OVERLAY MENU CHART — ngambang ing njero area chart (gaya
              SwiftEdge): simbol+timeframe ndhuwur-kiwa, mode+countdown+
-             layar penuh ndhuwur-tengen, lan BAR KONTROL (fx INDIKATOR +
-             ✎ GAMBAR + teks BASIS + KE TERBARU + SKALA AUTO) sakbaris
-             ing ndhuwur persis ngisore bar chip simbol/timeframe.
+             layar penuh ndhuwur-tengen, lan BAR KONTROL (tombol ikon
+             fx + ✎ + ▶ KE TERBARU + ↕ SKALA AUTO, banjur teks BASIS)
+             sakbaris ing ndhuwur persis ngisore bar chip simbol/timeframe.
              Kabeh id & handler tetep persis; mung posisine wadhah
              sing dipindah. -->
         <div class="ovl ovl-tl">
@@ -597,18 +604,19 @@
         <!-- BAR KONTROL NDHUWUR CHART — bar sing biyen ing ngisor chart
              saiki PINDAH mrene (arahan pemilik): sakbaris overlay
              ngambang ing sisih ndhuwur chart, persis ngisore bar chip
-             simbol/timeframe. Kiwa = fx INDIKATOR + ✎ GAMBAR, tengah =
-             teks BASIS (di-truncate nek sempit), tengen = KE TERBARU +
-             SKALA AUTO. Kabeh id/handler/logika tombol ora owah —
-             mung posisi wadhah-e. Ing mode OANDA bar iki didhelikake
+             simbol/timeframe. Kabeh tombol saiki IKON KOTHAK CILIK
+             nglumpuk ing kiwa: fx (indikator) + ✎ (gambar) + ▶
+             (KE TERBARU) + ↕ (SKALA AUTO); sakwise kuwi teks BASIS
+             ngisi papan turah ing tengen (di-truncate nek sempit).
+             Kabeh id/handler/logika tombol ora owah — mung tampilan &
+             urutan wadhah-e. Ing mode OANDA bar iki didhelikake
              total (setChartViewMode). -->
         <div class="ovl ovl-ctrl" id="ctrlBar">
           <button class="fxbtn fxicon" id="btnIndPop" aria-expanded="false" aria-controls="indPop" title="Indikator" aria-label="Buka daftar indikator">fx</button>
           <button class="fxbtn fxicon" id="btnDrawPop" aria-expanded="false" aria-controls="drawPop" title="Alat gambar" aria-label="Buka alat gambar">✎</button>
+          <button id="btnLatest" class="ovlact ovlicon" style="display:none" title="Ke terbaru — kembali ke tepi live" aria-label="Ke terbaru, kembali ke tepi live">▶</button>
+          <button id="btnScale" class="ovlact gold ovlicon" style="display:none" title="Skala otomatis" aria-label="Kembali ke skala otomatis">↕</button>
           <span class="ovlbasis" id="basisLiveChip" style="display:none"></span>
-          <span style="flex:1 1 auto"></span>
-          <button id="btnLatest" class="ovlact" style="display:none">KE TERBARU ▶</button>
-          <button id="btnScale" class="ovlact gold" style="display:none">↕ SKALA AUTO</button>
         </div>
         <!-- POPUP GAMBAR — rail piranti gambar permanen ing pinggir
              kiwa chart wis DIBUSAK; piranti saiki manggon ing popup
