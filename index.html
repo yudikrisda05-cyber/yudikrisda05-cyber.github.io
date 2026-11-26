@@ -459,7 +459,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 02:10 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 02:30 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -617,6 +617,14 @@
             <button id="ind-smcfvg" aria-pressed="false">SMC FVG</button>
             <button id="ind-smcpd" aria-pressed="false">SMC P/D</button>
             <button id="ind-snr" aria-pressed="false">SNR</button>
+            <button id="ind-vband" aria-pressed="false">VBAND</button>
+            <button id="ind-pivot" aria-pressed="false">PIVOT</button>
+            <button id="ind-strend" aria-pressed="false">SUPERTREND</button>
+            <button id="ind-bb" aria-pressed="false">BB</button>
+            <button id="ind-kelt" aria-pressed="false">KELTNER</button>
+            <button id="ind-don" aria-pressed="false">DONCHIAN</button>
+            <button id="ind-orbs" aria-pressed="false">ORBS</button>
+            <button id="ind-stats" aria-pressed="false">STATS</button>
           </div>
           <div class="indpop-foot">
             <button class="mini" id="btnCandles" style="margin-top:0">↻ MUAT ULANG CANDLE</button>
@@ -661,6 +669,7 @@
       <div>L <b id="oh-low">—</b></div>
       <div>C / LAST <b id="oh-last">—</b></div>
       <div>CHANGE <b id="oh-chg">—</b></div>
+      <div>Δ <b id="oh-delta">—</b></div>
       <div>CANDLE <b id="oh-n">0</b></div>
       <div>OBJEK GAMBAR <b id="oh-draw">0</b></div>
     </div>
@@ -793,7 +802,7 @@ var MARKETS=[
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · PERP · xyz:GOLD", unit:"oz", dec:1, szDec:2, grid:5}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
-var chart={ sym:"btc", tf:300, itv:"15m", viewMode:"analisa", ema:true, vwap:false, vol:true, rsi:false, macd:false, walls:true, zones:true, bubbles:true, panel:true, vprof:false, smc:false, smcObs:false, smcFvg:false, smcPd:false, snr:false, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
+var chart={ sym:"btc", tf:300, itv:"15m", viewMode:"analisa", ema:true, vwap:false, vol:true, rsi:false, macd:false, walls:true, zones:true, bubbles:true, panel:true, vprof:false, smc:false, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, cvdLog:[], cvdSeries:[], el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
@@ -2037,7 +2046,7 @@ function binApplyKline(k){
   /* kline untuk interval lain (sisa langganan lama) diabaikan */
   if(k.i&&k.i!==chart.itv) return;
   var id=bin.id; if(!id||!M[id]) return;
-  var c={ t:+k.t, o:+k.o, h:+k.h, l:+k.l, c:+k.c, v:+k.v||0 };
+  var c={ t:+k.t, o:+k.o, h:+k.h, l:+k.l, c:+k.c, v:+k.v||0, tb:(k.V!=null? +k.V : null) };
   if(!c.t||!c.o) return;
   var s=M[id];
   var last=s.candles[s.candles.length-1];
@@ -2069,7 +2078,7 @@ function binLoadRest(gen){
       .then(function(list){
         if(gen!==bin.gen||chart.itv!==itv||bin.id!==id) return;
         if(!Array.isArray(list)||!list.length){ tryHost(idx+1); return; }
-        var mapped=list.map(function(k){ return { t:+k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4], v:+k[5]||0 }; })
+        var mapped=list.map(function(k){ return { t:+k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4], v:+k[5]||0, tb:(k[9]!=null? +k[9] : null) }; })
           .filter(function(c){ return c.t&&c.o>0&&c.h>0&&c.l>0&&c.c>0; })
           .sort(function(a,b){ return a.t-b.t; });
         if(!mapped.length){ tryHost(idx+1); return; }
@@ -2379,6 +2388,16 @@ function drawChart(){
     $("oh-low").textContent="$"+fmt(c.l,m.dec);
     $("oh-last").textContent="$"+fmt(c.c,m.dec);
     var ce=$("oh-chg"); ce.textContent=(ch>=0?"+":"")+ch.toFixed(2)+"%"; ce.style.color= ch>=0? "var(--bid)":"var(--ask)";
+    /* STATS: delta taker-buy candle iki (Δ = 2×takerBuy − volume);
+       sumber tanpa data taker-buy (Hyperliquid) tampil "—" */
+    var dEl=$("oh-delta");
+    if(dEl){
+      if(c.tb!=null&&c.v>0){
+        var dlv=2*c.tb-c.v, dpct=dlv/c.v*100;
+        dEl.textContent=(dlv>=0?"+":"-")+fmt(Math.abs(dlv),m.szDec)+" ("+(dpct>=0?"+":"")+dpct.toFixed(1)+"%)";
+        dEl.style.color= dlv>=0? "var(--bid)" : "var(--ask)";
+      } else { dEl.textContent="—"; dEl.style.color=""; }
+    }
     $("oh-n").textContent=String(cs.length);
     $("oh-draw").textContent=String(s.drawings.length);
   }
@@ -2505,13 +2524,23 @@ function drawChart(){
   /* konten plot (volume, garis indikator, candle, bubble) diklip ke
      area plot supaya pan pecahan sub-candle tidak mengecat sumbu harga */
   ctx.save(); ctx.beginPath(); ctx.rect(0,0,W-64,H); ctx.clip();
-  /* volume */
+  /* volume — STATS urip: bar kebagi buy/sell proporsional saka data
+     taker-buy kline Binance (tb); candle tanpa data taker-buy
+     (sumber cadangan Hyperliquid) tetep bar biasa kaya sadurunge */
   if(chart.vol){
     var vmax=0; cs.forEach(function(c){ if(c.v>vmax)vmax=c.v; });
     if(vmax>0) cs.forEach(function(c,i){
       var h=c.v/vmax*volH, x=X(c.t)+view.step*0.18, w=Math.max(1,view.step*0.64);
-      ctx.fillStyle= c.c>=c.o? "rgba(46,230,168,.35)" : "rgba(232,121,249,.35)";
-      ctx.fillRect(x, volTop+volH-h, w, h);
+      if(chart.stats&&c.tb!=null&&c.v>0){
+        var buyH=h*Math.max(0,Math.min(1,c.tb/c.v));
+        ctx.fillStyle="rgba(232,121,249,.42)";
+        ctx.fillRect(x, volTop+volH-h, w, Math.max(0,h-buyH));
+        ctx.fillStyle="rgba(46,230,168,.48)";
+        ctx.fillRect(x, volTop+volH-buyH, w, buyH);
+      } else {
+        ctx.fillStyle= c.c>=c.o? "rgba(46,230,168,.35)" : "rgba(232,121,249,.35)";
+        ctx.fillRect(x, volTop+volH-h, w, h);
+      }
     });
   }
   /* garis indikator */
@@ -2806,10 +2835,17 @@ function drawChart(){
      di-isolasi try/catch dhewe: gagal mung mateni indikator kuwi,
      aplikasi tetep mlaku. Mode OANDA wis metu luwih dhisik ing
      ndhuwur drawChart, dadi katelune otomatis didhelikake neng kana. */
-  if(chart.vprof||chart.smc||chart.smcObs||chart.smcFvg||chart.smcPd||chart.snr){
+  if(chart.vprof||chart.smc||chart.smcObs||chart.smcFvg||chart.smcPd||chart.snr||chart.vband||chart.pivot||chart.strend||chart.bb||chart.kelt||chart.don||chart.orbs){
     var indD=null;
     try{ indD=indData(cs,allC); }catch(e){ indD=null; }
     if(indD){
+      if(chart.orbs&&indD.orbs){ try{ drawOrbsData(indD.orbs,m); }catch(e){} }
+      if(chart.vband&&indD.vband){ try{ drawVBandData(indD.vband,m,cs); }catch(e){} }
+      if(chart.bb&&indD.bb){ try{ drawBBData(indD.bb,m,cs); }catch(e){} }
+      if(chart.kelt&&indD.kelt){ try{ drawKeltData(indD.kelt,m,cs); }catch(e){} }
+      if(chart.don&&indD.don){ try{ drawDonData(indD.don,m,cs); }catch(e){} }
+      if(chart.strend&&indD.strend){ try{ drawStrendData(indD.strend,m,cs); }catch(e){} }
+      if(chart.pivot&&indD.pivot){ try{ drawPivotData(indD.pivot,m); }catch(e){} }
       if(chart.vprof&&indD.vprof){ try{ drawVProfData(indD.vprof,m); }catch(e){} }
       if((chart.smc||chart.smcObs||chart.smcFvg||chart.smcPd)&&indD.smc){ try{ drawSMCData(indD.smc,m); }catch(e){} }
       if(chart.snr&&indD.snr){ try{ drawSNRData(indD.snr,m); }catch(e){} }
@@ -2842,7 +2878,7 @@ function drawChart(){
   } else {
     chart.hoverIdx=cs.length-1;
     /* readout C / LAST ikut denyut tick di tepi live (salinan tampilan) */
-    setReadout(liveDisp!=null? {t:last.t,o:last.o,h:Math.max(last.h,liveDisp),l:Math.min(last.l,liveDisp),c:liveDisp,v:last.v} : last);
+    setReadout(liveDisp!=null? {t:last.t,o:last.o,h:Math.max(last.h,liveDisp),l:Math.min(last.l,liveDisp),c:liveDisp,v:last.v,tb:last.tb} : last);
   }
   updateMsnrPanel();
   drawRSI();
@@ -2883,15 +2919,24 @@ function drawObjects(s,m){ s.drawings.forEach(function(d){ drawOneObject(d,m,fal
    digambar saben frame nganggo X()/Y() frame kuwi — kekunci
    pemetaan chart kaya garis JSNR. Gaya gambar TIPIS lan kalem:
    garis 1px, label 9px, isi kothak opasitas endhek. */
-var indCalc={ key:"", at:0, vprof:null, smc:null, snr:null };
+var indCalc={ key:"", at:0, vprof:null, smc:null, snr:null, vband:null, pivot:null, strend:null, bb:null, kelt:null, don:null, orbs:null };
 function indData(cs,allC){
   var key=chart.sym+"|"+chart.itv+"|"+view.startIdx+"|"+cs.length+"|"+allC.length+"|"+(allC.length? allC[allC.length-1].t:0)
-    +"|"+(chart.vprof?1:0)+(chart.smc?1:0)+(chart.snr?1:0)+"|"+(chart.smcObs?1:0)+(chart.smcFvg?1:0)+(chart.smcPd?1:0);
+    +"|"+(chart.vprof?1:0)+(chart.smc?1:0)+(chart.snr?1:0)+"|"+(chart.smcObs?1:0)+(chart.smcFvg?1:0)+(chart.smcPd?1:0)
+    +"|"+(chart.vband?1:0)+(chart.pivot?1:0)+(chart.strend?1:0)+(chart.bb?1:0)+(chart.kelt?1:0)+(chart.don?1:0)+(chart.orbs?1:0)
+    +"|"+Math.floor(Date.now()/86400000)+"|"+((typeof jsnrData!=="undefined"&&jsnrData&&jsnrData[chart.sym]&&jsnrData[chart.sym].D)? jsnrData[chart.sym].D.length : 0);
   var now=Date.now();
   if((indCalc.key!==key||now-indCalc.at>4000)&&now-indCalc.at>=300){
     if(chart.vprof){ try{ indCalc.vprof=calcVProf(cs); }catch(e){ indCalc.vprof=null; } }
     if(chart.smc||chart.smcObs||chart.smcFvg||chart.smcPd){ try{ indCalc.smc=calcSMC(allC); }catch(e){ indCalc.smc=null; } }
     if(chart.snr){ try{ indCalc.snr=calcSNR(allC); }catch(e){ indCalc.snr=null; } }
+    if(chart.vband){ try{ indCalc.vband=calcVBand(cs); }catch(e){ indCalc.vband=null; } }
+    if(chart.pivot){ try{ indCalc.pivot=calcPivot(); }catch(e){ indCalc.pivot=null; } }
+    if(chart.strend){ try{ indCalc.strend=calcSuperTrend(cs); }catch(e){ indCalc.strend=null; } }
+    if(chart.bb){ try{ indCalc.bb=calcBB(cs); }catch(e){ indCalc.bb=null; } }
+    if(chart.kelt){ try{ indCalc.kelt=calcKeltner(cs); }catch(e){ indCalc.kelt=null; } }
+    if(chart.don){ try{ indCalc.don=calcDonchian(cs); }catch(e){ indCalc.don=null; } }
+    if(chart.orbs){ try{ indCalc.orbs=calcOrbs(allC); }catch(e){ indCalc.orbs=null; } }
     indCalc.key=key; indCalc.at=now;
   }
   return indCalc;
@@ -3262,6 +3307,283 @@ function drawSNRData(d,m){
   ctx.restore();
   ctx.font="10px ui-monospace,Menlo,monospace";
 }
+/* ============ GELOMBANG 2 · BATCH A — indikator saka candle sing wis ana ============
+   VBAND (VWAP sesi 00:00 UTC + pita ±1/2/3σ volume-weighted), PIVOT
+   (PDH/PDL/PDO + pivot klasik dina wingi UTC saka candle D mesin
+   JSNR), SUPERTREND (ATR 10 ×3), BB (20, 2σ), KELTNER (EMA 20 ±
+   2×ATR 10), DONCHIAN (20), ORBS (rentang pambuka 30 menit Tokyo /
+   London / New York, zona wektu nganggo Intl API ben DST bener).
+   Kabeh dietung ing cache indData (throttle padha karo VPROF/SMC/
+   SNR), disimpen ing ruang rega/wektu, digambar 1px / label 9px
+   kekunci X()/Y() frame iki, saben siji di-isolasi try/catch, lan
+   otomatis didhelikake ing mode OANDA (drawChart metu luwih dhisik). */
+/* gambar siji deret rega dadi garis 1px (null = putus) */
+function seriesLineCs(vals,cs,color,dash,lw){
+  ctx.beginPath(); var started=false;
+  for(var i=0;i<vals.length;i++){
+    var v=vals[i]; if(v==null){ started=false; continue; }
+    var x=X(cs[i].t)+view.step/2, y=Y(v);
+    if(!started){ ctx.moveTo(x,y); started=true; } else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle=color; ctx.lineWidth=lw||1; ctx.setLineDash(dash||[]); ctx.stroke(); ctx.setLineDash([]);
+}
+/* isi antarane deret ndhuwur & ngisor (null mung ing awalan deret) */
+function bandFillCs(up,dn,cs,color){
+  var pts=[];
+  for(var i=0;i<up.length;i++){ if(up[i]!=null&&dn[i]!=null) pts.push(i); }
+  if(pts.length<2) return;
+  ctx.beginPath();
+  pts.forEach(function(i,pi){ var x=X(cs[i].t)+view.step/2, y=Y(up[i]); if(pi===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  for(var k=pts.length-1;k>=0;k--){ var i2=pts[k]; ctx.lineTo(X(cs[i2].t)+view.step/2, Y(dn[i2])); }
+  ctx.closePath(); ctx.fillStyle=color; ctx.fill();
+}
+/* ---- VBAND: VWAP sesi (wiwit 00:00 UTC) + pita σ volume-weighted ---- */
+function calcVBand(cs){
+  var n=cs.length; if(n<2) return null;
+  var mid=[],u1=[],l1=[],u2=[],l2=[],u3=[],l3=[];
+  var cumPV=0, cumV=0, cumP2=0, day=-1;
+  for(var i=0;i<n;i++){
+    var c=cs[i], d=Math.floor(c.t/86400000);
+    if(d!==day){ day=d; cumPV=0; cumV=0; cumP2=0; }
+    var tp=(c.h+c.l+c.c)/3, v=c.v||0;
+    cumPV+=tp*v; cumV+=v; cumP2+=tp*tp*v;
+    if(cumV>0){
+      var vw=cumPV/cumV, sd=Math.sqrt(Math.max(0,cumP2/cumV-vw*vw));
+      mid.push(vw); u1.push(vw+sd); l1.push(vw-sd); u2.push(vw+2*sd); l2.push(vw-2*sd); u3.push(vw+3*sd); l3.push(vw-3*sd);
+    } else { mid.push(null); u1.push(null); l1.push(null); u2.push(null); l2.push(null); u3.push(null); l3.push(null); }
+  }
+  return { mid:mid, u1:u1, l1:l1, u2:u2, l2:l2, u3:u3, l3:l3 };
+}
+function drawVBandData(d,m,cs){
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  bandFillCs(d.u1,d.l1,cs,"rgba(232,195,58,.05)");
+  seriesLineCs(d.u3,cs,"rgba(232,195,58,.20)");
+  seriesLineCs(d.l3,cs,"rgba(232,195,58,.20)");
+  seriesLineCs(d.u2,cs,"rgba(232,195,58,.32)",[3,4]);
+  seriesLineCs(d.l2,cs,"rgba(232,195,58,.32)",[3,4]);
+  seriesLineCs(d.u1,cs,"rgba(232,195,58,.5)");
+  seriesLineCs(d.l1,cs,"rgba(232,195,58,.5)");
+  /* garis tengah ora digambar dobel yen toggle VWAP lawas urip —
+     VWAP lawas wis nggambar garis emas pedhot ing pass indikator */
+  if(!chart.vwap) seriesLineCs(d.mid,cs,"rgba(232,195,58,.9)");
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- PIVOT: level dina wingi UTC saka candle D mesin JSNR ---- */
+function calcPivot(){
+  if(typeof jsnrData==="undefined"||!jsnrData) return null;
+  var dd=jsnrData[chart.sym]; if(!dd||!dd.D||!dd.D.length) return null;
+  var D=dd.D, todayStart=Math.floor(Date.now()/86400000)*86400000, prev=null;
+  for(var i=D.length-1;i>=0;i--){ if(D[i].t<todayStart){ prev=D[i]; break; } }
+  if(!prev) return null;
+  var H=prev.h, L=prev.l, C=prev.c, P=(H+L+C)/3;
+  return { pdh:H, pdl:L, pdo:prev.o, p:P, r1:2*P-L, s1:2*P-H, r2:P+(H-L), s2:P-(H-L) };
+}
+function drawPivotData(d,m){
+  var plotR=view.offset+view.plotW;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  ctx.font="bold 9px -apple-system,'Segoe UI',Roboto,sans-serif";
+  function pivLine(px,tag,main){
+    if(px<view.min||px>view.max) return; /* mung sing ana ing rentang tampilan */
+    var y=Y(px);
+    ctx.strokeStyle= main? "rgba(33,87,243,.9)" : "rgba(33,87,243,.5)";
+    ctx.lineWidth=1; ctx.setLineDash(main? [6,4] : [2,3]);
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(plotR,y); ctx.stroke(); ctx.setLineDash([]);
+    var txt=tag+" "+fmt(px,m.dec), tw=ctx.measureText(txt).width;
+    ctx.fillStyle="rgba(5,8,13,.8)"; ctx.fillRect(4,y-8,tw+6,13);
+    ctx.fillStyle= main? "#7ea4f8" : "#5f7fc9"; ctx.fillText(txt,7,y+3);
+  }
+  pivLine(d.pdh,"PDH",true); pivLine(d.pdl,"PDL",true); pivLine(d.pdo,"PDO",true);
+  pivLine(d.p,"P",false); pivLine(d.r1,"R1",false); pivLine(d.s1,"S1",false); pivLine(d.r2,"R2",false); pivLine(d.s2,"S2",false);
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- SUPERTREND: ATR 10, pengali 3 ---- */
+function calcSuperTrend(cs){
+  var n=cs.length, P=10, MUL=3;
+  if(n<P+2) return null;
+  var atr=atrSeries(cs,P);
+  var vals=new Array(n), dirs=new Array(n), flips=[];
+  var fU=null, fL=null, dir=1, started=false;
+  for(var i=0;i<n;i++){
+    if(atr[i]==null){ vals[i]=null; dirs[i]=0; continue; }
+    var hl2=(cs[i].h+cs[i].l)/2, ub=hl2+MUL*atr[i], lb=hl2-MUL*atr[i];
+    if(!started){ fU=ub; fL=lb; dir= cs[i].c>=hl2? 1 : -1; started=true; }
+    else{
+      fU= (ub<fU||cs[i-1].c>fU)? ub : fU;
+      fL= (lb>fL||cs[i-1].c<fL)? lb : fL;
+      var pd=dir;
+      if(cs[i].c>fU) dir=1; else if(cs[i].c<fL) dir=-1;
+      if(dir!==pd) flips.push(i);
+    }
+    dirs[i]=dir; vals[i]= dir===1? fL : fU;
+  }
+  return { vals:vals, dirs:dirs, flips:flips };
+}
+function drawStrendData(d,m,cs){
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  var i=0;
+  while(i<cs.length){
+    if(d.vals[i]==null||!d.dirs[i]){ i++; continue; }
+    var dir=d.dirs[i];
+    ctx.beginPath();
+    var started=false;
+    while(i<cs.length&&d.vals[i]!=null&&d.dirs[i]===dir){
+      var x=X(cs[i].t)+view.step/2, y=Y(d.vals[i]);
+      if(!started){ ctx.moveTo(x,y); started=true; } else ctx.lineTo(x,y);
+      i++;
+    }
+    ctx.strokeStyle= dir===1? "rgba(46,230,168,.85)" : "rgba(232,121,249,.85)";
+    ctx.lineWidth=1; ctx.stroke();
+  }
+  /* titik cilik pas flip arah */
+  d.flips.forEach(function(fi){
+    if(fi<0||fi>=cs.length||d.vals[fi]==null) return;
+    ctx.beginPath(); ctx.arc(X(cs[fi].t)+view.step/2, Y(d.vals[fi]), 2.2, 0, Math.PI*2);
+    ctx.fillStyle= d.dirs[fi]===1? "#2ee6a8" : "#e879f9"; ctx.fill();
+  });
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- BB: Bollinger Bands 20, 2σ (simpangan baku populasi) ---- */
+function calcBB(cs){
+  var n=cs.length, P=20; if(n<P) return null;
+  var mid=[], up=[], dn=[], sum=0;
+  for(var i=0;i<n;i++){
+    sum+=cs[i].c; if(i>=P) sum-=cs[i-P].c;
+    if(i>=P-1){
+      var mean=sum/P, s2=0;
+      for(var j=i-P+1;j<=i;j++){ var df=cs[j].c-mean; s2+=df*df; }
+      var sd=Math.sqrt(s2/P);
+      mid.push(mean); up.push(mean+2*sd); dn.push(mean-2*sd);
+    } else { mid.push(null); up.push(null); dn.push(null); }
+  }
+  return { mid:mid, up:up, dn:dn };
+}
+function drawBBData(d,m,cs){
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  bandFillCs(d.up,d.dn,cs,"rgba(56,198,217,.05)");
+  seriesLineCs(d.up,cs,"rgba(56,198,217,.65)");
+  seriesLineCs(d.dn,cs,"rgba(56,198,217,.65)");
+  seriesLineCs(d.mid,cs,"rgba(56,198,217,.4)",[3,4]);
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- KELTNER: EMA 20 ± 2×ATR 10 (pedhot — beda gaya karo BB) ---- */
+function calcKeltner(cs){
+  var n=cs.length; if(n<25) return null;
+  var ema=emaSeries(cs,20), atr=atrSeries(cs,10);
+  var mid=[], up=[], dn=[];
+  for(var i=0;i<n;i++){
+    if(ema[i]!=null&&atr[i]!=null){ mid.push(ema[i]); up.push(ema[i]+2*atr[i]); dn.push(ema[i]-2*atr[i]); }
+    else { mid.push(null); up.push(null); dn.push(null); }
+  }
+  return { mid:mid, up:up, dn:dn };
+}
+function drawKeltData(d,m,cs){
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  seriesLineCs(d.up,cs,"rgba(245,166,35,.6)",[5,4]);
+  seriesLineCs(d.dn,cs,"rgba(245,166,35,.6)",[5,4]);
+  seriesLineCs(d.mid,cs,"rgba(245,166,35,.45)",[2,3]);
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- DONCHIAN: channel 20 (high/low periode + tengah titik-titik) ---- */
+function calcDonchian(cs){
+  var n=cs.length, P=20; if(n<P) return null;
+  var up=[], dn=[], mid=[];
+  for(var i=0;i<n;i++){
+    if(i>=P-1){
+      var hh=-Infinity, ll=Infinity;
+      for(var j=i-P+1;j<=i;j++){ if(cs[j].h>hh)hh=cs[j].h; if(cs[j].l<ll)ll=cs[j].l; }
+      up.push(hh); dn.push(ll); mid.push((hh+ll)/2);
+    } else { up.push(null); dn.push(null); mid.push(null); }
+  }
+  return { up:up, dn:dn, mid:mid };
+}
+function drawDonData(d,m,cs){
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  seriesLineCs(d.up,cs,"rgba(139,155,176,.7)");
+  seriesLineCs(d.dn,cs,"rgba(139,155,176,.7)");
+  seriesLineCs(d.mid,cs,"rgba(139,155,176,.45)",[2,3]);
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- ORBS: Session Orbs — rentang pambuka 30 menit saben sesi ----
+   Tokyo 09:00 Asia/Tokyo · London 08:00 Europe/London · New York
+   08:30 America/New_York. Wektu lokal sesi diowahi menyang UTC
+   nganggo Intl API (offset zona dietung saka formatToParts, iterasi
+   2× kanggo pinggir DST) — dadi jam JST-ne otomatis bener: London
+   16:00/17:00 JST, New York 21:30/22:30 JST miturut DST. Kothak
+   digambar saka wiwit sesi nganti wiwit sesi sing padha esuk-e,
+   isi ±6%, pinggir 1px pedhot, label jeneng sesi cilik. */
+var ORB_DEFS=[
+  { name:"TOKYO", zone:"Asia/Tokyo", h:9, mi:0, col:"56,198,217" },
+  { name:"LONDON", zone:"Europe/London", h:8, mi:0, col:"232,195,58" },
+  { name:"NEW YORK", zone:"America/New_York", h:8, mi:30, col:"217,70,239" }
+];
+var _tzFmt={};
+function tzFmt(zone){
+  if(!_tzFmt[zone]) _tzFmt[zone]=new Intl.DateTimeFormat("en-US",{timeZone:zone,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+  return _tzFmt[zone];
+}
+function tzParts(zone,ms){
+  var o={};
+  tzFmt(zone).formatToParts(new Date(ms)).forEach(function(p){ o[p.type]=p.value; });
+  return o;
+}
+function tzOffsetMs(zone,utcMs){
+  var p=tzParts(zone,utcMs);
+  return Date.UTC(+p.year, +p.month-1, +p.day, (+p.hour)%24, +p.minute, +p.second)-utcMs;
+}
+function zonedToUtc(zone,y,mo,d,h,mi){
+  var guess=Date.UTC(y,mo,d,h,mi,0);
+  var off=tzOffsetMs(zone,guess), utc=guess-off, off2=tzOffsetMs(zone,utc);
+  if(off2!==off) utc=guess-off2;
+  return utc;
+}
+function calcOrbs(allC){
+  if(!allC||allC.length<2) return null;
+  var itvMs=ITV_MS[chart.itv]||900000;
+  var ref=allC[allC.length-1].t, out=[];
+  ORB_DEFS.forEach(function(z){
+    var p=tzParts(z.zone,ref);
+    for(var back=0; back<2; back++){
+      var base=new Date(Date.UTC(+p.year, +p.month-1, +p.day-back));
+      var by=base.getUTCFullYear(), bm=base.getUTCMonth(), bd=base.getUTCDate();
+      var start=zonedToUtc(z.zone,by,bm,bd,z.h,z.mi);
+      var nxt=new Date(Date.UTC(by,bm,bd+1));
+      var nextStart=zonedToUtc(z.zone,nxt.getUTCFullYear(),nxt.getUTCMonth(),nxt.getUTCDate(),z.h,z.mi);
+      var end=start+1800000, hi=-Infinity, lo=Infinity, found=false;
+      for(var i=0;i<allC.length;i++){
+        var c=allC[i];
+        if(c.t<end&&c.t+itvMs>start){ if(c.h>hi)hi=c.h; if(c.l<lo)lo=c.l; found=true; }
+      }
+      if(found&&hi>lo) out.push({ name:z.name, col:z.col, x0:start, x1:nextStart, hi:hi, lo:lo });
+    }
+  });
+  return out.length? out : null;
+}
+function drawOrbsData(d,m){
+  var plotR=view.offset+view.plotW;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  ctx.font="bold 9px -apple-system,'Segoe UI',Roboto,sans-serif";
+  d.forEach(function(o){
+    var x1=X(o.x0), x2=Math.min(plotR,X(o.x1));
+    if(x2<0||x1>plotR) return;
+    x1=Math.max(0,x1); if(x2<=x1) return;
+    var yT=Y(o.hi), yB=Y(o.lo);
+    if(yB<0||yT>view.H-30) return;
+    ctx.fillStyle="rgba("+o.col+",.06)";
+    ctx.fillRect(x1,yT,x2-x1,Math.max(1,yB-yT));
+    ctx.strokeStyle="rgba("+o.col+",.55)"; ctx.lineWidth=1; ctx.setLineDash([5,4]);
+    ctx.strokeRect(x1,yT,x2-x1,Math.max(1,yB-yT)); ctx.setLineDash([]);
+    ctx.fillStyle="rgba("+o.col+",.95)";
+    ctx.fillText(o.name, x1+5, yT+12);
+  });
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
 /* ---- RSI ---- */
 function drawRSI(){
   var show=chart.rsi;
@@ -3585,6 +3907,7 @@ bindToggle("ind-ema","ema"); bindToggle("ind-vwap","vwap"); bindToggle("ind-vol"
 bindToggle("ind-panel","panel",function(){ msnrPanelCache=""; updateMsnrPanel(); });
 bindToggle("ind-vprof","vprof"); bindToggle("ind-smc","smc"); bindToggle("ind-snr","snr");
 bindToggle("ind-smcobs","smcObs"); bindToggle("ind-smcfvg","smcFvg"); bindToggle("ind-smcpd","smcPd");
+bindToggle("ind-vband","vband"); bindToggle("ind-pivot","pivot"); bindToggle("ind-strend","strend"); bindToggle("ind-bb","bb"); bindToggle("ind-kelt","kelt"); bindToggle("ind-don","don"); bindToggle("ind-orbs","orbs"); bindToggle("ind-stats","stats");
 /* ---- popup daftar indikator (tombol fx INDIKATOR ing bar ngisor
    chart): tutul fx = bukak/tutup; ✕ = tutup; nutul area chart ing
    njaba popup (pointerdown ing canvas) = tutup. Status saben
