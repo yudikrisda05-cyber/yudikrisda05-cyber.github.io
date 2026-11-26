@@ -292,7 +292,7 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Chart menggambar harga mid dari feed live sejak halaman dibuka (bukan histori bursa).</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book + trades — semua panel, chart, dan scanner dirender setiap pesan masuk, status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Chart menggambar harga mid dari feed live sejak halaman dibuka (bukan histori bursa).</p>
       <p>Scanner Tumpukan melacak semua level buku dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
@@ -306,7 +306,7 @@ var MARKETS=[
   {id:"btc", coin:"BTC", name:"BTC PERP", tag:"HYPERLIQUID · BITCOIN PERPETUAL", unit:"BTC", dec:0, szDec:3},
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · xyz:GOLD · XAU PERPETUAL (BUKAN SPOT)", unit:"oz", dec:1, szDec:2}
 ];
-var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000 };
+var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
 var chart={ sym:"btc", tf:300 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}}; });
@@ -481,7 +481,7 @@ function renderScanner(id){
 /* ============ status ============ */
 var dot=$("statusDot"), stext=$("statusText"), upd=$("updatedText"), errBox=$("errBox");
 function setStatus(kind,text){ dot.className="dot "+kind; stext.textContent=text; }
-function markUpdated(){ upd.textContent="UPDATE: "+jstNow(); errBox.style.display="none"; }
+function markUpdated(){ upd.textContent="UPDATE: "+jstNow()+(state.ticks? " · "+state.ticks.toLocaleString("id-ID")+" TICK WS":""); errBox.style.display="none"; }
 function showErr(msg){ errBox.textContent=msg; errBox.style.display="block"; }
 
 /* ============ data feed ============ */
@@ -546,7 +546,7 @@ function startWS(){
   state.ws=ws;
   var opened=false;
   ws.onopen=function(){
-    opened=true; state.wsOk=true; state.retryDelay=3000;
+    opened=true; state.wsOk=true; state.retryDelay=3000; state.lastMsg=Date.now();
     stopPolling(); stopReconnect();
     if(state.mode==="live") setStatus("live","LIVE PER TICK · WEBSOCKET");
     MARKETS.forEach(function(m){
@@ -557,20 +557,38 @@ function startWS(){
     stopPing();
     state.pingTimer=setInterval(function(){
       if(state.ws===ws && ws.readyState===1){ try{ ws.send(JSON.stringify({method:"ping"})); }catch(e){} }
-    },25000);
+    },20000);
+    /* watchdog: socket bisa mati setengah-terbuka di jaringan HP (terlihat
+       tersambung tapi tidak ada pesan masuk) — paksa sambung ulang */
+    stopWatch();
+    state.watchTimer=setInterval(function(){
+      if(state.ws!==ws||state.mode!=="live"||!state.wsOk) return;
+      if(Date.now()-state.lastMsg>15000){
+        setStatus("poll","WS DIAM >15 DTK · MENYAMBUNG ULANG…");
+        try{ ws.close(); }catch(e){}
+      }
+    },5000);
   };
   ws.onmessage=function(ev){
     if(state.mode!=="live") return;
     var msg; try{ msg=JSON.parse(ev.data); }catch(e){ return; }
-    if(!msg||!msg.data) return;
-    var mk=MARKETS.filter(function(m){return m.coin===msg.data.coin;})[0]; if(!mk) return;
+    if(!msg) return;
+    state.lastMsg=Date.now(); state.ticks++;
+    /* server Hyperliquid mengirim ping berkala — WAJIB dibalas pong,
+       kalau tidak koneksi diputus server walau socket terlihat hidup */
+    if(msg.channel==="ping"){ try{ ws.send(JSON.stringify({method:"pong"})); }catch(e){} return; }
+    if(!msg.data) return;
+    /* channel trades mengirim data sebagai ARRAY trade (coin ada di tiap
+       elemen), channel l2Book sebagai objek — tangani keduanya */
+    var coin= Array.isArray(msg.data)? (msg.data[0]&&msg.data[0].coin) : msg.data.coin;
+    var mk=MARKETS.filter(function(m){return m.coin===coin;})[0]; if(!mk) return;
     /* setiap pesan book/trade langsung dirender saat itu juga (per tick):
        applyBook -> render panel + chart + scanner tumpukan */
     if(msg.channel==="l2Book") applyBook(mk.id,msg.data);
     else if(msg.channel==="trades"&&Array.isArray(msg.data)) msg.data.forEach(function(t){ applyTrade(mk.id,t); });
   };
   ws.onclose=function(){
-    state.wsOk=false; stopPing();
+    state.wsOk=false; stopPing(); stopWatch();
     if(state.mode==="live"){
       setStatus("poll","WS PUTUS · CADANGAN POLLING REST 2 DTK — MENYAMBUNG LAGI…");
       startPolling(); scheduleReconnect();
@@ -580,6 +598,7 @@ function startWS(){
   setTimeout(function(){ if(!opened&&state.mode==="live"&&!state.wsOk) startPolling(); },4000);
 }
 function stopPing(){ if(state.pingTimer){ clearInterval(state.pingTimer); state.pingTimer=null; } }
+function stopWatch(){ if(state.watchTimer){ clearInterval(state.watchTimer); state.watchTimer=null; } }
 function stopReconnect(){ if(state.retryTimer){ clearTimeout(state.retryTimer); state.retryTimer=null; } }
 function scheduleReconnect(){
   stopReconnect();
@@ -591,7 +610,7 @@ function scheduleReconnect(){
   },delay);
 }
 function stopWS(){
-  stopPing(); stopReconnect();
+  stopPing(); stopWatch(); stopReconnect();
   if(state.ws){ try{state.ws.onclose=null; state.ws.close();}catch(e){} state.ws=null; }
   state.wsOk=false;
 }
