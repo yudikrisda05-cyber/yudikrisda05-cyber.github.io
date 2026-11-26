@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conto Terminal — Orderbook</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root{
+    --bg:#04070b; --panel:#080d14; --panel2:#0a1119; --line:#16202e; --line2:#1e2c3f;
+    --txt:#dbe6f2; --mut:#7d8fa6; --dim:#54687f;
+    --mint:#20e3a2; --pink:#ff4d6a; --viol:#b388ff; --gold:#f0c84b; --cyan:#22d3ee;
+    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  html,body{ background:var(--bg); color:var(--txt); font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  body{ padding:8px; }
+  .conto{ background:#3a2f10; color:var(--gold); border:1px solid #6b5716; border-radius:6px;
+    font-size:11px; letter-spacing:.06em; text-align:center; padding:5px 8px; margin-bottom:8px; font-weight:600;}
+  /* ===== command bar ===== */
+  .cmdbar{ display:flex; align-items:center; gap:10px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; padding:7px 10px; margin-bottom:8px; flex-wrap:wrap;}
+  .logo{ font-weight:800; letter-spacing:.08em; font-size:15px; white-space:nowrap;}
+  .logo .dot{ color:var(--mint); }
+  .cmd{ flex:1; min-width:170px; background:#05090f; border:1px solid var(--line2); border-radius:6px;
+    color:var(--dim); font-family:var(--mono); font-size:12px; padding:6px 9px; white-space:nowrap; overflow:hidden;}
+  .cmd b{ color:var(--cyan); font-weight:600;}
+  .live{ display:flex; align-items:center; gap:6px; font-size:11px; color:var(--mut); white-space:nowrap;}
+  .pulse{ width:8px; height:8px; border-radius:50%; background:var(--mint); box-shadow:0 0 8px var(--mint); }
+  .clock{ font-family:var(--mono); color:var(--txt); font-size:12px;}
+  /* ===== ticker strip ===== */
+  .strip{ display:flex; gap:0; background:var(--panel); border:1px solid var(--line); border-radius:8px;
+    overflow-x:auto; margin-bottom:8px; scrollbar-width:none;}
+  .strip::-webkit-scrollbar{ display:none; }
+  .tick{ padding:6px 14px; border-right:1px solid var(--line); white-space:nowrap; font-family:var(--mono); font-size:12px;}
+  .tick:last-child{ border-right:none; }
+  .tick .s{ color:var(--mut); font-size:10px; letter-spacing:.08em; display:block;}
+  .up{ color:var(--mint);} .dn{ color:var(--pink);}
+  /* ===== quick nav (mobile) ===== */
+  .nav{ display:none; gap:6px; overflow-x:auto; margin-bottom:8px; scrollbar-width:none;}
+  .nav::-webkit-scrollbar{ display:none; }
+  .nav a{ flex:0 0 auto; text-decoration:none; color:var(--cyan); border:1px solid var(--line2);
+    background:var(--panel); border-radius:20px; font-size:11px; font-weight:700; letter-spacing:.06em; padding:5px 12px;}
+  /* ===== grid ===== */
+  .grid{ display:grid; gap:8px; grid-template-columns:repeat(12,1fr);
+    grid-template-areas:
+      "px px px px px px px px dom dom dom dom"
+      "px px px px px px px px dom dom dom dom"
+      "scan scan scan scan tape tape tape tape cvd cvd cvd cvd"
+      "jsnr jsnr jsnr jsnr jsnr jsnr fund fund fund liq liq liq"; }
+  .panel{ background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; display:flex; flex-direction:column;}
+  .ph{ display:flex; align-items:center; gap:8px; padding:6px 10px; border-bottom:1px solid var(--line);
+    background:var(--panel2); min-height:30px;}
+  .ph .code{ font-weight:800; font-size:12px; letter-spacing:.1em; color:var(--cyan); }
+  .ph .ttl{ font-size:11px; color:var(--mut); letter-spacing:.04em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .ph .sp{ flex:1; }
+  .ph .mini{ font-family:var(--mono); font-size:11px; color:var(--mut); white-space:nowrap;}
+  .pb{ padding:8px 10px; font-size:12px; }
+  #p-px{ grid-area:px; } #p-dom{ grid-area:dom; } #p-scan{ grid-area:scan; }
+  #p-tape{ grid-area:tape; } #p-cvd{ grid-area:cvd; } #p-jsnr{ grid-area:jsnr; }
+  #p-fund{ grid-area:fund; } #p-liq{ grid-area:liq; }
+  /* chips */
+  .chips{ display:flex; gap:4px; flex-wrap:wrap;}
+  .chip{ font-size:10px; font-weight:700; letter-spacing:.05em; padding:3px 8px; border-radius:4px;
+    border:1px solid var(--line2); color:var(--mut); }
+  .chip.on{ background:#0e2a22; color:var(--mint); border-color:#14532d; }
+  .chip.gold{ color:var(--gold); border-color:#6b5716; background:#241d08;}
+  /* DOM ladder */
+  table{ width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11.5px; }
+  th{ color:var(--dim); font-weight:600; text-align:right; font-size:10px; letter-spacing:.06em; padding:2px 4px;}
+  th:first-child{ text-align:left; }
+  td{ padding:2.5px 4px; text-align:right; position:relative; white-space:nowrap;}
+  td:first-child{ text-align:left; }
+  .bar{ position:absolute; top:2px; bottom:2px; right:0; border-radius:2px; opacity:.20; }
+  .ask td:first-child{ color:var(--pink);} .bid td:first-child{ color:var(--mint);}
+  .wall td{ font-weight:700; }
+  .tag{ font-size:8.5px; font-weight:800; letter-spacing:.05em; padding:1px 4px; border-radius:3px; vertical-align:1px;}
+  .tag.a{ background:#3d1220; color:var(--pink);} .tag.b{ background:#0d2f24; color:var(--mint);}
+  .midrow{ display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line); padding:5px 4px; margin:3px 0; font-family:var(--mono);}
+  .midrow .mid{ font-size:15px; font-weight:700; }
+  .midrow .spr{ font-size:10.5px; color:var(--mut); }
+  /* generic rows */
+  .row{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; padding:3.5px 0; border-bottom:1px dashed #101926;}
+  .row:last-child{ border-bottom:none; }
+  .row .k{ color:var(--mut); font-size:11px; }
+  .row .v{ font-family:var(--mono); font-size:12px; text-align:right;}
+  .tape-row{ font-family:var(--mono); font-size:11.5px; }
+  /* JSNR */
+  .bias{ font-size:13px; font-weight:800; letter-spacing:.05em; }
+  .zone{ border:1px solid var(--line2); border-radius:6px; padding:6px 8px; margin-top:6px; font-family:var(--mono); font-size:12px;}
+  .zone.buy{ border-left:3px solid var(--mint);} .zone.sell{ border-left:3px solid var(--pink);}
+  .zone .st{ font-size:10px; color:var(--mut); font-family:-apple-system,"Segoe UI",Roboto,sans-serif;}
+  .star{ color:var(--gold); }
+  /* FUND */
+  .lsbar{ display:flex; height:10px; border-radius:5px; overflow:hidden; margin:6px 0 2px; }
+  .lsbar .l{ background:var(--mint);} .lsbar .s{ background:var(--pink);}
+  .big{ font-size:17px; font-weight:700; font-family:var(--mono); }
+  /* footer */
+  .foot{ color:var(--dim); font-size:10.5px; text-align:center; padding:10px 4px 4px; letter-spacing:.04em;}
+  @media (max-width:1023px){
+    .nav{ display:flex; }
+    .grid{ grid-template-columns:1fr; grid-template-areas:"px" "dom" "scan" "jsnr" "tape" "cvd" "fund" "liq"; }
+    .cmd{ order:3; flex-basis:100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="conto">CONTO TAMPILAN — DATA CONTO STATIS, DURUNG LIVE · SING DIDELok: DESAIN TERMINAL-E</div>
+
+<!-- command bar -->
+<div class="cmdbar">
+  <div class="logo"><span class="dot">⬢</span> ORDERBOOK <span style="color:var(--cyan)">TERMINAL</span></div>
+  <div class="cmd"><b>&gt;</b> ketik perintah: BTC DOM · XAU JSNR · FUND · LIQ …</div>
+  <div class="live"><span class="pulse"></span> LIVE · WS <span class="clock">00:30:14 JST</span></div>
+</div>
+
+<!-- ticker strip -->
+<div class="strip">
+  <div class="tick"><span class="s">BTC/USD</span>60.812 <span class="up">+2,6%</span></div>
+  <div class="tick"><span class="s">XAU/USD (PERP)</span>3.576,4 <span class="dn">−0,4%</span></div>
+  <div class="tick"><span class="s">ETH/USD</span>1.707 <span class="up">+3,5%</span></div>
+  <div class="tick"><span class="s">DXY</span>103,70 <span class="up">+0,04%</span></div>
+  <div class="tick"><span class="s">USD/JPY</span>159,20 <span class="dn">−0,1%</span></div>
+  <div class="tick"><span class="s">BASIS PERP−SPOT BTC</span>−$39</div>
+</div>
+
+<!-- quick nav (mobile) -->
+<div class="nav">
+  <a href="#p-px">PX</a><a href="#p-dom">DOM</a><a href="#p-scan">SCAN</a><a href="#p-jsnr">JSNR</a>
+  <a href="#p-tape">TAPE</a><a href="#p-cvd">CVD</a><a href="#p-fund">FUND</a><a href="#p-liq">LIQ</a>
+</div>
+
+<div class="grid">
+
+  <!-- PX -->
+  <section class="panel" id="p-px">
+    <div class="ph"><span class="code">PX</span><span class="ttl">BTC/USD · Chart + JSNR + Dinding</span><span class="sp"></span>
+      <div class="chips"><span class="chip">1m</span><span class="chip">5m</span><span class="chip on">15m</span><span class="chip">1H</span><span class="chip">4H</span><span class="chip">1D</span><span class="chip gold">ANALISA</span></div>
+    </div>
+    <div class="pb" style="padding:4px 4px 2px;">
+      <svg viewBox="0 0 720 300" width="100%" role="img" aria-label="Conto chart candlestick BTC">
+        <rect x="0" y="0" width="720" height="300" fill="#060a10"/>
+        <!-- grid -->
+        <g stroke="#101926" stroke-width="1">
+          <line x1="0" y1="50" x2="660" y2="50"/><line x1="0" y1="110" x2="660" y2="110"/>
+          <line x1="0" y1="170" x2="660" y2="170"/><line x1="0" y1="230" x2="660" y2="230"/>
+        </g>
+        <!-- resistance zone pair (pink) -->
+        <line x1="0" y1="34" x2="640" y2="34" stroke="#ff4d6a" stroke-width="1.5"/>
+        <line x1="0" y1="46" x2="640" y2="46" stroke="#ff4d6a" stroke-width="1.5"/>
+        <circle cx="640" cy="34" r="3" fill="#ff4d6a"/><circle cx="625" cy="46" r="3" fill="#ff4d6a"/>
+        <!-- wall line (violet dashed) -->
+        <line x1="0" y1="58" x2="640" y2="58" stroke="#b388ff" stroke-width="1.4" stroke-dasharray="7 5"/>
+        <circle cx="640" cy="58" r="3" fill="#b388ff"/>
+        <!-- support zone line (green) -->
+        <line x1="0" y1="212" x2="640" y2="212" stroke="#20e3a2" stroke-width="1.5"/>
+        <circle cx="640" cy="212" r="3" fill="#20e3a2"/>
+        <!-- EMA -->
+        <polyline points="10,196 60,188 110,178 160,182 210,168 260,158 310,150 360,142 410,146 460,132 510,124 560,116 610,108"
+          fill="none" stroke="#f0c84b" stroke-width="1.2" opacity="0.75"/>
+        <!-- candles -->
+        <g>
+          <rect x="14" y="176" width="11" height="26" fill="#20e3a2"/><line x1="19" y1="168" x2="19" y2="210" stroke="#20e3a2"/>
+          <rect x="39" y="182" width="11" height="20" fill="#ff4d6a"/><line x1="44" y1="174" x2="44" y2="208" stroke="#ff4d6a"/>
+          <rect x="64" y="166" width="11" height="24" fill="#20e3a2"/><line x1="69" y1="158" x2="69" y2="196" stroke="#20e3a2"/>
+          <rect x="89" y="158" width="11" height="18" fill="#20e3a2"/><line x1="94" y1="150" x2="94" y2="182" stroke="#20e3a2"/>
+          <rect x="114" y="162" width="11" height="22" fill="#ff4d6a"/><line x1="119" y1="154" x2="119" y2="190" stroke="#ff4d6a"/>
+          <rect x="139" y="148" width="11" height="24" fill="#20e3a2"/><line x1="144" y1="140" x2="144" y2="178" stroke="#20e3a2"/>
+          <rect x="164" y="140" width="11" height="20" fill="#20e3a2"/><line x1="169" y1="132" x2="169" y2="166" stroke="#20e3a2"/>
+          <rect x="189" y="146" width="11" height="18" fill="#ff4d6a"/><line x1="194" y1="138" x2="194" y2="170" stroke="#ff4d6a"/>
+          <rect x="214" y="132" width="11" height="24" fill="#20e3a2"/><line x1="219" y1="124" x2="219" y2="162" stroke="#20e3a2"/>
+          <rect x="239" y="126" width="11" height="20" fill="#20e3a2"/><line x1="244" y1="118" x2="244" y2="152" stroke="#20e3a2"/>
+          <rect x="264" y="130" width="11" height="16" fill="#ff4d6a"/><line x1="269" y1="122" x2="269" y2="152" stroke="#ff4d6a"/>
+          <rect x="289" y="116" width="11" height="24" fill="#20e3a2"/><line x1="294" y1="108" x2="294" y2="146" stroke="#20e3a2"/>
+          <rect x="314" y="110" width="11" height="20" fill="#20e3a2"/><line x1="319" y1="102" x2="319" y2="136" stroke="#20e3a2"/>
+          <rect x="339" y="118" width="11" height="18" fill="#ff4d6a"/><line x1="344" y1="110" x2="344" y2="142" stroke="#ff4d6a"/>
+          <rect x="364" y="104" width="11" height="22" fill="#20e3a2"/><line x1="369" y1="96" x2="369" y2="132" stroke="#20e3a2"/>
+          <rect x="389" y="98" width="11" height="18" fill="#20e3a2"/><line x1="394" y1="90" x2="394" y2="122" stroke="#20e3a2"/>
+          <rect x="414" y="106" width="11" height="16" fill="#ff4d6a"/><line x1="419" y1="98" x2="419" y2="128" stroke="#ff4d6a"/>
+          <rect x="439" y="94" width="11" height="20" fill="#20e3a2"/><line x1="444" y1="86" x2="444" y2="120" stroke="#20e3a2"/>
+          <rect x="464" y="88" width="11" height="18" fill="#20e3a2"/><line x1="469" y1="80" x2="469" y2="112" stroke="#20e3a2"/>
+          <rect x="489" y="94" width="11" height="15" fill="#ff4d6a"/><line x1="494" y1="87" x2="494" y2="115" stroke="#ff4d6a"/>
+          <rect x="514" y="84" width="11" height="19" fill="#20e3a2"/><line x1="519" y1="76" x2="519" y2="109" stroke="#20e3a2"/>
+          <rect x="539" y="90" width="11" height="14" fill="#ff4d6a"/><line x1="544" y1="83" x2="544" y2="110" stroke="#ff4d6a"/>
+          <rect x="564" y="80" width="11" height="17" fill="#20e3a2"/><line x1="569" y1="73" x2="569" y2="103" stroke="#20e3a2"/>
+          <rect x="589" y="86" width="11" height="13" fill="#20e3a2"/><line x1="594" y1="79" x2="594" y2="105" stroke="#20e3a2"/>
+        </g>
+        <!-- last price -->
+        <line x1="0" y1="92" x2="660" y2="92" stroke="#dbe6f2" stroke-width="1" stroke-dasharray="4 4" opacity="0.65"/>
+        <!-- labels -->
+        <g font-family="ui-monospace,Menlo,Consolas,monospace" font-size="10.5">
+          <text x="666" y="38" fill="#ff4d6a">61.361 SBR D,H4</text>
+          <text x="666" y="62" fill="#b388ff">61.200 DINDING</text>
+          <text x="666" y="96" fill="#dbe6f2">60.812</text>
+          <text x="666" y="216" fill="#20e3a2">60.294 RBS H1</text>
+          <text x="8" y="24" fill="#ff4d6a" font-size="10">SBR D,H4,H1 · A,V,OCL · fresh ★11</text>
+          <text x="8" y="290" fill="#54687f">15m · Binance Spot · EMA20 · VWAP · RSI 52,4 · MACD +18,2</text>
+        </g>
+        <!-- volume -->
+        <g fill="#2b4a5e">
+          <rect x="14" y="252" width="11" height="14"/><rect x="64" y="248" width="11" height="18"/>
+          <rect x="114" y="255" width="11" height="11"/><rect x="164" y="246" width="11" height="20"/>
+          <rect x="214" y="250" width="11" height="16"/><rect x="264" y="253" width="11" height="13"/>
+          <rect x="314" y="244" width="11" height="22"/><rect x="364" y="249" width="11" height="17"/>
+          <rect x="414" y="252" width="11" height="14"/><rect x="464" y="247" width="11" height="19"/>
+          <rect x="514" y="251" width="11" height="15"/><rect x="564" y="245" width="11" height="21"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <!-- DOM -->
+  <section class="panel" id="p-dom">
+    <div class="ph"><span class="code">DOM</span><span class="ttl">Order Book · BTC (Hyperliquid)</span><span class="sp"></span><span class="mini">jerone: SEDANG</span></div>
+    <div class="pb">
+      <table>
+        <tr><th>HARGA</th><th>UKURAN</th><th>TOTAL</th></tr>
+        <tr class="ask wall"><td>61.200 <span class="tag a">DINDING</span></td><td>1,250</td><td>9,412</td></tr>
+        <tr class="ask"><td>61.150</td><td>0,842</td><td>8,162</td></tr>
+        <tr class="ask"><td>61.100</td><td>1,104</td><td>7,320</td></tr>
+        <tr class="ask"><td>61.050</td><td>0,517</td><td>6,216</td></tr>
+        <tr class="ask"><td>61.000</td><td>0,966</td><td>5,699</td></tr>
+        <tr class="ask"><td>60.950</td><td>0,433</td><td>4,733</td></tr>
+        <tr class="ask"><td>60.900</td><td>0,758</td><td>4,300</td></tr>
+        <tr class="ask"><td>60.850</td><td>1,021</td><td>3,542</td></tr>
+      </table>
+      <div class="midrow"><span class="mid up">60.812</span><span class="spr">MID 60.806 · SPREAD 12 (0,02%)</span></div>
+      <table>
+        <tr class="bid"><td>60.800</td><td>0,689</td><td>0,689</td></tr>
+        <tr class="bid"><td>60.750</td><td>0,914</td><td>1,603</td></tr>
+        <tr class="bid"><td>60.700</td><td>0,402</td><td>2,005</td></tr>
+        <tr class="bid wall"><td>60.650 <span class="tag b">DINDING</span></td><td>1,386</td><td>3,391</td></tr>
+        <tr class="bid"><td>60.600</td><td>0,577</td><td>3,968</td></tr>
+        <tr class="bid"><td>60.550</td><td>0,845</td><td>4,813</td></tr>
+        <tr class="bid"><td>60.500</td><td>1,093</td><td>5,906</td></tr>
+        <tr class="bid"><td>60.450</td><td>0,361</td><td>6,267</td></tr>
+      </table>
+      <div class="row" style="margin-top:4px;"><span class="k">Imbalance (20 level)</span><span class="v" style="color:var(--pink)">Ask +8,4%</span></div>
+    </div>
+  </section>
+
+  <!-- SCAN -->
+  <section class="panel" id="p-scan">
+    <div class="ph"><span class="code">SCAN</span><span class="ttl">Tumpukan Order Terbesar · BTC</span><span class="sp"></span><span class="mini">buku jeru ±3–5%</span></div>
+    <div class="pb">
+      <div class="row"><span class="k" style="color:var(--pink)">ASK 61.200</span><span class="v">1,250 BTC · 5,9× median · awet 2 mnt</span></div>
+      <div class="row"><span class="k" style="color:var(--mint)">BID 59.400</span><span class="v">1,104 BTC · 5,2× median · awet 6 mnt</span></div>
+      <div class="row"><span class="k" style="color:var(--mint)">BID 60.650</span><span class="v">1,386 BTC · 4,4× median · awet 1 mnt</span></div>
+      <div class="row"><span class="k" style="color:var(--pink)">ASK 62.450</span><span class="v">0,977 BTC · 3,8× median · awet 11 mnt</span></div>
+      <div class="row"><span class="k" style="color:var(--mint)">BID 58.900</span><span class="v">0,863 BTC · 3,1× median · awet 3 mnt</span></div>
+    </div>
+  </section>
+
+  <!-- TAPE -->
+  <section class="panel" id="p-tape">
+    <div class="ph"><span class="code">TAPE</span><span class="ttl">Time &amp; Sales · BTC</span><span class="sp"></span><span class="mini">per tick</span></div>
+    <div class="pb">
+      <div class="row tape-row"><span style="color:var(--dim)">00:30:11</span><span style="color:var(--mint)">60.812</span><span>0,412</span></div>
+      <div class="row tape-row"><span style="color:var(--dim)">00:30:09</span><span style="color:var(--pink)">60.798</span><span>0,085</span></div>
+      <div class="row tape-row"><span style="color:var(--dim)">00:30:07</span><span style="color:var(--mint)">60.815</span><span>1,204</span></div>
+      <div class="row tape-row"><span style="color:var(--dim)">00:30:04</span><span style="color:var(--mint)">60.809</span><span>0,233</span></div>
+      <div class="row tape-row"><span style="color:var(--dim)">00:30:01</span><span style="color:var(--pink)">60.790</span><span>0,517</span></div>
+    </div>
+  </section>
+
+  <!-- CVD -->
+  <section class="panel" id="p-cvd">
+    <div class="ph"><span class="code">CVD</span><span class="ttl">Volume · CVD Sesi · BTC</span><span class="sp"></span><span class="mini">wiwit 00:00 UTC</span></div>
+    <div class="pb">
+      <svg viewBox="0 0 300 74" width="100%" role="img" aria-label="Conto grafik CVD">
+        <g fill="#20e3a2" opacity="0.85">
+          <rect x="8" y="34" width="14" height="26"/><rect x="34" y="28" width="14" height="32"/>
+          <rect x="60" y="38" width="14" height="22"/><rect x="86" y="22" width="14" height="38"/>
+          <rect x="112" y="30" width="14" height="30"/><rect x="138" y="18" width="14" height="42"/>
+          <rect x="164" y="26" width="14" height="34"/><rect x="190" y="14" width="14" height="46"/>
+          <rect x="216" y="24" width="14" height="36"/><rect x="242" y="10" width="14" height="50"/>
+        </g>
+        <polyline points="15,44 41,40 67,46 93,36 119,40 145,30 171,36 197,26 223,32 249,20"
+          fill="none" stroke="#f0c84b" stroke-width="1.6"/>
+      </svg>
+      <div class="row"><span class="k">CVD sesi</span><span class="v" style="color:var(--mint)">+128,4 BTC</span></div>
+      <div class="row"><span class="k">Delta 5 menit</span><span class="v" style="color:var(--mint)">+6,2 BTC</span></div>
+    </div>
+  </section>
+
+  <!-- JSNR -->
+  <section class="panel" id="p-jsnr">
+    <div class="ph"><span class="code">JSNR</span><span class="ttl">Zona MSNR/JSNR · BTC</span><span class="sp"></span><span class="mini">killzone: NEW YORK</span></div>
+    <div class="pb">
+      <div class="bias">BIAS: CAMPUR ◆ <span style="color:var(--mut); font-weight:400; font-size:11px;">— rega ing tengah zona</span></div>
+      <div class="zone buy">BUY 59.859–60.013 · RBS D,H4 · A,V,OCL · fresh <span class="star">★11</span>
+        <div class="st">Invalidasi: close H1 ing ngisor 59.859 · status: ngenteni</div></div>
+      <div class="zone sell">SELL 61.212–61.361 · SBR D,H4,H1 · A,V,OCL · fresh <span class="star">★9</span>
+        <div class="st">Invalidasi: close H1 ing ndhuwur 61.361 · jarak +1,14%</div></div>
+      <div class="row" style="margin-top:6px;"><span class="k">Sinyal</span><span class="v">AWAS 1 · PEMICU 0 · KONFIRMASI 0</span></div>
+    </div>
+  </section>
+
+  <!-- FUND -->
+  <section class="panel" id="p-fund">
+    <div class="ph"><span class="code">FUND</span><span class="ttl">Funding · OI · Long/Short</span><span class="sp"></span><span class="mini">Hyperliquid</span></div>
+    <div class="pb">
+      <div class="row"><span class="k">Funding (8j)</span><span class="v" style="color:var(--mint)">+0,0100%</span></div>
+      <div class="row"><span class="k">Open Interest</span><span class="v">19.842 BTC <span style="color:var(--mint)">+3,2%</span></span></div>
+      <div class="k" style="margin-top:4px;">Long / Short</div>
+      <div class="lsbar"><div class="l" style="width:54%"></div><div class="s" style="width:46%"></div></div>
+      <div class="row"><span class="k" style="color:var(--mint)">Long 54%</span><span class="k" style="color:var(--pink)">Short 46%</span></div>
+    </div>
+  </section>
+
+  <!-- LIQ -->
+  <section class="panel" id="p-liq">
+    <div class="ph"><span class="code">LIQ</span><span class="ttl">Likuidasi Live</span><span class="sp"></span><span class="mini">BTC + XAU</span></div>
+    <div class="pb">
+      <div class="row tape-row"><span style="color:var(--dim)">00:24:11</span><span style="color:var(--pink)">LONG</span><span>$1,24 jt @ 60.402</span></div>
+      <div class="row tape-row"><span style="color:var(--dim)">00:21:47</span><span style="color:var(--mint)">SHORT</span><span>$0,38 jt @ 60.955</span></div>
+      <div class="row tape-row"><span style="color:var(--dim)">00:17:03</span><span style="color:var(--pink)">LONG</span><span>$0,57 jt @ 3.561 (XAU)</span></div>
+      <div class="row tape-row"><span style="color:var(--dim)">00:09:52</span><span style="color:var(--mint)">SHORT</span><span>$0,91 jt @ 61.030</span></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="foot">CONTO DESAIN TERMINAL — ORDERBOOK · panel: PX · DOM · SCAN · TAPE · CVD · JSNR · FUND · LIQ · data conto, durung live</div>
+
+</body>
+</html>
