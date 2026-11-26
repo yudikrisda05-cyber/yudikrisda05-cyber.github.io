@@ -124,6 +124,13 @@
   .imbbar{display:flex;height:10px;border-radius:999px;overflow:hidden;background:var(--ask-bg);margin-top:5px}
   .imbbar .b{background:var(--teal);transition:width .3s}
   .imbbar .a{background:var(--violet);flex:1}
+  .depthbar{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line2);background:var(--head)}
+  .depthbar .dk{font-size:9.5px;color:var(--dim);font-weight:700;letter-spacing:.12em}
+  .dseg{display:flex;border:1px solid var(--line);background:var(--panel2);border-radius:999px;padding:2px;gap:2px;flex-wrap:wrap}
+  .dseg button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:10.5px;font-weight:700;padding:0 10px;cursor:pointer;min-height:26px;letter-spacing:.03em}
+  .dseg button[aria-pressed="true"]{background:var(--gold);color:#171200}
+  .depthbar .deff{font-size:10.5px;color:var(--gold);font-weight:700;letter-spacing:.03em}
+  .depthbar .drange{font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto}
   .bookhead,.brow{display:grid;grid-template-columns:96px 1fr 82px;gap:8px;padding:2px 14px;font-size:12px;position:relative;font-family:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace}
   .bookhead{font-size:9.5px;color:var(--dim);font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding-top:7px;font-family:inherit}
   .bookhead span:nth-child(2),.bookhead span:nth-child(3){text-align:right}
@@ -225,7 +232,7 @@
 
   <!-- COMMAND BAR -->
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 12:36 JST</span></div>
+    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 12:45 JST</span></div>
     <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
     <div class="cell grow">
       <span id="updatedText">UPDATE: —</span>
@@ -335,7 +342,7 @@
     </div>
     <div id="scanner"></div>
     <div class="pbody" style="padding-top:2px">
-      <div class="disc">Scanner melacak level harga tempat order menumpuk paling tebal di buku 20 level: ukuran berjalan, puncak ukuran selama dilacak, jarak dari mid, dan durasi tumpukan bertahan. Tumpukan yang hilang dari buku &gt;20 detik dihapus dari daftar. Dinding besar bisa berarti support/resistance kuat — atau jebakan (spoofing) bila hilang tiba-tiba; selalu konfirmasi dengan Zona Pantau MSNR.</div>
+      <div class="disc">Scanner melacak level harga tempat order menumpuk paling tebal di buku 20 level: ukuran berjalan, puncak ukuran selama dilacak, jarak dari mid, dan durasi tumpukan bertahan. Tumpukan yang hilang dari buku &gt;20 detik dihapus dari daftar. Dinding besar bisa berarti support/resistance kuat — atau jebakan (spoofing) bila hilang tiba-tiba; selalu konfirmasi dengan Zona Pantau MSNR. Scanner membaca buku pada <b style="color:var(--muted)">kedalaman aktif</b> panel orderbook — pada mode JERU / PALING JERU (atau timeframe 1H–1D pada mode AUTO) dinding yang jauh dari harga ikut terdeteksi, dan kolom jarak % menunjukkan seberapa jauh tumpukan itu dari mid.</div>
     </div>
   </section>
 
@@ -368,7 +375,7 @@
     <div class="phead"><span class="t">Metodologi Setup Teknikal</span><span class="r">RUMUS TERBUKA · BISA DIAUDIT</span></div>
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView.</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali) dengan timeframe 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima, dan Scanner Tumpukan membaca buku pada kedalaman aktif yang sama.</p>
       <p>Scanner Tumpukan melacak semua level buku dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
@@ -386,7 +393,54 @@ var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, re
 var chart={ sym:"btc", tf:300, itv:"15m", ema:true, vwap:false, vol:true, rsi:false, macd:false, tool:"cursor", cross:null, draft:null, hoverIdx:-1 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
-MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0}; });
+MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
+
+/* ============ kedalaman orderbook (agregasi nSigFigs) ============
+   l2Book Hyperliquid selalu maks 20 level/sisi — yang diatur nSigFigs
+   adalah lebar agregasi harga tiap level, jadi jangkauan buku:
+   tanpa nSigFigs ±0,03% · nSigFigs 4 ±0,3–0,55% · nSigFigs 3 ±3,2–5,5% ·
+   nSigFigs 2 ±32–58% dari mid (terukur dari API, 26 Nov 2026).
+   Mode AUTO (bawaan) mengikuti timeframe Terminal Analisa supaya di
+   skala daily yang tampil adalah tumpukan harian; pilihan manual
+   menimpa AUTO. Langganan tetap fast:true di semua kedalaman. */
+var NSIG={ fine:null, med:4, deep:3, max:2 };
+var DEPTH_NAME={ fine:"ALUS", med:"SEDANG", deep:"JERU", max:"PALING JERU" };
+var AUTO_DEPTH={ "1m":"fine", "5m":"fine", "15m":"med", "1h":"deep", "4h":"deep", "1d":"max" };
+function effDepth(id){ var s=M[id]; return s.depthMode==="auto"? (AUTO_DEPTH[chart.itv]||"fine") : s.depthMode; }
+function bookSub(m,nsig){ var sub={type:"l2Book", coin:m.coin, fast:true}; if(nsig!=null) sub.nSigFigs=nsig; return sub; }
+function updateDepthUI(id){
+  var s=M[id], el=s.el; if(!el) return;
+  el.querySelectorAll("[data-dp]").forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-dp")===s.depthMode? "true":"false"); });
+  var eff=f(el,"depthEff");
+  if(eff){ var ed=effDepth(id); eff.textContent= s.depthMode==="auto"? ("AUTO → "+DEPTH_NAME[ed]+" · IKUT TF "+chart.itv.toUpperCase()) : (DEPTH_NAME[ed]+" · MANUAL"); }
+}
+function fetchBook(id){
+  var m=M[id].def, body={type:"l2Book", coin:m.coin}, nsig=NSIG[effDepth(id)];
+  if(nsig!=null) body.nSigFigs=nsig;
+  M[id].appliedDepth=effDepth(id);
+  return postInfo(body).then(function(d){ applyBook(id,d); }).catch(function(){});
+}
+/* ganti kedalaman efektif: langganan WS l2Book dibangun ulang dari awal
+   (reconnect memakai nSigFigs terpilih + fast:true), snapshot REST ditarik
+   pada kedalaman baru, dan tumpukan scanner direset karena kunci level
+   agregasi lama tidak sebanding dengan agregasi baru */
+function applyDepthChange(id){
+  var s=M[id]; s.appliedDepth=effDepth(id); s.stacks={};
+  fetchBook(id);
+  if(state.mode==="live") startWS();
+}
+function setDepthMode(id,mode){
+  var s=M[id]; s.depthMode=mode; updateDepthUI(id);
+  if(effDepth(id)!==s.appliedDepth) applyDepthChange(id);
+}
+function syncAutoDepth(){
+  var any=false;
+  MARKETS.forEach(function(m){
+    var s=M[m.id]; updateDepthUI(m.id);
+    if(s.depthMode==="auto"&&effDepth(m.id)!==s.appliedDepth){ s.appliedDepth=effDepth(m.id); s.stacks={}; fetchBook(m.id); any=true; }
+  });
+  if(any&&state.mode==="live") startWS();
+}
 
 /* ============ ZONA PANTAU (statis, dari laporan pemilik) ============ */
 var ZONEGROUPS=[
@@ -429,6 +483,15 @@ MARKETS.forEach(function(m){
     '</div>'+
     '<div class="imb"><div class="lbl"><span data-f="imbB">BID —</span><span>IMBALANCE 20 LVL</span><span data-f="imbA">ASK —</span></div>'+
     '<div class="imbbar"><div class="b" data-f="imbBar" style="width:50%"></div><div class="a"></div></div></div>'+
+    '<div class="depthbar"><span class="dk">KEDALAMAN</span>'+
+    '<div class="dseg" role="group" aria-label="Kedalaman orderbook '+m.name+'">'+
+    '<button data-dp="auto" aria-pressed="true">AUTO</button>'+
+    '<button data-dp="fine" aria-pressed="false">ALUS</button>'+
+    '<button data-dp="med" aria-pressed="false">SEDANG</button>'+
+    '<button data-dp="deep" aria-pressed="false">JERU</button>'+
+    '<button data-dp="max" aria-pressed="false">PALING JERU</button></div>'+
+    '<span class="deff" data-f="depthEff">AUTO → SEDANG · IKUT TF 15M</span>'+
+    '<span class="drange" data-f="depthRange">JANGKAUAN —</span></div>'+
     '<div class="bookhead"><span>Harga</span><span>Ukuran ('+m.unit+')</span><span>Kumulatif</span></div>'+
     '<div data-f="asks"></div>'+
     '<div class="midrow"><span class="mid" data-f="midRow">MID —</span><span data-f="spreadRow" style="color:var(--muted)">SPREAD —</span></div>'+
@@ -442,6 +505,7 @@ MARKETS.forEach(function(m){
     '<div class="disc">Cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi sebelum mengambil keputusan apa pun.</div></div></div>';
   grid.appendChild(sec);
   M[m.id].el=sec;
+  sec.querySelectorAll("[data-dp]").forEach(function(b){ b.addEventListener("click",function(){ setDepthMode(m.id, b.getAttribute("data-dp")); }); });
   sec.querySelector('[data-act="reset"]').addEventListener("click",function(){
     var s=M[m.id]; s.cvd=0; s.cvdN=0; s.trades=[]; render(m.id);
   });
@@ -613,7 +677,10 @@ function tickCandle(id,tr){
 }
 function fetchSnapshot(){
   var jobs=MARKETS.map(function(m){
-    return postInfo({type:"l2Book",coin:m.coin}).then(function(d){ applyBook(m.id,d); });
+    var body={type:"l2Book",coin:m.coin}, nsig=NSIG[effDepth(m.id)];
+    if(nsig!=null) body.nSigFigs=nsig;
+    M[m.id].appliedDepth=effDepth(m.id);
+    return postInfo(body).then(function(d){ applyBook(m.id,d); });
   });
   return Promise.all(jobs).then(function(){
     if(state.mode==="live" && !state.wsOk) setStatus("poll","CADANGAN · POLLING REST 2 DTK (WS BELUM JALAN)");
@@ -658,7 +725,8 @@ function startWS(){
          mengirim snapshot buku ±0,13×/detik (terasa tidak live walau WS
          nyambung); mode fast menaikkan laju update buku ±14× (diuji
          langsung ke wss://api.hyperliquid.xyz/ws, 26 Nov 2026) */
-      ws.send(JSON.stringify({method:"subscribe",subscription:{type:"l2Book",coin:m.coin,fast:true}}));
+      var ed=effDepth(m.id), nsig=NSIG[ed]; M[m.id].appliedDepth=ed; M[m.id].subNsig=nsig;
+      ws.send(JSON.stringify({method:"subscribe",subscription:bookSub(m,nsig)}));
       ws.send(JSON.stringify({method:"subscribe",subscription:{type:"trades",coin:m.coin}}));
       ws.send(JSON.stringify({method:"subscribe",subscription:{type:"candle",coin:m.coin,interval:chart.itv}}));
     });
@@ -797,6 +865,8 @@ function render(id){
   f(el,"imbB").textContent="BID "+pctB.toFixed(0)+"%";
   f(el,"imbA").textContent="ASK "+(100-pctB).toFixed(0)+"%";
   f(el,"imbBar").style.width=pctB+"%";
+  var dr=f(el,"depthRange");
+  if(dr&&bids.length&&asks.length){ var dnR=(mid-bids[bids.length-1].px)/mid*100, upR=(asks[asks.length-1].px-mid)/mid*100; dr.textContent="JANGKAUAN −"+dnR.toFixed(2)+"% / +"+upR.toFixed(2)+"% DARI MID · "+bids.length+" LVL/SISI"; }
   f(el,"asks").innerHTML=rowsHtml(asks,true,m.dec,m.szDec);
   f(el,"bids").innerHTML=rowsHtml(bids,false,m.dec,m.szDec);
   f(el,"empty").style.display="none";
@@ -1246,7 +1316,7 @@ document.querySelectorAll("[data-itv]").forEach(function(b){
     chart.itv=b.getAttribute("data-itv"); chart.draft=null;
     document.querySelectorAll("[data-itv]").forEach(function(x){ x.setAttribute("aria-pressed", x===b? "true":"false"); });
     $("chartSymLabel").textContent=(chart.sym==="btc"? "BTC PERP":"XAU PERP")+" · CANDLE "+chart.itv.toUpperCase()+" · LIVE PER TICK";
-    fetchAllCandles(); resubCandles(); drawChart();
+    fetchAllCandles(); resubCandles(); drawChart(); syncAutoDepth();
   });
 });
 $("tab-btc").addEventListener("click",function(){ setChartSym("btc"); });
@@ -1321,6 +1391,7 @@ setInterval(updateDiag,1000);
 
 /* ============ boot ============ */
 setChartSym("btc");
+MARKETS.forEach(function(m){ updateDepthUI(m.id); });
 fetchAllCandles();
 setMode("live");
 /* segarkan durasi tumpukan & buang yang basi tiap detik */
