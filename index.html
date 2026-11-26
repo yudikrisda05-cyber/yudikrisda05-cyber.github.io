@@ -171,7 +171,7 @@
   /* teks basis live ing njero bar kontrol NDHUWUR chart (dudu chip
      ngambang maneh): mono cilik warna emas, manggon ing tengah bar
      antarane tombol GAMBAR lan KE TERBARU, di-truncate nek sempit */
-  .ovlbasis{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px;font-weight:700;color:var(--gold);letter-spacing:.02em;white-space:nowrap;font-variant-numeric:tabular-nums;padding:0 2px;max-width:118px;overflow:hidden;text-overflow:ellipsis}
+  .ovlbasis{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px;font-weight:700;color:var(--gold);letter-spacing:.02em;white-space:nowrap;font-variant-numeric:tabular-nums;padding:0 2px;max-width:82px;overflow:hidden;text-overflow:ellipsis}
   /* tombol aksi ing bar kontrol ndhuwur chart (KE TERBARU / SKALA AUTO) —
      tampil/dhelik diatur drawChart liwat style.display kaya sadurunge */
   .ovlact{border:1px solid var(--teal);background:rgba(3,26,18,.94);color:var(--teal);font-weight:800;font-size:9.5px;letter-spacing:.04em;border-radius:999px;padding:0 8px;min-height:22px;cursor:pointer;flex:none;pointer-events:auto;white-space:nowrap}
@@ -208,6 +208,9 @@
      sing nggantung ing ngisore bar kontrol iki (njero area chart,
      kiwa-ndhuwur) — id & handler toggle tetep. */
   .fxbtn{border:1px solid rgba(232,195,58,.55);background:rgba(23,18,0,.85);color:var(--gold);border-radius:999px;font-size:9.5px;font-weight:800;letter-spacing:.04em;padding:0 8px;min-height:22px;cursor:pointer;flex:none;pointer-events:auto;white-space:nowrap}
+  /* varian ikon kompak (arahan pemilik): tombol kothak cilik mung isi
+     simbol "fx" / "✎" tanpa tembung, dhuwur sejajar bar kontrol */
+  .fxbtn.fxicon{width:30px;padding:0;text-align:center;font-size:12.5px;letter-spacing:0;border-radius:8px}
   .fxbtn[aria-expanded="true"]{background:var(--gold);color:#171200}
   .indpop{position:absolute;left:8px;top:80px;z-index:7;max-height:calc(100% - 88px);overflow-y:auto;width:262px;max-width:calc(100% - 88px);background:rgba(8,13,20,.95);border:1px solid rgba(27,39,56,.95);border-radius:12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:9px;box-shadow:0 6px 22px rgba(0,0,0,.5);display:none}
   .indpop.on{display:block}
@@ -232,7 +235,7 @@
      fx INDIKATOR. Wadhah persis .indpop (latar panel semi-transparan,
      pinggir tipis, judhul cilik + ✕); isine daftar vertikal
      ikon + jeneng, piranti aktif disorot teal kaya rail lawas. ===== */
-  .drawpop{left:116px;width:198px}
+  .drawpop{left:48px;width:198px}
   .drawlist{display:flex;flex-direction:column;gap:5px}
   .drawlist button{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:8px;font-size:11.5px;font-weight:700;padding:6px 9px;min-height:30px;cursor:pointer;text-align:left;letter-spacing:.01em}
   .drawlist button .dic{font-size:14px;width:16px;text-align:center;flex:none;line-height:1}
@@ -468,7 +471,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 03:10 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 03:20 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -600,8 +603,8 @@
              mung posisi wadhah-e. Ing mode OANDA bar iki didhelikake
              total (setChartViewMode). -->
         <div class="ovl ovl-ctrl" id="ctrlBar">
-          <button class="fxbtn" id="btnIndPop" aria-expanded="false" aria-controls="indPop">fx INDIKATOR</button>
-          <button class="fxbtn" id="btnDrawPop" aria-expanded="false" aria-controls="drawPop">✎ GAMBAR</button>
+          <button class="fxbtn fxicon" id="btnIndPop" aria-expanded="false" aria-controls="indPop" title="Indikator" aria-label="Buka daftar indikator">fx</button>
+          <button class="fxbtn fxicon" id="btnDrawPop" aria-expanded="false" aria-controls="drawPop" title="Alat gambar" aria-label="Buka alat gambar">✎</button>
           <span class="ovlbasis" id="basisLiveChip" style="display:none"></span>
           <span style="flex:1 1 auto"></span>
           <button id="btnLatest" class="ovlact" style="display:none">KE TERBARU ▶</button>
