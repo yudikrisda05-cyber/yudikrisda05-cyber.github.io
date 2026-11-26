@@ -478,7 +478,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 03:55 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 04:10 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -671,6 +671,8 @@
             <button id="ind-stats" aria-pressed="false">STATS</button>
             <button id="ind-heat" aria-pressed="false">HEAT</button>
             <button id="ind-foot" aria-pressed="false">FOOT</button>
+            <button id="ind-absorb" aria-pressed="false">ABSORB</button>
+            <button id="ind-tpo" aria-pressed="false">TPO</button>
           </div>
           <div class="indpop-foot">
             <button class="mini" id="btnCandles" style="margin-top:0">↻ MUAT ULANG CANDLE</button>
@@ -832,6 +834,8 @@
       <p>SMC: adhedhasar Smart Money Concepts [LuxAlgo] (CC BY-NC-SA 4.0)</p>
       <p>Heatmap orderbook (toggle HEAT di popup indikator) digambar sebagai lapisan latar chart dari rekaman buku jeru sesi ini — ia hanya menampilkan data sejak aplikasi dibuka pada sesi ini (rekaman disimpan di memori perangkat, hingga ±3 jam terakhir), bukan histori dari sebelum aplikasi dibuka.</p>
       <p>Footprint (toggle FOOT di popup indikator) diagregasi dari aggTrades Binance untuk candle yang terlihat saat mode FOOT aktif, bukan footprint tick-persis — candle di luar tampilan atau dari masa sebelum mode dihidupkan tidak memiliki data footprint dan digambar sebagai candle biasa; stacked imbalance dihitung dari perbandingan diagonal antar level harga di dalam candle yang sama.</p>
+      <p>Absorption zones (toggle ABSORB di popup indikator) dihitung dari candle + delta taker-buy Binance yang tersimpan pada candle (delta = 2×takerBuy − volume, sama seperti kolom Δ pada STATS): candle dianggap absorpsi bila volumenya ≥1,5× rata-rata volume 20 candle sebelumnya dan |delta%| ≥40%, tetapi hasil harganya tidak sebanding — delta negatif kuat namun close tetap di paruh atas rentang candle (penjual diserap, zona mint) atau delta positif kuat namun close di paruh bawah rentang (pembeli diserap, zona merah muda). Zona digambar dari low–high candle itu dan memanjang ke kanan sampai ada body close menembus batasnya; maksimal 6 zona aktif terbaru yang digambar. Bila candle tidak memiliki data taker-buy (sumber cadangan Hyperliquid), ABSORB tidak menggambar apa pun.</p>
+      <p>TPO profile (toggle TPO di popup indikator) adalah profil Time Price Opportunity hari ini (UTC): hari dibagi blok 30 menit (huruf A, B, C, …), tiap blok menandai baris harga yang tersentuh rentang high–low dalam blok itu, dihitung dari candle chart yang aktif — bila timeframe lebih besar dari 30 menit, tiap candle menjadi satu blok. Baris dengan huruf terbanyak adalah POC (diserot emas + garis POC), dan 70% huruf di sekitar POC membentuk value area yang disorot lebih terang. TPO ini didekati dari rentang candle per blok 30 menit, bukan dari data tick, jadi huruf per baris adalah pendekatan, bukan hitungan tick persis.</p>
       <p><b>Pasang di HP:</b> halaman ini adalah <b>web app</b> — tidak bisa menginstal dirinya sendiri seperti APK Play Store, tapi bisa dipasang ke layar utama dan dibuka seperti aplikasi, lengkap dengan <b>ikon aplikasi khusus</b> yang akan muncul di layar utama setelah dipasang (bukan ikon bawaan browser). <b>iPhone (Safari):</b> tombol <b>Bagikan</b> → <b>Tambah ke Layar Utama</b> → <b>Tambah</b>. <b>Android (Chrome):</b> menu <b>⋮</b> → <b>Tambahkan ke Layar Utama</b> / <b>Instal aplikasi</b>. Bila ikon lama sudah terpasang sebelum ikon khusus ini ada, hapus dulu ikon lama dari layar utama lalu pasang ulang supaya ikon barunya muncul. APK Android sungguhan = proyek terpisah (dibangun &amp; ditandatangani di luar halaman ini) — bilang saja bila mau disiapkan jalurnya.</p>
     </div>
   </footer>
@@ -846,7 +850,7 @@ var MARKETS=[
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · PERP · xyz:GOLD", unit:"oz", dec:1, szDec:2, grid:5}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
-var chart={ sym:"btc", tf:300, itv:"15m", viewMode:"analisa", ema:true, vwap:false, vol:true, rsi:false, macd:false, stoch:false, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:true, bubbles:true, panel:false, vprof:false, smc:false, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, info:false, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
+var chart={ sym:"btc", tf:300, itv:"15m", viewMode:"analisa", ema:true, vwap:false, vol:true, rsi:false, macd:false, stoch:false, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:true, bubbles:true, panel:false, vprof:false, smc:false, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, info:false, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, cvdLog:[], cvdSeries:[], el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
@@ -3390,7 +3394,7 @@ function drawChart(){
      di-isolasi try/catch dhewe: gagal mung mateni indikator kuwi,
      aplikasi tetep mlaku. Mode OANDA wis metu luwih dhisik ing
      ndhuwur drawChart, dadi katelune otomatis didhelikake neng kana. */
-  if(chart.vprof||chart.smc||chart.smcObs||chart.smcFvg||chart.smcPd||chart.snr||chart.vband||chart.pivot||chart.strend||chart.bb||chart.kelt||chart.don||chart.orbs){
+  if(chart.vprof||chart.smc||chart.smcObs||chart.smcFvg||chart.smcPd||chart.snr||chart.vband||chart.pivot||chart.strend||chart.bb||chart.kelt||chart.don||chart.orbs||chart.absorb||chart.tpo){
     var indD=null;
     try{ indD=indData(cs,allC); }catch(e){ indD=null; }
     if(indD){
@@ -3404,6 +3408,8 @@ function drawChart(){
       if(chart.vprof&&indD.vprof){ try{ drawVProfData(indD.vprof,m); }catch(e){} }
       if((chart.smc||chart.smcObs||chart.smcFvg||chart.smcPd)&&indD.smc){ try{ drawSMCData(indD.smc,m); }catch(e){} }
       if(chart.snr&&indD.snr){ try{ drawSNRData(indD.snr,m); }catch(e){} }
+      if(chart.absorb&&indD.absorb){ try{ drawAbsorbData(indD.absorb,m); }catch(e){} }
+      if(chart.tpo&&indD.tpo){ try{ drawTPOData(indD.tpo,m); }catch(e){} }
     }
   }
   /* objek gambar pengguna */
@@ -3475,12 +3481,13 @@ function drawObjects(s,m){ s.drawings.forEach(function(d){ drawOneObject(d,m,fal
    digambar saben frame nganggo X()/Y() frame kuwi — kekunci
    pemetaan chart kaya garis JSNR. Gaya gambar TIPIS lan kalem:
    garis 1px, label 9px, isi kothak opasitas endhek. */
-var indCalc={ key:"", at:0, vprof:null, smc:null, snr:null, vband:null, pivot:null, strend:null, bb:null, kelt:null, don:null, orbs:null, stoch:null, cci:null, adx:null, obv:null, mfi:null, rvol:null };
+var indCalc={ key:"", at:0, vprof:null, smc:null, snr:null, vband:null, pivot:null, strend:null, bb:null, kelt:null, don:null, orbs:null, stoch:null, cci:null, adx:null, obv:null, mfi:null, rvol:null, absorb:null, tpo:null };
 function indData(cs,allC){
   var key=chart.sym+"|"+chart.itv+"|"+view.startIdx+"|"+cs.length+"|"+allC.length+"|"+(allC.length? allC[allC.length-1].t:0)
     +"|"+(chart.vprof?1:0)+(chart.smc?1:0)+(chart.snr?1:0)+"|"+(chart.smcObs?1:0)+(chart.smcFvg?1:0)+(chart.smcPd?1:0)
     +"|"+(chart.vband?1:0)+(chart.pivot?1:0)+(chart.strend?1:0)+(chart.bb?1:0)+(chart.kelt?1:0)+(chart.don?1:0)+(chart.orbs?1:0)
     +"|"+(chart.stoch?1:0)+(chart.cci?1:0)+(chart.adx?1:0)+(chart.obv?1:0)+(chart.mfi?1:0)+(chart.rvol?1:0)
+    +"|"+(chart.absorb?1:0)+(chart.tpo?1:0)
     +"|"+Math.floor(Date.now()/86400000)+"|"+((typeof jsnrData!=="undefined"&&jsnrData&&jsnrData[chart.sym]&&jsnrData[chart.sym].D)? jsnrData[chart.sym].D.length : 0);
   var now=Date.now();
   if((indCalc.key!==key||now-indCalc.at>4000)&&now-indCalc.at>=300){
@@ -3500,6 +3507,8 @@ function indData(cs,allC){
     if(chart.obv){ try{ indCalc.obv=calcOBV(cs); }catch(e){ indCalc.obv=null; } }
     if(chart.mfi){ try{ indCalc.mfi=calcMFI(cs); }catch(e){ indCalc.mfi=null; } }
     if(chart.rvol){ try{ indCalc.rvol=calcRVOL(cs); }catch(e){ indCalc.rvol=null; } }
+    if(chart.absorb){ try{ indCalc.absorb=calcAbsorb(allC); }catch(e){ indCalc.absorb=null; } }
+    if(chart.tpo){ try{ indCalc.tpo=calcTPO(allC); }catch(e){ indCalc.tpo=null; } }
     indCalc.key=key; indCalc.at=now;
   }
   return indCalc;
@@ -3556,6 +3565,166 @@ function drawVProfData(d,m){
   ctx.fillStyle="#9fb2c8";
   ctx.fillText("VAH",6,yA-3);
   ctx.fillText("VAL",6,yV+11);
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- ABSORB: zona absorpsi saka candle + delta taker (Gelombang 3B) ----
+   Toggle ABSORB (popup fx INDIKATOR, standar MATI). Candle dianggep
+   ABSORPSI nek usahane gedhe nanging asil regane ora sebanding:
+   volume ≥1,5× rata-rata volume 20 candle sadurunge lan |delta%| ≥40%
+   (delta = 2×takerBuy − volume, data taker-buy Binance sing disimpen
+   ing candle — padha karo sing dianggo STATS), nanging:
+   (a) BULLISH (penjual diserap): delta% ≤ −40% nanging close ana ing
+       separo ndhuwur rentang candle (rega ora sida mudhun adoh);
+   (b) BEARISH (pembeli diserap): delta% ≥ +40% nanging close ana ing
+       separo ngisor rentang candle.
+   Zona = kothak saka low–high candle kuwi, diterusne menyang tengen
+   nganti ana BODY CLOSE nembus: bullish pecah nek close mudhun ngisor
+   low-e, bearish pecah nek close munggah ndhuwur high-e. Mung zona
+   sing isih AKTIF (durung pecah tekan candle pungkasan) sing digambar,
+   maksimal 6 sing paling anyar. Nek candle ora ana data taker-buy
+   (sumber Hyperliquid cadangan), calcAbsorb mbalekne null lan ora ana
+   sing digambar — kejujurane ditulis ing ⓘ Metodologi. */
+function calcAbsorb(csAll){
+  if(!csAll||csAll.length<21) return null;
+  var hasTb=false, i, j;
+  for(i=0;i<csAll.length;i++){ if(csAll[i].tb!=null){ hasTb=true; break; } }
+  if(!hasTb) return null;
+  var zones=[];
+  for(i=20;i<csAll.length;i++){
+    var c=csAll[i];
+    if(c.tb==null||!(c.v>0)) continue;
+    var sv=0; for(j=i-20;j<i;j++) sv+=(csAll[j].v||0);
+    var avg=sv/20; if(!(avg>0)) continue;
+    if(c.v<1.5*avg) continue;
+    var dpct=(2*c.tb-c.v)/c.v*100;
+    if(Math.abs(dpct)<40) continue;
+    var rng=c.h-c.l; if(!(rng>0)) continue;
+    var pos=(c.c-c.l)/rng, dir=0;
+    if(dpct<=-40&&pos>=0.5) dir=1;
+    else if(dpct>=40&&pos<=0.5) dir=-1;
+    if(!dir) continue;
+    var broken=false;
+    for(j=i+1;j<csAll.length;j++){
+      var cj=csAll[j];
+      if(dir>0&&cj.c<c.l){ broken=true; break; }
+      if(dir<0&&cj.c>c.h){ broken=true; break; }
+    }
+    if(!broken) zones.push({ t:c.t, lo:c.l, hi:c.h, dir:dir });
+  }
+  if(!zones.length) return null;
+  if(zones.length>6) zones=zones.slice(zones.length-6);
+  return { zones:zones };
+}
+/* gambar zona absorpsi: isi kalem (mint bullish / pink bearish),
+   pinggir 1px pedhot-pedhot, label cilik "ABS" — kekunci X()/Y() */
+function drawAbsorbData(d,m){
+  var plotR=view.offset+view.plotW;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  ctx.font="bold 9px -apple-system,'Segoe UI',Roboto,sans-serif";
+  d.zones.forEach(function(z){
+    var x0=X(z.t); if(x0>plotR) return;
+    var yT=Y(z.hi), yB=Y(z.lo);
+    if(yB<-20||yT>view.H+20) return;
+    var bull=z.dir>0;
+    ctx.fillStyle= bull? "rgba(46,230,168,.10)" : "rgba(255,77,106,.10)";
+    ctx.fillRect(x0,yT,Math.max(1,plotR-x0),Math.max(1,yB-yT));
+    ctx.strokeStyle= bull? "rgba(46,230,168,.8)" : "rgba(255,77,106,.8)";
+    ctx.lineWidth=1; ctx.setLineDash([5,4]);
+    ctx.strokeRect(x0+0.5,yT+0.5,Math.max(1,plotR-x0-1),Math.max(1,(yB-yT)-1));
+    ctx.setLineDash([]);
+    ctx.fillStyle= bull? "#2ee6a8" : "#ff4d6a";
+    ctx.fillText("ABS", x0+4, yT+11);
+  });
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- TPO: profil Time Price Opportunity dina iki UTC (Gelombang 3B) ----
+   Toggle TPO (popup fx INDIKATOR, standar MATI). Dina UTC kebagi blok
+   30 menit (huruf A, B, C, … banjur a, b, c, …); saben blok nandhani
+   baris rega sing kena rentang high–low sajroning blok kuwi, dietung
+   saka candle chart sing aktif; nek timeframe luwih gedhe saka
+   30 menit, saben candle dadi sak blok dhewe. Baris rega 27 merata
+   sajroning rentang dina iki. POC = baris huruf paling akeh; area
+   nilai 70% ditambahi saka POC munggah/mudhun milih baris sing luwih
+   gedhe dhisik (pola padha karo VPROF). KEJUJURAN: TPO iki didekati
+   saka rentang candle per blok, dudu data tick — ditulis uga ing
+   ⓘ Metodologi. */
+function calcTPO(csAll){
+  if(!csAll||!csAll.length) return null;
+  var dayMs=86400000;
+  var dayStart=Math.floor(Date.now()/dayMs)*dayMs;
+  var todays=[], i;
+  for(i=0;i<csAll.length;i++){ if(csAll[i].t>=dayStart) todays.push(csAll[i]); }
+  if(!todays.length) return null;
+  var lo=Infinity, hi=-Infinity;
+  todays.forEach(function(c){ if(c.l<lo)lo=c.l; if(c.h>hi)hi=c.h; });
+  if(!(hi>lo)) return null;
+  var rows=27, rh=(hi-lo)/rows;
+  var tfMs=ITV_MS[chart.itv]||900000;
+  var blockOf={};
+  todays.forEach(function(c,ci){
+    /* TF ≤30 menit: blok wektu 30 menit saka awal dina UTC;
+       TF luwih gedhe: saben candle dadi sak blok dhewe */
+    var bi= tfMs<=1800000? Math.floor((c.t-dayStart)/1800000) : ci;
+    (blockOf[bi]=blockOf[bi]||[]).push(c);
+  });
+  var bIdx=Object.keys(blockOf).map(Number).sort(function(a,b){ return a-b; });
+  var rowLetters=[], r;
+  for(r=0;r<rows;r++) rowLetters.push([]);
+  var total=0;
+  bIdx.forEach(function(bi,ord){
+    var L= ord<26? String.fromCharCode(65+ord) : String.fromCharCode(97+(ord-26)%26);
+    var touched={};
+    blockOf[bi].forEach(function(c){
+      var a=Math.max(0,Math.floor((c.l-lo)/rh)), b=Math.min(rows-1,Math.floor((c.h-lo)/rh));
+      for(var rr=a;rr<=b;rr++) touched[rr]=1;
+    });
+    Object.keys(touched).forEach(function(k){ rowLetters[+k].push(L); total++; });
+  });
+  if(!total) return null;
+  var poc=0, mx=0;
+  rowLetters.forEach(function(L2,i2){ if(L2.length>mx){ mx=L2.length; poc=i2; } });
+  var acc=rowLetters[poc].length, up=poc, dn=poc;
+  while(acc<total*0.70&&(up<rows-1||dn>0)){
+    var vu= up<rows-1? rowLetters[up+1].length : -1, vd= dn>0? rowLetters[dn-1].length : -1;
+    if(vu>=vd){ up++; acc+=Math.max(0,vu); } else { dn--; acc+=Math.max(0,vd); }
+  }
+  return { lo:lo, rh:rh, rows:rowLetters, pocRow:poc, pocPx:lo+(poc+0.5)*rh, vaUp:up, vaDn:dn };
+}
+/* gambar profil TPO ing sisih tengen area chart (area offset, nempel
+   pinggir tengen plot kaya VPROF): saben baris isine tumpukan huruf
+   blok; baris POC disorot emas + garis POC tipis nyabrang chart;
+   baris area nilai 70% luwih padhang; label cilik "TPO" + "POC" */
+function drawTPOData(d,m){
+  var plotR=view.offset+view.plotW;
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,view.W-64,view.H); ctx.clip();
+  var maxL=0, i;
+  d.rows.forEach(function(L){ if(L.length>maxL) maxL=L.length; });
+  var charW=5.4, profW=Math.min(maxL*charW, view.plotW*0.42);
+  var x0=plotR-profW;
+  ctx.font="8px ui-monospace,Menlo,monospace";
+  for(i=0;i<d.rows.length;i++){
+    var L=d.rows[i]; if(!L.length) continue;
+    var yc=Y(d.lo+(i+0.5)*d.rh);
+    var isPoc= i===d.pocRow, inVa= i>=d.vaDn&&i<=d.vaUp;
+    if(isPoc){ ctx.fillStyle="rgba(232,195,58,.20)"; ctx.fillRect(x0,yc-5.5,profW,11); }
+    else if(inVa){ ctx.fillStyle="rgba(125,143,166,.13)"; ctx.fillRect(x0,yc-5.5,profW,11); }
+    ctx.fillStyle= isPoc? "#e8c33a" : (inVa? "#dbe6f2" : "rgba(139,155,176,.75)");
+    if(isPoc) ctx.font="bold 8px ui-monospace,Menlo,monospace";
+    var txt=L.join("");
+    var tw=ctx.measureText(txt).width;
+    ctx.fillText(txt, plotR-Math.min(tw,profW)-1, yc+2.8);
+    if(isPoc) ctx.font="8px ui-monospace,Menlo,monospace";
+  }
+  /* garis POC: emas 1px pedhot-pedhot nyabrang chart + label POC */
+  var yP=Y(d.pocPx);
+  ctx.strokeStyle="rgba(232,195,58,.85)"; ctx.lineWidth=1; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(0,yP); ctx.lineTo(plotR,yP); ctx.stroke(); ctx.setLineDash([]);
+  ctx.font="bold 9px -apple-system,'Segoe UI',Roboto,sans-serif";
+  ctx.fillStyle="#e8c33a";
+  ctx.fillText("POC",6,yP-3);
+  ctx.fillText("TPO", Math.max(6,x0), Math.max(10,Y(d.lo+d.rows.length*d.rh)-4));
   ctx.restore();
   ctx.font="10px ui-monospace,Menlo,monospace";
 }
@@ -4688,6 +4857,7 @@ bindToggle("ind-smcobs","smcObs"); bindToggle("ind-smcfvg","smcFvg"); bindToggle
 bindToggle("ind-vband","vband"); bindToggle("ind-pivot","pivot"); bindToggle("ind-strend","strend"); bindToggle("ind-bb","bb"); bindToggle("ind-kelt","kelt"); bindToggle("ind-don","don"); bindToggle("ind-orbs","orbs"); bindToggle("ind-stats","stats");
 bindToggle("ind-heat","heat");
 bindToggle("ind-foot","foot");
+bindToggle("ind-absorb","absorb"); bindToggle("ind-tpo","tpo");
 /* ---- INFO CHART: saklompok blok info didhelikake kanthi standar
    (chart.info=false) — legenda OHLC ing pojok ndhuwur chart, strip
    readout OHLC ing ngisor chart, baris petunjuk gestur, lan panel
