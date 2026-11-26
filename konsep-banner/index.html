@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="jv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Konsep Banner — Orderbook</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#000; color:#dbe4f0; font-family:-apple-system,'Segoe UI',Roboto,sans-serif; }
+  .wrap { max-width:430px; margin:0 auto; padding:14px 10px 40px; }
+  h1 { font-size:15px; text-align:center; color:#f0c84b; letter-spacing:1px; margin:6px 0 2px; }
+  .sub { text-align:center; font-size:11px; color:#7d8fa6; margin-bottom:18px; }
+  .label { font-size:11px; font-weight:700; color:#22d3ee; letter-spacing:1.5px; margin:20px 2px 7px; }
+  .banner { border-radius:14px; overflow:hidden; position:relative; height:168px; border:1px solid #1b2637; }
+
+  /* ===== KONSEP 1: JARVIS HUD ===== */
+  .b1 { background:radial-gradient(120% 160% at 18% 50%, #0b2233 0%, #071420 45%, #04070c 100%); display:flex; align-items:center; gap:14px; padding:0 18px; }
+  .b1 .ring { flex:0 0 auto; animation:pulse 3.2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{ filter:drop-shadow(0 0 3px rgba(32,227,194,.45)); } 50%{ filter:drop-shadow(0 0 10px rgba(32,227,194,.85)); } }
+  .b1 .t1 { font-size:19px; font-weight:800; letter-spacing:2.5px; color:#eaf6ff; line-height:1.15; }
+  .b1 .t1 span { color:#20e3c2; }
+  .b1 .t2 { margin-top:7px; font-size:10.5px; color:#8fb0c9; letter-spacing:.6px; line-height:1.5; }
+  .b1 .t2 b { color:#f0c84b; font-weight:600; }
+
+  /* ===== KONSEP 2: TICKER URIP ===== */
+  .b2 { background:linear-gradient(180deg,#081018,#05080d); display:flex; flex-direction:column; }
+  .b2 .head { display:flex; align-items:center; gap:8px; padding:12px 14px 8px; }
+  .b2 .dot { width:7px; height:7px; border-radius:50%; background:#20e3a2; box-shadow:0 0 7px #20e3a2; }
+  .b2 .brand { font-size:13px; font-weight:800; letter-spacing:2px; color:#eaf6ff; }
+  .b2 .brand span { color:#f0c84b; }
+  .b2 .live { margin-left:auto; font-size:9px; color:#20e3a2; border:1px solid #14532d; padding:2px 7px; border-radius:20px; letter-spacing:1px; }
+  .b2 .track { overflow:hidden; flex:1; display:flex; align-items:center; -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent); }
+  .b2 .move { display:flex; gap:34px; white-space:nowrap; animation:mq 26s linear infinite; padding-left:14px; }
+  @keyframes mq { from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+  .b2 .it { font-size:12.5px; color:#a9bdd2; }
+  .b2 .it b { color:#eaf6ff; font-weight:700; }
+  .b2 .up { color:#20e3a2; } .b2 .dn { color:#ff4d6a; } .b2 .gd { color:#f0c84b; }
+  .b2 .foot { padding:8px 14px 11px; font-size:9.5px; color:#5f7288; letter-spacing:.8px; border-top:1px solid #12202f; }
+
+  /* ===== KONSEP 3: PANGELING JAVANESE ===== */
+  .b3 { background:radial-gradient(130% 170% at 85% 20%, #171106 0%, #0a0805 55%, #050403 100%); display:flex; flex-direction:column; justify-content:center; padding:0 20px; }
+  .b3 .wm { position:absolute; right:-8px; top:50%; transform:translateY(-52%); font-size:118px; color:rgba(240,200,75,.07); font-weight:700; line-height:1; pointer-events:none; }
+  .b3 .q { font-size:19px; font-weight:700; color:#f3e9cf; line-height:1.35; position:relative; }
+  .b3 .q span { color:#f0c84b; }
+  .b3 .rule { width:64px; height:2px; background:linear-gradient(90deg,#f0c84b,transparent); margin:11px 0 9px; }
+  .b3 .s { font-size:10px; letter-spacing:2.2px; color:#9a8a68; position:relative; }
+
+  /* ===== KONSEP 4: TIPOGRAFI MINIMAL ===== */
+  .b4 { background:#05080d; display:flex; flex-direction:column; justify-content:center; padding:0 16px; }
+  .b4 .rule { height:1px; background:linear-gradient(90deg,transparent,#f0c84b 30%,#f0c84b 70%,transparent); opacity:.65; }
+  .b4 .big { text-align:center; font-size:41px; font-weight:800; letter-spacing:6px; color:transparent; -webkit-text-stroke:1.2px #7d8fa6; padding:13px 0 11px; }
+  .b4 .big b { color:#f0c84b; -webkit-text-stroke:0; font-weight:800; }
+  .b4 .s { text-align:center; font-size:9px; letter-spacing:1.6px; color:#5f7288; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>KONSEP BANNER</h1>
+  <div class="sub">Papan ngisor chart tab PX · ilang pas mode fullscreen · pillih nomer-e</div>
+
+  <div class="label">KONSEP 1 — JARVIS HUD</div>
+  <div class="banner b1">
+    <svg class="ring" width="86" height="86" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" fill="none" stroke="#123" stroke-width="2"/>
+      <circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/>
+      <circle cx="50" cy="50" r="36" fill="none" stroke="#f0c84b" stroke-width="1" stroke-dasharray="3 5" opacity="0.7"/>
+      <rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/>
+      <line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="1.6"/>
+      <rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/>
+      <line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="1.6"/>
+      <rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/>
+      <line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="1.6"/>
+    </svg>
+    <div>
+      <div class="t1">JARVIS<br><span>TRADING</span> INTELLIGENCE</div>
+      <div class="t2">ANALISA WAE · <b>DUDU PERINTAH ORDER</b><br>MSNR · JSNR · ORDERFLOW</div>
+    </div>
+  </div>
+
+  <div class="label">KONSEP 2 — TICKER URIP</div>
+  <div class="banner b2">
+    <div class="head">
+      <div class="dot"></div>
+      <div class="brand">ORDERBOOK <span>· PAKPOH</span></div>
+      <div class="live">LIVE</div>
+    </div>
+    <div class="track">
+      <div class="move">
+        <span class="it">BTC <b>$60,537</b> <span class="dn">−0,03%</span></span>
+        <span class="it">XAU <b>$3,570.1</b> <span class="up">+0,00%</span></span>
+        <span class="it">FUNDING BTC <b class="gd">+0,0075%</b></span>
+        <span class="it">OI GOLD <b>$278,5M</b></span>
+        <span class="it">BIAS JSNR <b class="gd">CAMPUR ◆</b></span>
+        <span class="it">KILLZONE <b>NEW YORK</b></span>
+        <span class="it">BTC <b>$60,537</b> <span class="dn">−0,03%</span></span>
+        <span class="it">XAU <b>$3,570.1</b> <span class="up">+0,00%</span></span>
+        <span class="it">FUNDING BTC <b class="gd">+0,0075%</b></span>
+        <span class="it">OI GOLD <b>$278,5M</b></span>
+        <span class="it">BIAS JSNR <b class="gd">CAMPUR ◆</b></span>
+        <span class="it">KILLZONE <b>NEW YORK</b></span>
+      </div>
+    </div>
+    <div class="foot">HYPERLIQUID · BINANCE · SWIFTEDGE — DATA URIP SAKA APLIKASI</div>
+  </div>
+
+  <div class="label">KONSEP 3 — PANGELING JAVANESE</div>
+  <div class="banner b3">
+    <div class="wm">ꦥꦏ꧀ꦥꦺꦴꦃ</div>
+    <div class="q">"Sing tenang,<br><span>disawang wae</span> disik."</div>
+    <div class="rule"></div>
+    <div class="s">PAKPOH · MORIYAMA · JST</div>
+  </div>
+
+  <div class="label">KONSEP 4 — TIPOGRAFI MINIMAL</div>
+  <div class="banner b4">
+    <div class="rule"></div>
+    <div class="big">ORDER<b>BOOK</b></div>
+    <div class="rule"></div>
+    <div class="s">ORDERBOOK &amp; CVD: HYPERLIQUID · CANDLE: BINANCE · POSISI: SWIFTEDGE</div>
+  </div>
+
+  <div class="sub" style="margin-top:22px;">Sebut nomer pillihan sampean ndek WhatsApp — isa campuran pisan.</div>
+</div>
+</body>
+</html>
