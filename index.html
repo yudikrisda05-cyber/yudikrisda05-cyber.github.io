@@ -82,8 +82,20 @@
   .symtabs button{border:0;border-radius:999px;background:transparent;color:var(--muted);font-size:11.5px;font-weight:700;padding:0 14px;cursor:pointer;min-height:28px;letter-spacing:.03em}
   .symtabs button[aria-pressed="true"]{background:var(--teal);color:#04120c}
   .chartwrap{position:relative;background:#05080d}
-  canvas#chart{display:block;width:100%;height:340px;touch-action:none;cursor:crosshair}
-  @media(min-width:900px){canvas#chart{height:440px}}
+  canvas#chart{display:block;width:100%;height:clamp(380px,62vh,680px);height:clamp(380px,62dvh,680px);touch-action:none;cursor:crosshair}
+  @media(min-width:900px){canvas#chart{height:clamp(460px,64vh,740px);height:clamp(460px,64dvh,740px)}}
+  /* panel terminal full-bleed: chart ombo koyo MT5 — tanpa margin samping,
+     tinggi portrait ±62% layar; panel lain tetap di bawahnya & bisa di-scroll */
+  .panel.term-panel{margin-left:0;margin-right:0;border-left:0;border-right:0;border-radius:0}
+  .basishint{font-size:11px;color:var(--gold);margin-top:7px;line-height:1.5}
+  /* ===== mode LAYAR PENUH chart (Fullscreen API / fallback overlay) ===== */
+  #termPanel:fullscreen,#termPanel:-webkit-full-screen{margin:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+  #termPanel.fs-fallback{position:fixed;inset:0;z-index:300;margin:0;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+  #termPanel:fullscreen .term-main,#termPanel:-webkit-full-screen .term-main,#termPanel.fs-fallback .term-main{flex:1;min-height:0}
+  #termPanel:fullscreen .term-chart,#termPanel:-webkit-full-screen .term-chart,#termPanel.fs-fallback .term-chart{display:flex;flex-direction:column;min-height:0}
+  #termPanel:fullscreen .chartwrap,#termPanel:-webkit-full-screen .chartwrap,#termPanel.fs-fallback .chartwrap{flex:1;min-height:0}
+  #termPanel:fullscreen canvas#chart,#termPanel:-webkit-full-screen canvas#chart,#termPanel.fs-fallback canvas#chart{height:100%}
+  #termPanel:fullscreen .term-hint,#termPanel:-webkit-full-screen .term-hint,#termPanel.fs-fallback .term-hint{display:none}
   canvas#rsiChart{display:block;width:100%;height:84px;background:#05080d;border-top:1px solid var(--line2);touch-action:none}
   canvas#macdChart{display:block;width:100%;height:96px;background:#05080d;border-top:1px solid var(--line2);touch-action:none}
   .latestbtn{position:absolute;right:74px;bottom:40px;z-index:4;display:none;border:1px solid var(--teal);background:rgba(3,26,18,.94);color:var(--teal);font-weight:800;font-size:11px;letter-spacing:.05em;border-radius:999px;padding:0 14px;min-height:32px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.5)}
@@ -234,7 +246,7 @@
 
   <!-- COMMAND BAR -->
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 13:55 JST</span></div>
+    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 15:14 JST</span></div>
     <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
     <div class="cell grow">
       <span id="updatedText">UPDATE: —</span>
@@ -274,7 +286,7 @@
   <div class="err" id="errBox"></div>
 
   <!-- TERMINAL ANALISA — GAYA TRADINGVIEW -->
-  <section class="panel" aria-label="Terminal analisa">
+  <section class="panel term-panel" id="termPanel" aria-label="Terminal analisa">
     <div class="phead">
       <span class="t">Terminal Analisa — Candlestick</span>
       <span class="r" id="chartSymLabel">BTC PERP · CANDLE HYPERLIQUID · LIVE PER TICK</span>
@@ -300,9 +312,12 @@
           <button id="ind-rsi" aria-pressed="false">RSI</button>
           <button id="ind-macd" aria-pressed="false">MACD</button>
           <button id="ind-walls" aria-pressed="true">DINDING</button>
+          <button id="ind-zones" aria-pressed="true">ZONA MSNR</button>
         </div>
         <button class="mini" id="btnCandles" style="margin-top:0">↻ MUAT ULANG CANDLE</button>
+        <button class="mini" id="btnFs" style="margin-top:0">⛶ LAYAR PENUH</button>
       </div>
+      <div class="basishint" id="zoneBasisNote" style="display:none">Catatan basis: Zona MSNR XAU memakai harga <b>spot OANDA</b>, sedangkan chart ini perpetual Hyperliquid — basis perp bisa bergeser beberapa dolar dari spot. Zona digambar <b>apa adanya</b> (angka tidak digeser), jadi posisi pita terhadap candle bersifat pendekatan; keputusan tetap pada close candle acuan OANDA.</div>
     </div>
     <div class="term-main">
       <div class="drawbar" role="group" aria-label="Piranti gambar">
@@ -332,7 +347,7 @@
       <div>CANDLE <b id="oh-n">0</b></div>
       <div>OBJEK GAMBAR <b id="oh-draw">0</b></div>
     </div>
-    <div class="term-hint" id="termHint">Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (15–400 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona MSNR Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar hanya untuk sesi ini (tidak disimpan) dan tiap simbol punya gambarnya sendiri. Band pudar ing chart = Zona Pantau MSNR statis. Garis putus-putus teal (bid) / ungu (ask) berlabel ukuran = dinding order terbesar dari scan buku jeru — hidup-matikan lewat tombol DINDING.</div>
+    <div class="term-hint" id="termHint">Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (15–400 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona MSNR Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar hanya untuk sesi ini (tidak disimpan) dan tiap simbol punya gambarnya sendiri. Zona Pantau MSNR digambar sebagai <b style="color:var(--muted)">pita berwarna berlabel nama zona + rentang harga</b> (hidup-matikan lewat tombol <b style="color:var(--muted)">ZONA MSNR</b>); zona yang sedang berada di luar rentang harga terlihat tetap ditandai <b style="color:var(--muted)">label tepi ▲ ZONA DI ATAS / ▼ ZONA DI BAWAH</b> lengkap dengan jarak % dari harga terakhir, jadi tidak pernah “hilang” dari chart. Tombol <b style="color:var(--muted)">LAYAR PENUH</b> memperluas chart memenuhi seluruh layar HP — pan, pinch zoom, crosshair, dinding order, dan zona MSNR tetap bekerja di mode itu. Garis putus-putus teal (bid) / ungu (ask) berlabel ukuran = dinding order terbesar dari scan buku jeru — hidup-matikan lewat tombol DINDING.</div>
   </section>
 
   <!-- MARKET PANELS -->
@@ -380,7 +395,7 @@
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
       <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali). Pembaruan per tick ini berlaku untuk <b>semua timeframe</b> — bucket candle berjalan selalu mengikuti timeframe yang sedang aktif (1m/5m/15m/1H/4H/1D), dan mengganti timeframe meminta ulang snapshot candleSnapshot + langganan candle WebSocket untuk interval terpilih. Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 15 sampai 400 candle terlihat (bawaan 160); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — bukan chart TradingView resmi dan tidak terhubung ke akun TradingView. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
-      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Tumpukan terbesar per sisi dari scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus berlabel ukuran order (bid teal, ask ungu; tombol DINDING) — sengaja dibedakan gayanya dari band Zona Pantau MSNR yang berupa pita pudar. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
+      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Tumpukan terbesar per sisi dari scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus berlabel ukuran order (bid teal, ask ungu; tombol DINDING) — sengaja dibedakan gayanya dari band Zona Pantau MSNR yang berupa pita berwarna berlabel nama zona + rentang harga (zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
 </div>
@@ -394,7 +409,7 @@ var MARKETS=[
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · xyz:GOLD · XAU PERPETUAL (BUKAN SPOT)", unit:"oz", dec:1, szDec:2}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
-var chart={ sym:"btc", tf:300, itv:"15m", ema:true, vwap:false, vol:true, rsi:false, macd:false, walls:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null };
+var chart={ sym:"btc", tf:300, itv:"15m", ema:true, vwap:false, vol:true, rsi:false, macd:false, walls:true, zones:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
@@ -449,12 +464,12 @@ function syncAutoDepth(){
 /* ============ ZONA PANTAU (statis, dari laporan pemilik) ============ */
 var ZONEGROUPS=[
   { id:"gold", title:"XAU/USD — SPOT OANDA (ACUAN LAPORAN)",
-    meta:'Bias: <span class="biasbear">BEARISH</span> · Laporan Sesi Asia — Rabu 25 Nov 2026',
+    meta:"Update zona terakhir · harga acuan spot OANDA — zona digambar apa adanya di chart perp (basis bisa bergeser beberapa dolar)",
     zones:[
-      {lo:3588, hi:3605, kind:"res", type:"RESISTANCE · FLIP SBR", note:"Ex-support jebol semalam.", inv:"Invalidasi: close H1 > 3.605"},
-      {lo:3538, hi:3547, kind:"sup", type:"SUPPORT · FLIP RBS", note:"Level close 20 Nov, dites 3×.", inv:"Invalidasi: close H1 < 3.538"},
-      {lo:3625, hi:3637, kind:"res", type:"RESISTANCE LANJUTAN", note:"Atap lanjutan bila 3.605 tembus.", inv:""},
-      {lo:3690, hi:3700, kind:"res", type:"RESISTANCE LANJUTAN", note:"Zona psikologis 3.700.", inv:""}
+      {lo:3588, hi:3605, kind:"res", type:"RESISTANCE LANJUTAN", note:"Resistance lanjutan di atas zona flip.", inv:""},
+      {lo:3578, hi:3587, kind:"res", type:"RESISTANCE · FLIP SBR", note:"Zona flip SBR terdekat di atas.", inv:""},
+      {lo:3566, hi:3575, kind:"sup", type:"SUPPORT · FLIP RBS", note:"Zona flip RBS terdekat di bawah.", inv:""},
+      {lo:3507, hi:3515, kind:"sup", type:"SUPPORT LANJUTAN · FLIP RBS", note:"Support lanjutan flip RBS.", inv:""}
     ]},
   { id:"btc", title:"BTC/USD — ACUAN UPDATE ZONA AKHIR PEKAN",
     meta:"Update zona akhir pekan — 22 Nov 2026 · Golden pocket teruji &amp; bertahan 21 Nov",
@@ -1189,20 +1204,65 @@ function drawChart(){
     ctx.strokeStyle="#0d141f"; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H-30); ctx.stroke();
     ctx.fillStyle="#5b6b82"; ctx.fillText(fmtTime(cs[gx].t), Math.min(x,W-90), H-16);
   }
-  /* band zona pantau MSNR */
-  var g=ZONEGROUPS.filter(function(z){return z.id===chart.sym;})[0];
-  if(g) g.zones.forEach(function(z){
-    if(z.hi<min||z.lo>max) return;
-    var yTop=Y(Math.min(z.hi,max)), yBot=Y(Math.max(z.lo,min));
-    ctx.fillStyle= z.kind==="res"? "rgba(217,70,239,.08)" : "rgba(46,230,168,.08)";
-    ctx.fillRect(0,yTop,W-64,Math.max(2,yBot-yTop));
-    ctx.fillStyle= z.kind==="res"? "rgba(240,166,247,.75)" : "rgba(95,242,196,.75)";
-    ctx.font="9px -apple-system,'Segoe UI',Roboto,sans-serif";
-    ctx.fillText((z.kind==="res"?"R ":"S ")+fmt(z.lo,m.dec)+"–"+fmt(z.hi,m.dec), 6, yTop+11);
-    ctx.font="10px ui-monospace,Menlo,monospace";
-  });
+  /* ===== zona pantau MSNR di chart =====
+     Zona simbol aktif SELALU tampil (semua timeframe): yang memotong
+     rentang harga terlihat digambar sebagai pita berwarna + garis tepi +
+     chip label berisi nama zona & rentang harga; yang berada di luar
+     layar digambar sebagai chip tepi bertanda panah (▲ ZONA DI ATAS /
+     ▼ ZONA DI BAWAH) lengkap dengan jarak % dari harga terakhir — jadi
+     zona tidak pernah "hilang" dari chart. Angka zona digambar APA
+     ADANYA: zona XAU memakai harga spot OANDA sedangkan chart ini
+     perpetual Hyperliquid (basis bisa bergeser beberapa dolar) — lihat
+     catatan basis di panel terminal. */
+  if(chart.zones){
+    var g=ZONEGROUPS.filter(function(z){return z.id===chart.sym;})[0];
+    if(g){
+      var lastPx=cs[cs.length-1].c;
+      var aboveZones=[], belowZones=[];
+      g.zones.forEach(function(z){
+        var isRes=z.kind==="res";
+        var colMain= isRes? "#e879f9" : "#2ee6a8";
+        if(z.hi<min){ belowZones.push(z); return; }
+        if(z.lo>max){ aboveZones.push(z); return; }
+        var yTop=Y(Math.min(z.hi,max)), yBot=Y(Math.max(z.lo,min));
+        ctx.fillStyle= isRes? "rgba(217,70,239,.14)" : "rgba(46,230,168,.14)";
+        ctx.fillRect(0,yTop,W-64,Math.max(2,yBot-yTop));
+        ctx.strokeStyle= isRes? "rgba(232,121,249,.55)" : "rgba(46,230,168,.55)"; ctx.lineWidth=1;
+        if(z.hi<=max){ var yHi=Y(z.hi); ctx.beginPath(); ctx.moveTo(0,yHi); ctx.lineTo(W-64,yHi); ctx.stroke(); }
+        if(z.lo>=min){ var yLo=Y(z.lo); ctx.beginPath(); ctx.moveTo(0,yLo); ctx.lineTo(W-64,yLo); ctx.stroke(); }
+        /* chip label: nama zona + rentang harga — di dalam pita bila
+           muat, bila pita terlalu tipis ditaruh tepat di atas pitanya */
+        var zlabel="MSNR · "+z.type.replace(" · "," ")+" · "+fmt(z.lo,m.dec)+"–"+fmt(z.hi,m.dec);
+        ctx.font="bold 10px -apple-system,'Segoe UI',Roboto,sans-serif";
+        var ztw=ctx.measureText(zlabel).width, zbw=Math.min(ztw+12,W-76);
+        var chipH=16, chipY= (yBot-yTop>=chipH+4)? yTop+3 : Math.max(2,yTop-chipH-3);
+        ctx.fillStyle= isRes? "rgba(30,4,38,.88)" : "rgba(3,26,18,.88)";
+        ctx.fillRect(6,chipY,zbw,chipH);
+        ctx.strokeStyle=colMain; ctx.strokeRect(6,chipY,zbw,chipH);
+        ctx.fillStyle=colMain; ctx.fillText(zlabel,12,chipY+12);
+        ctx.font="10px ui-monospace,Menlo,monospace";
+      });
+      /* chip tepi untuk zona di luar rentang terlihat */
+      function zoneEdgeChip(z,above,y){
+        var isRes=z.kind==="res";
+        var edge= above? z.lo : z.hi;
+        var pct=(edge-lastPx)/Math.max(1e-9,lastPx)*100;
+        var txt=(above? "▲ ZONA MSNR DI ATAS · " : "▼ ZONA MSNR DI BAWAH · ")+z.type.replace(" · "," ")+" "+fmt(z.lo,m.dec)+"–"+fmt(z.hi,m.dec)+" · "+(pct>=0?"+":"")+pct.toFixed(2)+"%";
+        ctx.font="bold 10px -apple-system,'Segoe UI',Roboto,sans-serif";
+        var tw=ctx.measureText(txt).width, bw=Math.min(tw+12,W-76);
+        ctx.fillStyle= isRes? "rgba(30,4,38,.92)" : "rgba(3,26,18,.92)";
+        ctx.fillRect(6,y,bw,17);
+        ctx.strokeStyle= isRes? "#e879f9" : "#2ee6a8"; ctx.lineWidth=1; ctx.strokeRect(6,y,bw,17);
+        ctx.fillStyle= isRes? "#f0a6f7" : "#5ff2c4";
+        ctx.fillText(txt,12,y+12.5);
+        ctx.font="10px ui-monospace,Menlo,monospace";
+      }
+      aboveZones.forEach(function(z,i){ zoneEdgeChip(z,true, 64+i*21); });
+      belowZones.forEach(function(z,i){ zoneEdgeChip(z,false, H-48-i*21); });
+    }
+  }
   /* dinding order dari scan buku JERU: garis putus-putus + label ukuran,
-     gaya sengaja beda dari band Zona Pantau MSNR (pita pudar) di atas */
+     gaya sengaja beda dari band Zona Pantau MSNR (pita berlabel) di atas */
   if(chart.walls){
     var allStacks=Object.keys(s.stacks).map(function(k){ return s.stacks[k]; });
     [["bid","#2ee6a8","DINDING BID "],["ask","#e879f9","DINDING ASK "]].forEach(function(cfg){
@@ -1515,9 +1575,38 @@ function bindToggle(id,key,after){
     drawChart();
   });
 }
-bindToggle("ind-ema","ema"); bindToggle("ind-vwap","vwap"); bindToggle("ind-vol","vol"); bindToggle("ind-rsi","rsi"); bindToggle("ind-macd","macd"); bindToggle("ind-walls","walls");
+bindToggle("ind-ema","ema"); bindToggle("ind-vwap","vwap"); bindToggle("ind-vol","vol"); bindToggle("ind-rsi","rsi"); bindToggle("ind-macd","macd"); bindToggle("ind-walls","walls"); bindToggle("ind-zones","zones");
 $("btnCandles").addEventListener("click",function(){ fetchAllCandles(); });
 $("btnLatest").addEventListener("click",function(){ chart.pan=0; chart.drag=null; drawChart(); });
+/* ---- mode LAYAR PENUH chart ----
+   Memperluas panel Terminal Analisa memenuhi seluruh layar: Fullscreen
+   API bila tersedia (desktop/Android), fallback overlay fixed inset-0
+   untuk browser tanpa API itu (mis. Safari iPhone). Canvas tidak perlu
+   kode resize khusus: drawChart() membaca clientWidth/clientHeight
+   canvas tiap gambar dan menyesuaikan backing store, jadi cukup
+   memanggil drawChart() setelah masuk/keluar fullscreen dan setelah
+   orientasi berubah. Semua interaksi (pan, pinch, crosshair, piranti
+   gambar, dinding, zona MSNR) bekerja apa adanya di mode ini. */
+var termPanel=$("termPanel"), fsFallback=false;
+function fsActive(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||fsFallback); }
+function updateFsBtn(){ var b=$("btnFs"); if(b) b.textContent= fsActive()? "✕ KELUAR LAYAR PENUH" : "⛶ LAYAR PENUH"; }
+function fsRedraw(){ requestAnimationFrame(function(){ drawChart(); }); setTimeout(drawChart,200); setTimeout(drawChart,600); }
+function fsFallbackOn(){ fsFallback=true; termPanel.classList.add("fs-fallback"); document.body.style.overflow="hidden"; updateFsBtn(); fsRedraw(); }
+function enterFs(){
+  if(termPanel.requestFullscreen){ var p=termPanel.requestFullscreen(); if(p&&p.catch) p.catch(function(){ fsFallbackOn(); }); }
+  else if(termPanel.webkitRequestFullscreen){ termPanel.webkitRequestFullscreen(); }
+  else fsFallbackOn();
+}
+function exitFs(){
+  if(document.fullscreenElement&&document.exitFullscreen) document.exitFullscreen();
+  else if(document.webkitFullscreenElement&&document.webkitExitFullscreen) document.webkitExitFullscreen();
+  if(fsFallback){ fsFallback=false; termPanel.classList.remove("fs-fallback"); document.body.style.overflow=""; updateFsBtn(); fsRedraw(); }
+}
+$("btnFs").addEventListener("click",function(){ fsActive()? exitFs() : enterFs(); });
+document.addEventListener("fullscreenchange",function(){ updateFsBtn(); fsRedraw(); });
+document.addEventListener("webkitfullscreenchange",function(){ updateFsBtn(); fsRedraw(); });
+document.addEventListener("keydown",function(ev){ if(ev.key==="Escape"&&fsFallback) exitFs(); });
+window.addEventListener("orientationchange",function(){ setTimeout(drawChart,200); setTimeout(drawChart,600); });
 document.querySelectorAll("[data-itv]").forEach(function(b){
   b.addEventListener("click",function(){
     chart.itv=b.getAttribute("data-itv"); chart.draft=null; chart.pan=0; chart.drag=null; chart.visible=160; chart.pinch=null; chart.pointers={};
@@ -1539,6 +1628,7 @@ function setChartSym(id){
   $("tab-btc").setAttribute("aria-pressed", id==="btc"? "true":"false");
   $("tab-gold").setAttribute("aria-pressed", id==="gold"? "true":"false");
   $("chartSymLabel").textContent=(id==="btc"? "BTC PERP":"XAU PERP")+" · CANDLE "+chart.itv.toUpperCase()+" · LIVE PER TICK";
+  var bn=$("zoneBasisNote"); if(bn) bn.style.display= id==="gold"? "block":"none";
   if(!M[id].candles.length) fetchCandles(id);
   drawChart();
 }
