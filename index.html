@@ -292,7 +292,7 @@
 
   <!-- COMMAND BAR -->
   <div class="cmdbar">
-    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 19:00 JST</span></div>
+    <div class="cell"><span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span><span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 19:10 JST</span></div>
     <div class="cell statuschip"><span class="dot" id="statusDot"></span><span id="statusText">MENGHUBUNGKAN…</span></div>
     <div class="cell grow">
       <span id="updatedText">UPDATE: —</span>
@@ -412,7 +412,7 @@
       <div>CANDLE <b id="oh-n">0</b></div>
       <div>OBJEK GAMBAR <b id="oh-draw">0</b></div>
     </div>
-    <div class="term-hint" id="termHint">Sumber candle: <b style="color:var(--muted)">TradingView</b> (XAU = OANDA:XAUUSD, BTC = BINANCE:BTCUSDT) — chip di kanan atas chart menunjukkan sumber yang sedang aktif; bila feed TradingView gagal/putus, chart otomatis memakai <b style="color:var(--muted)">candle Hyperliquid (cadangan)</b>. Baris <b style="color:var(--muted)">DIAGNOSTIK LIVE</b> juga menampilkan status &amp; error terakhir TradingView (kolom <b style="color:var(--muted)">TV</b>) — bila server TradingView menolak koneksi, pesan penolakannya tercatat di sana. Dinding &amp; bubble tetap dari buku perpetual Hyperliquid. Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (8–600 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. <b style="color:var(--muted)">Skala vertikal bisa diatur manual:</b> seret <b style="color:var(--muted)">sumbu harga</b> (strip angka di kanan) ke bawah untuk memampatkan chart atau ke atas untuk melebarkan candle, cubit dua jari secara vertikal juga bisa; label harga berubah teal dan tombol <b style="color:#e8c33a">SKALA AUTO</b> muncul — ketuk tombol itu atau ketuk ganda sumbu harga untuk kembali ke skala otomatis; selama skala manual aktif, seretan vertikal di area chart ikut menggeser rentang harga. Seret <b style="color:var(--muted)">sumbu waktu</b> (strip jam di bawah) ke kiri/kanan untuk mengubah spasi candle. Pan mengikuti jari 1:1 secara halus (sub-candle). <b style="color:var(--muted)">Lingkaran berwarna (bubble)</b> di chart = penanda likuiditas dari scan buku jeru, menempel pada candle yang buntutnya menyentuh level tumpukan itu (atau di tepi kanan bila belum tersentuh): teal = bid, ungu = ask; makin besar lingkaran makin besar tumpukannya (≥2× / ≥3× / ≥5× median sisinya), angka di dalamnya = ukuran tumpukan — hidup-matikan lewat tombol <b style="color:var(--muted)">BUBBLE</b>. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona MSNR Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar hanya untuk sesi ini (tidak disimpan) dan tiap simbol punya gambarnya sendiri. Zona Pantau MSNR digambar <b style="color:var(--muted)">sebagai garis kustom gaya JSNR</b>: garis horizontal tegas (palet JSNR: merah = resistance/supply, hijau = support/demand, ungu = flip SBR/RBS) pada level kunci zona — zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya — memanjang dari tepi kiri sampai <b style="color:var(--muted)">titik (dot) bersama di ujung kanan</b>, dengan <b style="color:var(--muted)">label “harga level TIPE · fresh/tested”</b> di kanan titik; posisi label zona yang berdekatan dirapikan otomatis supaya tidak bertumpuk. Status dihitung dari candle di buffer (tersentuh = tested, belum = fresh); hidup-matikan lewat tombol <b style="color:var(--muted)">ZONA MSNR</b>. <b style="color:var(--muted)">Panel status MSNR</b> berbentuk tabel kecil di pojok kanan atas chart menampilkan bias + zona BUY/SELL terdekat (status menunggu / DI DALAM ZONA) + baris status zona terdekat — hidup-matikan lewat tombol <b style="color:var(--muted)">PANEL</b> atau tombol ✕ di panel, lipat lewat tombol –. Zona yang sedang berada di luar rentang harga terlihat tetap ditandai <b style="color:var(--muted)">label tepi ▲ ZONA DI ATAS / ▼ ZONA DI BAWAH</b> lengkap dengan jarak % dari harga terakhir, jadi tidak pernah “hilang” dari chart. Tombol <b style="color:var(--muted)">LAYAR PENUH</b> memperluas chart memenuhi seluruh layar HP — pan, pinch zoom, crosshair, dinding order, dan zona MSNR tetap bekerja di mode itu. Garis putus-putus teal (bid) / ungu (ask) berlabel ukuran = dinding order terbesar dari scan buku jeru — hidup-matikan lewat tombol DINDING.</div>
+    <div class="term-hint" id="termHint">Sumber candle: <b style="color:var(--muted)">TradingView</b> (XAU = OANDA:XAUUSD, BTC = BINANCE:BTCUSDT) — chip di kanan atas chart menunjukkan sumber yang sedang aktif; bila feed TradingView gagal/putus, chart otomatis memakai <b style="color:var(--muted)">candle Hyperliquid (cadangan)</b>. Baris <b style="color:var(--muted)">DIAGNOSTIK LIVE</b> juga menampilkan status &amp; error terakhir TradingView (kolom <b style="color:var(--muted)">TV</b>) — bila server TradingView menolak koneksi, pesan penolakannya tercatat di sana. Dinding &amp; bubble tetap dari buku perpetual Hyperliquid. Seret chart ke kiri/kanan = menggeser (pan) menelusuri riwayat candle; <b style="color:var(--muted)">cubit dua jari (pinch)</b> di chart atau putar <b style="color:var(--muted)">roda mouse</b> = zoom in/out (8–600 candle terlihat, titik tengah cubit jadi jangkar jadi area yang di-zoom tetap di tempat; geser satu jari tetap pan dan tidak ikut melonjak saat pinch); gerakkan jari/mouse tanpa menekan = crosshair + readout OHLC candle di posisi itu. Selama tidak digeser ke belakang, chart otomatis mengikuti candle terbaru; bila sedang melihat riwayat, tombol <b style="color:var(--teal)">KE TERBARU</b> muncul untuk kembali ke tepi live. <b style="color:var(--muted)">Skala vertikal bisa diatur manual:</b> seret <b style="color:var(--muted)">sumbu harga</b> (strip angka di kanan) ke bawah untuk memampatkan chart atau ke atas untuk melebarkan candle, cubit dua jari secara vertikal juga bisa; label harga berubah teal dan tombol <b style="color:#e8c33a">SKALA AUTO</b> muncul — ketuk tombol itu atau ketuk ganda sumbu harga untuk kembali ke skala otomatis; selama skala manual aktif, seretan vertikal di area chart ikut menggeser rentang harga. Seret <b style="color:var(--muted)">sumbu waktu</b> (strip jam di bawah) ke kiri/kanan untuk mengubah spasi candle. Pan mengikuti jari 1:1 secara halus (sub-candle). <b style="color:var(--muted)">Lingkaran berwarna (bubble)</b> di chart = penanda likuiditas dari scan buku jeru, menempel pada candle yang buntutnya menyentuh level tumpukan itu (atau di tepi kanan bila belum tersentuh): teal = bid, ungu = ask; makin besar lingkaran makin besar tumpukannya (≥2× / ≥3× / ≥5× median sisinya), angka di dalamnya = ukuran tumpukan — hidup-matikan lewat tombol <b style="color:var(--muted)">BUBBLE</b>. Piranti gambar: <b style="color:var(--muted)">Trendline</b> klik titik awal lalu titik akhir · <b style="color:var(--muted)">Garis Harga</b> klik sekali di level harga · <b style="color:var(--muted)">Kotak Zona</b> tahan &amp; geser untuk menandai zona MSNR Anda sendiri · <b style="color:var(--muted)">Hapus Objek</b> klik objek yang akan dihapus. Objek gambar hanya untuk sesi ini (tidak disimpan) dan tiap simbol punya gambarnya sendiri. Zona Pantau MSNR digambar <b style="color:var(--muted)">sebagai garis kustom gaya JSNR</b>: garis horizontal tegas (palet JSNR: merah = resistance/supply, hijau = support/demand, ungu = flip SBR/RBS) pada level kunci zona — zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya — memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada <b style="color:var(--muted)">titik (dot) di ujung garisnya sendiri, tepat pada harga levelnya</b> — dot &amp; garis tidak pernah digeser dari levelnya — dengan <b style="color:var(--muted)">label “harga level TIPE · fresh/tested”</b> di kanan titik pada ketinggian yang sama persis; label zona yang berdekatan hanya digeser mendatar (dengan garis penghubung mungil ke titiknya) supaya tidak bertumpuk. Status dihitung dari candle di buffer (tersentuh = tested, belum = fresh); hidup-matikan lewat tombol <b style="color:var(--muted)">ZONA MSNR</b>. <b style="color:var(--muted)">Panel status MSNR</b> berbentuk tabel kecil di pojok kanan atas chart menampilkan bias + zona BUY/SELL terdekat (status menunggu / DI DALAM ZONA) + baris status zona terdekat — hidup-matikan lewat tombol <b style="color:var(--muted)">PANEL</b> atau tombol ✕ di panel, lipat lewat tombol –. Zona yang sedang berada di luar rentang harga terlihat tetap ditandai <b style="color:var(--muted)">label tepi ▲ ZONA DI ATAS / ▼ ZONA DI BAWAH</b> lengkap dengan jarak % dari harga terakhir, jadi tidak pernah “hilang” dari chart. Tombol <b style="color:var(--muted)">LAYAR PENUH</b> memperluas chart memenuhi seluruh layar HP — pan, pinch zoom, crosshair, dinding order, dan zona MSNR tetap bekerja di mode itu. Garis putus-putus teal (bid) / ungu (ask) berlabel ukuran = dinding order terbesar dari scan buku jeru — hidup-matikan lewat tombol DINDING.</div>
   </section>
 
   <!-- MARKET PANELS -->
@@ -460,7 +460,7 @@
     <div class="pbody">
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
       <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar <b>candlestick TradingView</b> sebagai sumber utama — feed data publik TradingView (WebSocket data.tradingview.com, token anonim; feed tidak resmi dan bisa berubah/diblokir sewaktu-waktu) dengan simbol <b>OANDA:XAUUSD</b> untuk emas (harga yang sama persis dengan acuan Zona Pantau MSNR, jadi zona kini sejajar 1:1 dengan candle) dan <b>BINANCE:BTCUSDT</b> untuk BTC; bar berjalan datang dari update timescale TradingView dan pembangunan candle dari trade Hyperliquid <b>dimatikan selama sumber TV aktif</b> supaya tidak tercampur. Bila WebSocket TradingView gagal tersambung, tidak mengirim bar dalam ±8 detik, atau putus di tengah, chart <b>otomatis kembali ke candlestick bursa Hyperliquid</b> (snapshot candleSnapshot REST + streaming candle WebSocket, dan candle yang sedang berjalan diperbarui langsung dari <b>setiap trade tick</b> yang masuk — open/high/low/close/volume mengikuti trade terakhir, candle baru dibuka saat pergantian bucket timeframe; snapshot disinkronkan ulang tiap WebSocket tersambung kembali). Pembaruan per tick ini berlaku untuk <b>semua timeframe</b> — bucket candle berjalan selalu mengikuti timeframe yang sedang aktif (1m/5m/15m/1H/4H/1D), dan mengganti timeframe meminta ulang snapshot candleSnapshot + langganan candle WebSocket untuk interval terpilih. Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar sesi ini (trendline, garis harga, kotak zona) — data candle dari feed publik TradingView (bukan widget/akun TradingView resmi; chip sumber di chart selalu menunjukkan sumber yang sedang aktif, termasuk saat jatuh ke cadangan Hyperliquid). Handshake TradingView kini <b>bertahap</b> (sesi dibuat → simbol di-resolve → series dibuat, tidak lagi dikirim serentak sebelum sesi siap) dan status serta pesan error terakhir TradingView ditampilkan di kolom TV pada baris DIAGNOSTIK LIVE, jadi penolakan server tercatat di layar; status TV hanya dinyatakan OK bila bar TradingView benar-benar sudah diterima. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
-      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Tumpukan terbesar per sisi dari scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus berlabel ukuran order (bid teal, ask ungu; tombol DINDING) — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tegas palet JSNR — merah supply, hijau demand, ungu flip — pada level kunci zona; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; garis memanjang dari tepi kiri sampai titik bersama di ujung kanan, label “harga level TIPE · fresh/tested” di kanan titik dengan posisi label berdekatan yang dirapikan anti-tumpuk; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status MSNR berbentuk tabel di pojok kanan atas chart (bias + BUY/SELL zona terdekat + baris zona terdekat, tanpa skor bintang/killzone karena data itu tidak tersedia) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
+      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Tumpukan terbesar per sisi dari scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus berlabel ukuran order (bid teal, ask ungu; tombol DINDING) — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tegas palet JSNR — merah supply, hijau demand, ungu flip — pada level kunci zona; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; tiap garis memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada titik di ujung garisnya sendiri, tepat pada harga levelnya (zona lebar: dua garis tepi, masing-masing bertitik di level tepinya), label “harga level TIPE · fresh/tested” di kanan titik pada ketinggian yang sama persis dengan titiknya — label berdekatan hanya digeser mendatar dengan garis penghubung mungil, dot tidak pernah digeser dari levelnya; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status MSNR berbentuk tabel di pojok kanan atas chart (bias + BUY/SELL zona terdekat + baris zona terdekat, tanpa skor bintang/killzone karena data itu tidak tersedia) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
     </div>
   </footer>
 </div>
@@ -1700,9 +1700,12 @@ function drawChart(){
      "gawe garis wae", menggantikan badan kotak yang tidak terbaca di
      HP): garis horizontal tegas pada level kunci zona (zona lebar:
      dua garis tepi + arsir sangat tipis di antaranya) memanjang dari
-     tepi kiri plot sampai TITIK (dot) bersama di ujung kanan, label
-     "harga level TIPE · fresh/tested" di kanan dot dengan posisi
-     vertikal yang dirapikan anti-tumpuk. Zona di luar rentang terlihat
+     tepi kiri plot sampai dekat sumbu harga kanan, berakhir pada DOT
+     di ujung garisnya sendiri — dot & garis duduk EXACT pada harga
+     levelnya dan tidak pernah digeser dari levelnya; label
+     "harga level TIPE · fresh/tested" di kanan dot pada ketinggian
+     yang sama persis (label berdekatan hanya digeser mendatar).
+     Zona di luar rentang terlihat
      tetap ditandai chip tepi (▲ ZONA DI ATAS / ▼ ZONA DI BAWAH +
      jarak %) — jadi zona tidak pernah "hilang" dari chart. Angka zona
      digambar APA ADANYA: zona XAU memakai harga spot OANDA sedangkan
@@ -1714,11 +1717,23 @@ function drawChart(){
       var lastPx=cs[cs.length-1].c;
       var aboveZones=[], belowZones=[];
       var labelItems=[];
-      /* dot bersama semua zona di ±56% lebar plot: garis jauh lebih
-         panjang dari dotX 46% versi kotak (yang tampak seperti garis
-         pendek di tepi kiri pada rekaman HP) dan masih menyisakan
-         ruang label di kanan dot */
-      var dotX=Math.max(120,Math.round((W-64)*0.56));
+      /* TIAP GARIS LEVEL MEMANJANG SAMPAI DEKAT SUMBU HARGA KANAN
+         (plotRight = W-64) dan DOT duduk di UJUNG GARISNYA SENDIRI
+         tepat pada harga levelnya: y dot = y level, TIDAK digeser
+         sedikit pun (arahan pemilik: garis "dipaske pada titik
+         level, ojo podo kabeh"). Ujung garis sengaja TIDAK seragam —
+         tiap garis level menerima endX sendiri (tangga kecil
+         0/15/30/45px dari tepi kanan menurut urutan gambar) supaya
+         dot tidak menumpuk di satu kolom x bersama. */
+      var plotRight=W-64;
+      var lineSeq=0;
+      function nextEndX(){ var ex=plotRight-8-(lineSeq%4)*15; lineSeq++; return ex; }
+      function drawZoneDot(ex,y,col){
+        ctx.beginPath(); ctx.arc(ex,y,6.8,0,Math.PI*2);
+        ctx.strokeStyle=col; ctx.globalAlpha=.38; ctx.lineWidth=1.4; ctx.stroke(); ctx.globalAlpha=1;
+        ctx.beginPath(); ctx.arc(ex,y,4.2,0,Math.PI*2); ctx.fillStyle=col; ctx.fill();
+        ctx.strokeStyle="#05080d"; ctx.lineWidth=1.2; ctx.stroke();
+      }
       g.zones.forEach(function(z){
         var isRes=z.kind==="res";
         var ztype=zoneTypeShort(z);
@@ -1740,64 +1755,71 @@ function drawChart(){
         var edgePx= isRes? z.lo : z.hi;
         var dotY=Y(Math.max(min,Math.min(max,edgePx)));
         var tested=allC.some(function(c){ return c.h>=z.lo&&c.l<=z.hi; });
-        /* GEOMETRI persis screenshot JSNR: kotak pita TIDAK selebar
-           plot — ujung kanannya berhenti tepat di TITIK (dot) pada
-           level kunci, dan badannya memanjang ke KIRI dari titik itu
-           (semua zona berbagi dotX yang sama, seperti di screenshot).
-           Isi TRANSPARAN samar, tepi garis TEGAS warna zona. Level
-           tunggal (rentang sangat tipis) tampil sebagai GARIS
-           horizontal + titik, bukan kotak. */
         /* GARIS kustom gaya JSNR: garis TEGAS 2,2–2,6px warna palet
-           JSNR penuh dari tepi kiri plot (x=0) sampai dotX. Zona lebar
-           (tinggi piksel ≥14) = dua garis tepi + arsir .07 di
-           antaranya; zona sempit = satu garis di level kunci. Label
-           tidak digambar di sini — dikumpulkan ke labelItems untuk
-           dirapikan anti-tumpuk setelah loop. */
+           JSNR penuh dari tepi kiri plot (x=0) sampai endX garis itu
+           sendiri di dekat sumbu harga kanan. Zona lebar (tinggi
+           piksel ≥14) = DUA garis tepi, masing-masing dengan DOT di
+           level tepinya sendiri, + arsir .07 di antaranya; zona
+           sempit = satu garis di level kunci. Semua garis & dot
+           duduk EXACT pada harga levelnya — tidak ada pergeseran
+           vertikal demi kerapian; label dikumpulkan ke labelItems
+           dan hanya boleh digeser MENDATAR setelah loop. */
         var pxH=yBot-yTop;
+        var keyEndX;
         if(pxH>=14){
+          var endTop=nextEndX(), endBot=nextEndX();
           ctx.fillStyle=fillCol;
-          ctx.fillRect(0,yTop,dotX,pxH);
+          ctx.fillRect(0,yTop,Math.max(endTop,endBot),pxH);
           ctx.strokeStyle=colMain; ctx.lineWidth=2.2;
-          ctx.beginPath(); ctx.moveTo(0,yTop); ctx.lineTo(dotX,yTop); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(0,yBot); ctx.lineTo(dotX,yBot); ctx.stroke();
-          var otherY= (edgePx===z.lo)? yTop : yBot;
-          ctx.beginPath(); ctx.arc(dotX,otherY,2.6,0,Math.PI*2); ctx.fillStyle=colMain; ctx.fill();
+          ctx.beginPath(); ctx.moveTo(0,yTop); ctx.lineTo(endTop,yTop); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0,yBot); ctx.lineTo(endBot,yBot); ctx.stroke();
+          drawZoneDot(endTop,yTop,colMain);
+          drawZoneDot(endBot,yBot,colMain);
+          keyEndX= (edgePx===z.lo)? endBot : endTop;
         }else{
+          keyEndX=nextEndX();
           ctx.strokeStyle=colMain; ctx.lineWidth=2.6;
-          ctx.beginPath(); ctx.moveTo(0,dotY); ctx.lineTo(dotX,dotY); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0,dotY); ctx.lineTo(keyEndX,dotY); ctx.stroke();
+          drawZoneDot(keyEndX,dotY,colMain);
         }
-        /* DOT utama di ujung kanan garis pada level kunci: halo +
-           inti warna zona + tepi gelap, menonjol di atas candle */
-        ctx.beginPath(); ctx.arc(dotX,dotY,6.8,0,Math.PI*2);
-        ctx.strokeStyle=colMain; ctx.globalAlpha=.38; ctx.lineWidth=1.4; ctx.stroke(); ctx.globalAlpha=1;
-        ctx.beginPath(); ctx.arc(dotX,dotY,4.2,0,Math.PI*2); ctx.fillStyle=colMain; ctx.fill();
-        ctx.strokeStyle="#05080d"; ctx.lineWidth=1.2; ctx.stroke();
-        labelItems.push({dotY:dotY, col:colMain, priceTxt:fmt(edgePx,m.dec), typeTxt:" "+ztype+" \u00b7 "+(tested? "tested":"fresh")});
+        labelItems.push({dotY:dotY, dotX:keyEndX, col:colMain, priceTxt:fmt(edgePx,m.dec), typeTxt:" "+ztype+" \u00b7 "+(tested? "tested":"fresh")});
       });
-      /* LABEL di kanan dot, posisi vertikal DIRAPIKAN anti-tumpuk:
-         level berdekatan (mis. tepi 3.578 & 3.575 hanya ±5px di
-         skala 1H) sebelumnya digambar di dotY masing-masing sehingga
-         label bertumpuk tak terbaca. Kini label diurutkan menurut
-         dotY, digeser berjarak minimum 17px dari tetangganya, dan
-         label yang bergeser dihubungkan ke dot-nya dengan garis
-         tipis. Latar gelap di belakang teks menjaga keterbacaan di
-         atas body candle. */
+      /* LABEL di kanan dot pada ketinggian yang SAMA PERSIS dengan
+         dot-nya: label TIDAK PERNAH digeser vertikal (pergeseran
+         vertikal versi lama — anti-tumpuk 17px — membuat dot/label
+         tampak tidak duduk di levelnya). Bila label tidak muat di
+         kanan dot atau bertabrakan dengan label tetangga yang
+         sangat berdekatan, yang digeser hanya posisi MENDATAR
+         label, dan label dihubungkan ke dot-nya dengan garis
+         penghubung mungil pada ketinggian yang sama. Latar gelap
+         di belakang teks menjaga keterbacaan di atas body candle. */
       labelItems.sort(function(a,b){ return a.dotY-b.dotY; });
-      labelItems.forEach(function(it,i){ it.ly= i===0? it.dotY : Math.max(it.dotY, labelItems[i-1].ly+17); });
-      for(var li2=labelItems.length-1; li2>=0; li2--){ var capY=H-46-(labelItems.length-1-li2)*17; if(labelItems[li2].ly>capY) labelItems[li2].ly=capY; }
+      var placedLbl=[];
       labelItems.forEach(function(it){
         ctx.font="bold 10.5px -apple-system,'Segoe UI',Roboto,sans-serif";
         var wPrice=ctx.measureText(it.priceTxt).width, wType=ctx.measureText(it.typeTxt).width;
-        var lx=dotX+10;
-        if(lx+wPrice+wType>W-70) lx=Math.max(8,(W-70)-wPrice-wType);
-        if(Math.abs(it.ly-it.dotY)>1.5){
+        var tw=wPrice+wType;
+        var lx=it.dotX+10;
+        if(lx+tw>plotRight-2) lx=plotRight-2-tw;
+        for(var tries=0; tries<14; tries++){
+          var hit=false;
+          for(var pi=0; pi<placedLbl.length; pi++){ var pr=placedLbl[pi];
+            if(Math.abs(pr.y-it.dotY)<14 && lx<pr.x+pr.w && lx+tw>pr.x){ hit=true; break; } }
+          if(!hit||lx<=8) break;
+          lx=Math.max(8,lx-14);
+        }
+        placedLbl.push({x:lx,y:it.dotY,w:tw});
+        if(Math.abs(lx-(it.dotX+10))>1){
           ctx.strokeStyle=it.col; ctx.globalAlpha=.55; ctx.lineWidth=1;
-          ctx.beginPath(); ctx.moveTo(dotX+5,it.dotY); ctx.lineTo(lx-4,it.ly); ctx.stroke(); ctx.globalAlpha=1;
+          ctx.beginPath();
+          if(lx>it.dotX){ ctx.moveTo(it.dotX+5,it.dotY); ctx.lineTo(lx-3,it.dotY); }
+          else{ ctx.moveTo(lx+tw+3,it.dotY); ctx.lineTo(it.dotX-5,it.dotY); }
+          ctx.stroke(); ctx.globalAlpha=1;
         }
         ctx.fillStyle="rgba(5,8,13,.88)";
-        ctx.fillRect(lx-4,it.ly-9,wPrice+wType+8,17);
-        ctx.fillStyle="#e8eef5"; ctx.fillText(it.priceTxt,lx,it.ly+3.5);
-        ctx.fillStyle=it.col; ctx.fillText(it.typeTxt,lx+wPrice,it.ly+3.5);
+        ctx.fillRect(lx-4,it.dotY-9,tw+8,17);
+        ctx.fillStyle="#e8eef5"; ctx.fillText(it.priceTxt,lx,it.dotY+3.5);
+        ctx.fillStyle=it.col; ctx.fillText(it.typeTxt,lx+wPrice,it.dotY+3.5);
         ctx.font="10px ui-monospace,Menlo,monospace";
       });
       /* chip tepi untuk zona di luar rentang terlihat */
