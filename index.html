@@ -371,7 +371,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 21:20 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 26 Nov 2026 · 21:30 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -534,7 +534,7 @@
     </div>
     <div id="scanner"></div>
     <div class="pinfo" id="scanInfo" hidden>
-      <div class="disc">Scanner melacak level harga tempat order menumpuk paling tebal di <b style="color:var(--muted)">buku JERU khususnya sendiri</b> — langganan l2Book nSigFigs 3 + fast yang selalu aktif (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder panel orderbook, jadi yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%: ukuran berjalan, puncak ukuran selama dilacak, jarak dari mid, dan durasi tumpukan bertahan. Tumpukan yang hilang dari buku &gt;20 detik dihapus dari daftar. Dinding besar bisa berarti support/resistance kuat — atau jebakan (spoofing) bila hilang tiba-tiba; selalu konfirmasi dengan Zona Pantau MSNR. Tumpukan terbesar per sisi dari scan jeru yang sama digambar juga di Terminal Analisa sebagai garis putus-putus berlabel ukuran (tombol DINDING), dan kolom jarak % menunjukkan seberapa jauh tumpukan itu dari mid.</div>
+      <div class="disc">Scanner melacak level harga tempat order menumpuk paling tebal di <b style="color:var(--muted)">buku JERU khususnya sendiri</b> — langganan l2Book nSigFigs 3 + fast yang selalu aktif (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder panel orderbook, jadi yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%: ukuran berjalan, puncak ukuran selama dilacak, jarak dari mid, dan durasi tumpukan bertahan. Tumpukan dilacak pada kisi harga absolut (BTC $50, XAU $5) dengan ambang dari median yang dihaluskan, dan dipertahankan selama masa tenggang 45 detik setelah terakhir terlihat di buku — di chart bubble-nya memudar, bukan lenyap seketika; ia hanya dihapus bila absen melewati tenggang itu atau ukurannya jatuh di bawah 1,2× median. Dinding besar bisa berarti support/resistance kuat — atau jebakan (spoofing) bila hilang tiba-tiba; selalu konfirmasi dengan Zona Pantau MSNR. Tumpukan terbesar per sisi dari scan jeru yang sama digambar juga di Terminal Analisa sebagai garis putus-putus berlabel ukuran (tombol DINDING), dan kolom jarak % menunjukkan seberapa jauh tumpukan itu dari mid.</div>
     </div>
   </section>
   </div><!-- /desk-main -->
@@ -565,7 +565,7 @@
     <div class="pinfo" id="footInfo" hidden>
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
       <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar candle dari <b>sumber resmi per simbol</b>: untuk <b>BTC, Binance Spot (BTCUSDT)</b> — muat awal dari REST klines resmi Binance (data-api.binance.vision, cadangan api.binance.com) dan candle berjalan dari WebSocket kline resmi Binance (data-stream.binance.vision, cadangan stream.binance.com:9443), jadi bentuk candle persis pasar spot asli; untuk <b>emas, PAXG dari Binance</b> — simbol <b>PAXGUSDT</b> lewat pipa Binance yang sama dengan BTC (REST klines + WebSocket kline resmi); PAXG adalah emas token yang harganya mengikuti spot emas sehingga menjadi proksi spot untuk XAU (label simbol chart tetap XAU), dekat dengan acuan spot OANDA Zona Pantau MSNR — zona tidak digeser dan duduk apa adanya di chart PAXG ≈ spot. Percobaan koneksi TradingView sudah dihapus dari alur muat XAU: server TradingView terbukti menolak koneksi dari halaman ini (WebSocket tutup kode 1006 pada dua varian URL, tercatat di foto diagnostik pengguna). <b>Pembangunan candle lokal dari tick dagang sudah dihapus total</b> — jalur rakitan itulah yang dulu membuat candle tidak beraturan; tick dagang Hyperliquid kini hanya dipakai untuk harga terakhir, CVD, dan panel-panel lain, tidak pernah membentuk atau mengubah candle. Bila sumber utama sebuah simbol gagal tersambung, tidak mengirim candle dalam ±8–10 detik, atau putus di tengah, chart simbol itu <b>otomatis jatuh ke candle RESMI Hyperliquid (cadangan)</b> — hanya snapshot candleSnapshot REST + langganan WebSocket kanal candle resmi exchange, dengan snapshot disinkronkan ulang berkala tiap ±8 detik untuk mengoreksi candle berjalan, tanpa penggabungan rakitan lokal apa pun — dan sumber utama dicoba lagi berkala ±30 detik. Mengganti timeframe meminta ulang candle dari sumber aktif untuk interval terpilih (nama interval chart 1m/5m/15m/1H/4H/1D sama dengan nama interval Binance &amp; kanal candle Hyperliquid). Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; sisi kanan chart selalu menyisakan ruang kosong tetap (±8% jendela tampil, 3–14 candle) antara candle terakhir dan sumbu harga ala offset kanan TradingView, jadi harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live dengan ruang kanan standar itu. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar personal yang tersimpan lokal per simbol di perangkat ini (trendline, garis harga, kotak zona personal bertepi emas putus-putus berlabel PERSONAL/nama sendiri) — data candle dari Binance Spot untuk BTC dan PAXG Binance untuk XAU (chip sumber di chart selalu menunjukkan sumber yang sedang aktif per simbol — “BINANCE SPOT” / “PAXG BINANCE ≈ SPOT” — termasuk saat jatuh ke cadangan Hyperliquid). Keselarasan orderbook di chart dijaga dengan <b>basis live terukur</b>: basis = mid perpetual Hyperliquid − mid spot Binance (BTC) atau mid PAXG (XAU, dari close bar terakhir); dinding &amp; bubble yang digambar di chart digeser sebesar basis itu (harga gambar = harga perp − basis, label harga bertanda ≈spot, nilai basis tampil sebagai chip kecil di area chart dan di label “Sumber:” pada baris DIAGNOSTIK LIVE), sedangkan panel orderbook, ladder, scanner, dan CVD selalu memakai harga perpetual Hyperliquid asli tanpa digeser. Label “Sumber:” menggantikan kolom TV lama — percobaan TradingView tidak lagi ditampilkan karena tidak lagi dilakukan. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
-      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya: dicatat harga, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; entri dihapus bila level hilang dari buku lebih dari 20 detik. Tumpukan terbesar per sisi dari scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus berlabel ukuran order (bid teal, ask ungu; tombol DINDING) — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tipis (1,4–1,5px; zona fresh warna penuh, zona tested disamarkan ke ±55% untuk garis, dot, dan labelnya) palet JSNR — merah muda resistance/SELL, hijau support/BUY (status flip SBR/RBS dibaca dari teks label, bukan warna) — pada level kunci zona, TERKUNCI ke pemetaan harga chart: posisi vertikalnya dihitung ulang setiap frame dari view.min/view.max lewat fungsi Y() yang sama dengan yang dipakai candle pada frame itu (termasuk pan sub-candle, skala manual, dan auto-scale) dan digambar dalam klip area plot yang sama dengan candle, jadi garis tidak lepas dari levelnya saat chart digeser/di-zoom; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; tiap garis memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada titik di ujung garisnya sendiri, tepat pada harga levelnya (zona lebar: dua garis tepi, masing-masing bertitik di level tepinya), label “harga level TIPE · fresh/tested” di kanan titik pada ketinggian yang sama persis dengan titiknya — label berdekatan hanya digeser mendatar dengan garis penghubung mungil, dot tidak pernah digeser dari levelnya; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status JSNR berbentuk tabel di pojok kanan atas chart kini diisi mesin JSNR asli (bias storyline W+D, zona BUY/SELL terbaik dengan ★skor dan tahap sinyal menunggu/AWAS/DI ZONA/PEMICU/KONFIRMASI, baris kaki killzone waktu New York + hitungan sinyal terkonfirmasi/dihapus) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
+      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya (median dihaluskan dengan rata-rata bergerak supaya ambang tidak berkedip): identitas tumpukan dikunci ke kisi harga absolut per simbol (BTC langkah $50, XAU langkah $5) supaya bucket agregasi nSigFigs yang bergeser mengikuti mid tidak terus mengganti identitas level yang sama; dicatat harga kisi, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; tumpukan yang sudah tampil dipertahankan dengan ukuran terakhirnya selama masa tenggang 45 detik sejak terakhir terlihat di buku (bubble di chart memudar selama tenggang, bukan lenyap seketika) dan hanya dihapus bila absen melewati tenggang itu atau ukurannya jatuh jauh di bawah ambang (&lt;1,2× median halus) saat masih ada di buku; keadaan scanner tidak direset saat WebSocket-nya reconnect sesaat — masa tenggang hanya berjalan oleh snapshot nyata yang diterima tanpa level itu, bukan oleh jeda sambungan. Tumpukan terbesar per sisi dari scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus berlabel ukuran order (bid teal, ask ungu; tombol DINDING) — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tipis (1,4–1,5px; zona fresh warna penuh, zona tested disamarkan ke ±55% untuk garis, dot, dan labelnya) palet JSNR — merah muda resistance/SELL, hijau support/BUY (status flip SBR/RBS dibaca dari teks label, bukan warna) — pada level kunci zona, TERKUNCI ke pemetaan harga chart: posisi vertikalnya dihitung ulang setiap frame dari view.min/view.max lewat fungsi Y() yang sama dengan yang dipakai candle pada frame itu (termasuk pan sub-candle, skala manual, dan auto-scale) dan digambar dalam klip area plot yang sama dengan candle, jadi garis tidak lepas dari levelnya saat chart digeser/di-zoom; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; tiap garis memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada titik di ujung garisnya sendiri, tepat pada harga levelnya (zona lebar: dua garis tepi, masing-masing bertitik di level tepinya), label “harga level TIPE · fresh/tested” di kanan titik pada ketinggian yang sama persis dengan titiknya — label berdekatan hanya digeser mendatar dengan garis penghubung mungil, dot tidak pernah digeser dari levelnya; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status JSNR berbentuk tabel di pojok kanan atas chart kini diisi mesin JSNR asli (bias storyline W+D, zona BUY/SELL terbaik dengan ★skor dan tahap sinyal menunggu/AWAS/DI ZONA/PEMICU/KONFIRMASI, baris kaki killzone waktu New York + hitungan sinyal terkonfirmasi/dihapus) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
       <p><b>Pasang di HP:</b> halaman ini adalah <b>web app</b> — tidak bisa menginstal dirinya sendiri seperti APK Play Store, tapi bisa dipasang ke layar utama dan dibuka seperti aplikasi. <b>iPhone (Safari):</b> tombol <b>Bagikan</b> → <b>Tambah ke Layar Utama</b> → <b>Tambah</b>. <b>Android (Chrome):</b> menu <b>⋮</b> → <b>Tambahkan ke Layar Utama</b> / <b>Instal aplikasi</b>. APK Android sungguhan = proyek terpisah (dibangun &amp; ditandatangani di luar halaman ini) — bilang saja bila mau disiapkan jalurnya.</p>
     </div>
   </footer>
@@ -576,14 +576,14 @@
 var API="https://api.hyperliquid.xyz/info";
 var WSURL="wss://api.hyperliquid.xyz/ws";
 var MARKETS=[
-  {id:"btc", coin:"BTC", name:"BTC PERP", tag:"HYPERLIQUID · PERP", unit:"BTC", dec:0, szDec:3},
-  {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · PERP · xyz:GOLD", unit:"oz", dec:1, szDec:2}
+  {id:"btc", coin:"BTC", name:"BTC PERP", tag:"HYPERLIQUID · PERP", unit:"BTC", dec:0, szDec:3, grid:50},
+  {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · PERP · xyz:GOLD", unit:"oz", dec:1, szDec:2, grid:5}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
 var chart={ sym:"btc", tf:300, itv:"15m", viewMode:"analisa", ema:true, vwap:false, vol:true, rsi:false, macd:false, walls:true, zones:true, bubbles:true, panel:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
-MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
+MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
 
 /* ============ MARKING PERSONAL PERSISTEN (localStorage, per simbol) ============
    Gambar pengguna (garis tren, garis harga, kotak zona personal)
@@ -819,24 +819,69 @@ function renderZones(id){
   });
 }
 
-/* ============ scanner tumpukan likuiditas ============ */
+/* ============ scanner tumpukan likuiditas ============
+   KESETABILAN TUMPUKAN/BUBBLE (perbaikan "bubble sering hilang"):
+   1) IDENTITAS DIKUNCI KE KISI HARGA ABSOLUT per simbol (BTC $50,
+      XAU $5): bucket agregasi nSigFigs buku jeru bergeser mengikuti
+      mid, jadi kunci harga mentah membuat tumpukan yang sama terus
+      berganti identitas dan dianggap hilang. Kini tiap level
+      dipetakan ke sel kisi tetap dan st.px = harga kisi itu.
+   2) MEDIAN DIHALUSKAN (rata-rata bergerak per sisi, s.medSm)
+      supaya ambang tampil ≥2× tidak berkedip mengikuti median
+      sesaat tiap snapshot.
+   3) HISTERESIS: tumpukan yang sudah tampil dipertahankan dengan
+      ukuran terakhirnya selama masa tenggang 45 detik sejak
+      terakhir terlihat di buku (di chart ia MEMUDAR, bukan lenyap
+      seketika); ia hanya dihapus bila absen melewati tenggang itu,
+      atau bila ukurannya — saat masih ada di buku — jatuh jauh di
+      bawah ambang (<1,2× median halus).
+   4) RECONNECT TIDAK MERESET: st.absentSince hanya diisi oleh
+      snapshot buku yang benar-benar diterima tanpa level itu.
+      Selama sambungan scanner putus tidak ada snapshot masuk,
+      jadi umur tumpukan tidak berjalan dan tidak ada yang
+      terhapus; snapshot pertama setelah reconnect menggantikan
+      data level yang sama, bukan menghapus semua. */
+var STACK_GRACE_MS=45000, STACK_DROP_RATIO=1.2, STACK_SHOW_RATIO=2;
 function updateStacks(id){
   var s=M[id]; if(!s.deepBook) return;
   var now=Date.now();
+  var grid=s.def.grid||1;
   [["bid",s.deepBook.bids],["ask",s.deepBook.asks]].forEach(function(pair){
     var side=pair[0], levels=pair[1];
-    var med=median(levels.map(function(l){return l.sz;}));
-    if(med<=0) return;
+    var rawMed=median(levels.map(function(l){return l.sz;}));
+    if(rawMed<=0) return;
+    /* median halus: EMA lambat supaya ambang tidak berkedip */
+    s.medSm[side]= s.medSm[side]>0? s.medSm[side]*0.65+rawMed*0.35 : rawMed;
+    var med=s.medSm[side];
+    /* jumlahkan ukuran semua level per sel kisi harga absolut */
+    var cells={};
     levels.forEach(function(l){
-      if(l.sz < 2*med) return;
-      var key=side+"|"+l.px.toFixed(4);
+      var gi=Math.round(l.px/grid);
+      cells[gi]=(cells[gi]||0)+l.sz;
+    });
+    /* perbarui / buat tumpukan dari sel yang hadir di snapshot ini */
+    Object.keys(cells).forEach(function(gk){
+      var gi=+gk, sz=cells[gk];
+      var key=side+"|"+gi;
       var st=s.stacks[key];
-      if(!st){ st=s.stacks[key]={side:side, px:l.px, sz:l.sz, peak:l.sz, first:now, last:now, hits:1}; }
-      else { st.sz=l.sz; if(l.sz>st.peak) st.peak=l.sz; st.last=now; st.hits++; }
+      if(st){
+        /* masih ada di buku tetapi jatuh jauh di bawah ambang → hapus */
+        if(sz < STACK_DROP_RATIO*med){ delete s.stacks[key]; return; }
+        st.sz=sz; if(sz>st.peak) st.peak=sz; st.last=now; st.hits++; st.absentSince=null;
+      } else if(sz >= STACK_SHOW_RATIO*med){
+        s.stacks[key]={side:side, px:gi*grid, sz:sz, peak:sz, first:now, last:now, hits:1, absentSince:null};
+      }
+    });
+    /* tumpukan sisi ini yang TIDAK hadir di snapshot ini: mulai /
+       lanjutkan masa tenggang — ukuran terakhir dipertahankan,
+       dihapus hanya setelah absen >45 detik terus-menerus */
+    Object.keys(s.stacks).forEach(function(k){
+      var st=s.stacks[k]; if(st.side!==side) return;
+      if(cells[Math.round(st.px/grid)]!=null) return;
+      if(!st.absentSince) st.absentSince=now;
+      if(now-st.absentSince>STACK_GRACE_MS) delete s.stacks[k];
     });
   });
-  /* buang tumpukan yang sudah hilang dari buku >20 detik */
-  Object.keys(s.stacks).forEach(function(k){ if(now-s.stacks[k].last>20000) delete s.stacks[k]; });
   /* batasi jumlah entri per simbol */
   var keys=Object.keys(s.stacks);
   if(keys.length>60){
@@ -2154,9 +2199,13 @@ function drawChart(){
      lingkaran (atau di sampingnya bila tidak muat). Maks 14 bubble
      terbesar supaya chart tidak penuh. */
   if(chart.bubbles){
+    /* rasio ukuran memakai MEDIAN HALUS scanner (s.medSm), bukan
+       median sesaat buku jeru, supaya kelas radius GEDE/SEDENG/CILIK
+       tidak berkedip antar-snapshot; median sesaat hanya cadangan
+       sebelum median halus terbentuk */
     var bkB=s.deepBook;
-    var medB= bkB? median(bkB.bids.map(function(l){return l.sz;})) : 0;
-    var medA= bkB? median(bkB.asks.map(function(l){return l.sz;})) : 0;
+    var medB= s.medSm&&s.medSm.bid>0? s.medSm.bid : (bkB? median(bkB.bids.map(function(l){return l.sz;})) : 0);
+    var medA= s.medSm&&s.medSm.ask>0? s.medSm.ask : (bkB? median(bkB.asks.map(function(l){return l.sz;})) : 0);
     /* bubble ikut digeser basis live yang sama dengan dinding:
        level tumpukan perp digambar pada harga perp − basis supaya
        menempel pada candle spot/proksi spot yang benar */
@@ -2174,6 +2223,13 @@ function drawChart(){
       if(bx==null) bx=view.offset+view.plotW-r-3;
       bx=Math.max(r+2, Math.min(view.offset+view.plotW-r-2, bx));
       var isBid= st.side==="bid";
+      /* HISTERESIS VISUAL: tumpukan yang sedang dalam masa tenggang
+         (absen dari buku <45 dtk) tetap digambar dengan ukuran
+         terakhirnya tetapi MEMUDAR seiring habisnya tenggang —
+         tidak lenyap seketika */
+      var fade=1;
+      if(st.absentSince){ fade=Math.max(0.3, 1-0.7*Math.min(1,(Date.now()-st.absentSince)/STACK_GRACE_MS)); }
+      ctx.save(); ctx.globalAlpha=fade;
       ctx.beginPath(); ctx.arc(bx,by,r,0,Math.PI*2);
       ctx.fillStyle= isBid? "rgba(46,230,168,.30)" : "rgba(232,121,249,.30)"; ctx.fill();
       ctx.strokeStyle= isBid? "#2ee6a8" : "#e879f9"; ctx.lineWidth=1.5; ctx.stroke();
@@ -2195,6 +2251,7 @@ function drawChart(){
         ctx.fillText(ptxt, pxLbl, by+3);
         ctx.font="10px ui-monospace,Menlo,monospace";
       }
+      ctx.restore();
     });
     ctx.font="10px ui-monospace,Menlo,monospace";
   }
@@ -3414,13 +3471,16 @@ setInterval(function(){
     if(candleSrc[m.id]==="hl"){ delete candleFetchAt[m.id+"|"+chart.itv]; fetchCandles(m.id); }
   });
 },8000);
-/* segarkan durasi tumpukan & buang yang basi tiap detik */
+/* segarkan durasi tumpukan & buang yang melewati masa tenggang tiap
+   detik — penghapusan di sini memakai absentSince (hanya terisi oleh
+   snapshot nyata tanpa level itu), jadi jeda reconnect TIDAK ikut
+   menua/menghapus tumpukan */
 setInterval(function(){
   if(document.hidden) return;
   MARKETS.forEach(function(m){
     var s=M[m.id]; if(!s.deepBook&&!s.book) return;
     var now=Date.now(), changed=false;
-    Object.keys(s.stacks).forEach(function(k){ if(now-s.stacks[k].last>20000){ delete s.stacks[k]; changed=true; } });
+    Object.keys(s.stacks).forEach(function(k){ var st=s.stacks[k]; if(st.absentSince&&now-st.absentSince>STACK_GRACE_MS){ delete s.stacks[k]; changed=true; } else if(st.absentSince) changed=true; });
     renderScanner(m.id);
     if(changed&&m.id===chart.sym) markChartDirty();
   });
