@@ -274,7 +274,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   /* panel terminal full-bleed: chart ngisi meh kabeh layar tab — tanpa
      margin samping, tanpa padding, tanpa toolbar numpuk ing ndhuwur
      chart (kabeh menu saiki overlay ngambang ing njero area chart) */
-  .panel.term-panel{margin:8px 0 0;border-left:0;border-right:0;border-radius:0}
+  .panel.term-panel{margin:12px 0 0;border-left:0;border-right:0;border-radius:0}
   /* catatan basis DIPADATKAN: chip satu baris kecil; teks lengkap hanya
      muncul saat chip diketuk (tidak tampil default, termasuk fullscreen) */
   .basiswrap{margin-top:4px}
@@ -832,11 +832,12 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     .brow .t{font-size:11px}
   }
   /* ===== PANEL PX: KOLOM FLEX + BANNER JAMET TERMINAL =====
-     Panel PX dadi kolom flex: panel chart dhuwure alami, banner ing
-     ngisore ngisi sisa dhuwur layar (JS nyetel min-height #tp-px =
-     dhuwur viewport − posisi panel) supaya ora ana papan ireng mati
-     ing ngisor chart ing layar HP dhuwur; ing layar cendhek banner
-     tetep dhuwur alamine (min-height ±150px). Banner manggon ing
+     Panel PX dadi kolom flex: banner saiki ing ndhuwur dhewe
+     tampilan PX (ing .wrap, sak ndhuwure strip ticker; dhuwur
+     alami, flex:0 0 auto, min-height ±150px, mung tampil nalika
+     tab PX aktif liwat CSS :has), panel chart kanthi dhuwur alami
+     (JS nyetel min-height #tp-px = dhuwur viewport − posisi panel).
+     Banner manggon ing
      NJABA #termPanel — mode fullscreen chart (Fullscreen API utawa
      fallback overlay .fs-fallback sing nutupi kabeh layar) ora
      nampilne banner babar pisan. Gaya banner = konsep v3 sing
@@ -844,7 +845,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
      jbn- supaya ora tabrakan karo .brand/.dot header. */
   #tp-px.on{display:flex;flex-direction:column}
   #tp-px .term-panel{flex:none}
-  .jbn{position:relative;flex:1 1 auto;min-height:150px;margin:12px 12px 0;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:radial-gradient(130% 190% at 16% 40%,#0c2438 0%,#071420 52%,#04070c 100%);display:flex;flex-direction:column}
+  .jbn{position:relative;flex:0 0 auto;min-height:150px;margin:12px 12px 0;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:radial-gradient(130% 190% at 16% 40%,#0c2438 0%,#071420 52%,#04070c 100%);display:flex;flex-direction:column}
   .jbn-wm{position:absolute;right:-10px;top:-38px;font-size:120px;font-weight:700;color:rgba(240,200,75,.05);line-height:1;pointer-events:none}
   .jbn-main{position:relative;flex:1 1 auto;display:flex;align-items:center;gap:15px;padding:16px 16px 13px}
   .jbn-logo{flex:0 0 auto;animation:jbnPulse 3.4s ease-in-out infinite}
@@ -936,7 +937,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
 
   /* ===== REDESIGN VISUAL HP (mung presentasi) =====
      Lapisan pungkasan: (1) tandha merek ikon aplikasi ing header —
-     mung katon ing ambane HP; (2) panel RINGKESAN PASAR ing tab PX
+     mung katon ing ambane HP; (2) panel RINGKESAN PASAR ing tab DOM
      — mung HP, desktop tetep kertu ticker lawas; (3) bagean WERNA
      CANDLE ing popup SETUP; (4) media ≤700px: bar tab dadi navigasi
      NGISOR tetep (safe-area iOS), tangga DOM luwih rapet, panel
@@ -963,7 +964,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     .tabbar button{border:0;border-radius:4px;min-height:44px;padding:4px 6px 5px}
     .tabbar button[aria-pressed="true"]{background:var(--accent-dim);box-shadow:inset 0 2px 0 var(--accent)}
     .wrap{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
-    /* panel RINGKESAN PASAR (tab PX, mung HP): nilai saka kahanan
+    /* panel RINGKESAN PASAR (tab DOM, mung HP): nilai saka kahanan
        aplikasi sing wis ana — diisi updateMov() */
     .mov{display:block;margin:12px 12px 0;border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:10px 12px 11px}
     .mov-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
@@ -992,6 +993,34 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     .sk-row{padding-top:4px;padding-bottom:4px}
     .mp-v{font-size:11px}
     .kv .v,.lv .v{font-variant-numeric:tabular-nums}
+  }
+
+  /* ===== RAPAT PX + DISIPLIN BORDER (mung presentasi) =====
+     Lapisan pungkasan babak iki: (1) ritme spasi 12px sing konsisten
+     antar seksi PX — banner (ndhuwur dhewe tampilan PX) → baris
+     kertu ticker → panel chart → chart dobel; ora ana margin dobel amarga
+     #tp-px kolom flex (margin anak ora nate ambruk); (2) disiplin
+     border: kabeh item 1px nganggo warna border tema (--line, padha
+     regane karo --border ing saben tema), radius panel/kertu 4px,
+     radius chip/tombol 3px (wis ditetepne lapisan institusional ing
+     ndhuwur). Sing dikecualikne kanthi sengojo: label VERSI (bingkai
+     emas --gold-line = elemen identitas), kahanan aktif/kapilih
+     (tab aktif, chip aria-pressed), lan garis pamisah njero banner
+     (bagean karya banner dhewe). Ing HP panel chart dadi sak kolom
+     resik: pinggir kiwa/tengen sejajar karo kertu ticker & banner
+     (12px), border kebak + radius panel; ing desktop panel chart
+     tetep full-bleed kaya strukture saiki. */
+  .ticker{gap:12px}
+  .msnr-panel,.skor-panel{border-radius:4px}
+  /* banner JAMET TERMINAL: manggon ing .wrap sak ndhuwure strip
+     ticker (ndhuwur dhewe tampilan PX) — mung tampil nalika tab PX
+     aktif, didhelikake murni nganggo :has() marang kelas .on panel
+     tab sing wis ana; ora ana logika/JS sing owah */
+  .wrap > .jbn{display:none}
+  .wrap:has(> .tabwrap > #tp-px.on) > .jbn{display:flex}
+  @media(max-width:700px){
+    .panel.term-panel{margin:12px 12px 0;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:4px}
+    .tick{min-width:150px}
   }
 </style>
 </head>
@@ -1044,7 +1073,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     <span class="brand"><svg class="brandmark" width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45" fill="none" stroke="#12303f" stroke-width="3"/><circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/><rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/><line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="2.4"/><rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/><line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="2.4"/><rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/><line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="2.4"/></svg>Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 02:15 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 02:40 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -1112,6 +1141,47 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   </nav>
   </div><!-- /topwrap -->
 
+  <!-- BANNER JAMET TERMINAL — konsep v3 sing disetujoni pemilik,
+       manggon ing ndhuwur dhewe tampilan PX: sak ndhuwure strip
+       kertu ticker & panel chart, nanging ing NJABA #termPanel
+       (ORA katon ing mode fullscreen chart). Strip ticker iku
+       strip global ing njaba panel tab, dadi banner manggon ing
+       .wrap sak ndhuwure strip kuwi lan mung tampil nalika tab PX
+       aktif — didhelikake murni nganggo CSS :has() marang kelas
+       .on panel tab sing wis ana (ora ana logika JS anyar). Strip ticker ing ngisore
+       isine data urip aplikasi (dibangun ulang JS maksimal saben
+       ±5 detik, isi didobel kanggo puteran marquee mulus). -->
+  <div class="jbn" id="jbnBanner" aria-label="Banner JAMET Terminal">
+    <div class="jbn-wm" aria-hidden="true">ꦥꦏ꧀ꦥꦺꦴꦃ</div>
+    <div class="jbn-main">
+      <svg class="jbn-logo" width="88" height="88" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#12303f" stroke-width="2"/>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/>
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#f0c84b" stroke-width="1" stroke-dasharray="3 5" opacity="0.7"/>
+        <rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/>
+        <line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="1.6"/>
+        <rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/>
+        <line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="1.6"/>
+        <rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/>
+        <line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="1.6"/>
+      </svg>
+      <div>
+        <div class="jbn-title">JAMET<br><span>TERMINAL</span></div>
+        <div class="jbn-quote">"Sing tenang, <b>disawang wae</b> disik."</div>
+        <div class="jbn-tag">ANALISA WAE · <b>DUDU PERINTAH ORDER</b> · MSNR · JSNR · ORDERFLOW</div>
+      </div>
+    </div>
+    <div class="jbn-ticker">
+      <div class="jbn-thead">
+        <span class="jbn-dot"></span>
+        <span class="jbn-tbrand">ORDERBOOK <span>· JAMET</span></span>
+      </div>
+      <div class="jbn-track">
+        <div class="jbn-move" id="jbnMove"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- TICKER STRIP -->
   <div class="ticker">
     <div class="tick"><span class="sym">BTC PERP</span><span class="px" id="tick-btc">—</span><span class="chg" id="tick-btc-chg">—</span></div>
@@ -1125,27 +1195,6 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   <div class="td-alertbanner" id="tdAlertBanner" role="alert"></div>
   <div class="tabwrap">
   <div class="tabpanel on" id="tp-px">
-  <!-- RINGKESAN PASAR — mung katon ing HP (≤700px), manggon ing
-       ndhuwure panel chart: instrumen aktif, rega pungkasan + % sesi,
-       bid/ask/spread saka kahanan buku sing wis ana, jeneng sesi saka
-       killzone JSNR, lan status sambungan saka Diagnostik. Kabeh
-       diisi updateMov() saka nilai sing WIS dietung/ditampilne
-       aplikasi — ora ana etungan/fetch/sumber anyar; nilai sing
-       durung kasedhiya tampil "—". Desktop ora owah (display:none,
-       kertu ticker lawas tetep). -->
-  <div class="mov" id="marketOverview" aria-label="Ringkasan pasar simbol aktif">
-    <div class="mov-top">
-      <div><span class="mov-sym" id="movSym">—</span><span class="mov-name" id="movName">—</span></div>
-      <span class="mov-conn"><span class="mov-dot" id="movDot"></span><span id="movConn">—</span></span>
-    </div>
-    <div class="mov-pxrow"><span class="mov-px" id="movPx">—</span><span class="mov-chg" id="movChg">—</span></div>
-    <div class="mov-grid">
-      <div class="mov-cell"><span class="mov-k">BID</span><span class="mov-v" id="movBid">—</span></div>
-      <div class="mov-cell"><span class="mov-k">ASK</span><span class="mov-v" id="movAsk">—</span></div>
-      <div class="mov-cell"><span class="mov-k">SPREAD</span><span class="mov-v" id="movSpread">—</span></div>
-      <div class="mov-cell"><span class="mov-k">SESI</span><span class="mov-v sess" id="movSess">—</span></div>
-    </div>
-  </div>
   <!-- TERMINAL ANALISA — GAYA TRADINGVIEW -->
   <section class="panel term-panel" id="termPanel" aria-label="Terminal analisa">
     <div class="term-chart">
@@ -1274,7 +1323,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
             <button id="ind-ema" aria-pressed="false">EMA 20/50</button>
             <button id="ind-vwap" aria-pressed="false">VWAP</button>
             <button id="ind-vol" aria-pressed="true">VOL</button>
-            <button id="ind-rsi" aria-pressed="true">RSI</button>
+            <button id="ind-rsi" aria-pressed="false">RSI</button>
             <button id="ind-macd" aria-pressed="false">MACD</button>
             <button id="ind-stoch" aria-pressed="true">STOCH</button>
             <button id="ind-cci" aria-pressed="false">CCI</button>
@@ -1286,10 +1335,10 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
             <button id="ind-zones" aria-pressed="false">ZONA MSNR</button>
             <button id="ind-bubbles" aria-pressed="true">BUBBLE</button>
             <button id="ind-panel" aria-pressed="false">PANEL</button>
-            <button id="ind-info" aria-pressed="true">INFO CHART</button>
+            <button id="ind-info" aria-pressed="false">INFO CHART</button>
             <button id="ind-vprof" aria-pressed="false">VPROF</button>
             <button id="ind-smc" aria-pressed="true">SMC</button>
-            <button id="ind-smcobs" aria-pressed="false">SMC OB SWING</button>
+            <button id="ind-smcobs" aria-pressed="true">SMC OB SWING</button>
             <button id="ind-smcfvg" aria-pressed="false">SMC FVG</button>
             <button id="ind-smcpd" aria-pressed="false">SMC P/D</button>
             <button id="ind-snr" aria-pressed="false">SNR</button>
@@ -1441,47 +1490,31 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     <canvas id="tdDualCv" aria-label="Chart simbol liyane"></canvas>
   </div>
 
-  <!-- BANNER JAMET TERMINAL — konsep v3 sing disetujoni pemilik,
-       manggon ing ngisore panel chart nanging ing NJABA #termPanel:
-       ngisi papan kosong ing ngisor chart (mulur liwat flex) lan
-       ORA katon ing mode fullscreen chart. Strip ticker ing ngisore
-       isine data urip aplikasi (dibangun ulang JS maksimal saben
-       ±5 detik, isi didobel kanggo puteran marquee mulus). -->
-  <div class="jbn" id="jbnBanner" aria-label="Banner JAMET Terminal">
-    <div class="jbn-wm" aria-hidden="true">ꦥꦏ꧀ꦥꦺꦴꦃ</div>
-    <div class="jbn-main">
-      <svg class="jbn-logo" width="88" height="88" viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r="45" fill="none" stroke="#12303f" stroke-width="2"/>
-        <circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/>
-        <circle cx="50" cy="50" r="36" fill="none" stroke="#f0c84b" stroke-width="1" stroke-dasharray="3 5" opacity="0.7"/>
-        <rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/>
-        <line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="1.6"/>
-        <rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/>
-        <line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="1.6"/>
-        <rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/>
-        <line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="1.6"/>
-      </svg>
-      <div>
-        <div class="jbn-title">JAMET<br><span>TERMINAL</span></div>
-        <div class="jbn-quote">"Sing tenang, <b>disawang wae</b> disik."</div>
-        <div class="jbn-tag">ANALISA WAE · <b>DUDU PERINTAH ORDER</b> · MSNR · JSNR · ORDERFLOW</div>
-      </div>
-    </div>
-    <div class="jbn-ticker">
-      <div class="jbn-thead">
-        <span class="jbn-dot"></span>
-        <span class="jbn-tbrand">ORDERBOOK <span>· JAMET</span></span>
-      </div>
-      <div class="jbn-track">
-        <div class="jbn-move" id="jbnMove"></div>
-      </div>
-    </div>
-  </div>
-
   </div><!-- /tp-px -->
 
   <!-- MARKET PANELS -->
   <div class="tabpanel" id="tp-dom">
+  <!-- RINGKESAN PASAR — mung katon ing HP (≤700px), manggon ing
+       ndhuwur dhewe tab DOM (elemen pisanan panel DOM): instrumen aktif, rega pungkasan + % sesi,
+       bid/ask/spread saka kahanan buku sing wis ana, jeneng sesi saka
+       killzone JSNR, lan status sambungan saka Diagnostik. Kabeh
+       diisi updateMov() saka nilai sing WIS dietung/ditampilne
+       aplikasi — ora ana etungan/fetch/sumber anyar; nilai sing
+       durung kasedhiya tampil "—". Desktop ora owah (display:none,
+       kertu ticker lawas tetep). -->
+  <div class="mov" id="marketOverview" aria-label="Ringkasan pasar simbol aktif">
+    <div class="mov-top">
+      <div><span class="mov-sym" id="movSym">—</span><span class="mov-name" id="movName">—</span></div>
+      <span class="mov-conn"><span class="mov-dot" id="movDot"></span><span id="movConn">—</span></span>
+    </div>
+    <div class="mov-pxrow"><span class="mov-px" id="movPx">—</span><span class="mov-chg" id="movChg">—</span></div>
+    <div class="mov-grid">
+      <div class="mov-cell"><span class="mov-k">BID</span><span class="mov-v" id="movBid">—</span></div>
+      <div class="mov-cell"><span class="mov-k">ASK</span><span class="mov-v" id="movAsk">—</span></div>
+      <div class="mov-cell"><span class="mov-k">SPREAD</span><span class="mov-v" id="movSpread">—</span></div>
+      <div class="mov-cell"><span class="mov-k">SESI</span><span class="mov-v sess" id="movSess">—</span></div>
+    </div>
+  </div>
   <div class="tgrid" id="grid"></div>
   <!-- DOM JERU ala Tradoor — mung mode SUMBER TRADOOR: tangga buku
        1000 level sing isa digulung, kolom ukuran | rega | owahan
@@ -1667,7 +1700,7 @@ var MARKETS=[
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · PERP · xyz:GOLD", unit:"oz", dec:1, szDec:2, grid:5}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
-var chart={ sym:"gold", tf:300, itv:"15m", viewMode:"analisa", ema:false, vwap:false, vol:true, rsi:true, macd:false, stoch:true, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:false, bubbles:true, panel:false, vprof:false, smc:true, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, skor:false, presisi:false, info:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
+var chart={ sym:"gold", tf:300, itv:"15m", viewMode:"analisa", ema:false, vwap:false, vol:true, rsi:false, macd:false, stoch:true, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:false, bubbles:true, panel:false, vprof:false, smc:true, smcObs:true, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, skor:false, presisi:false, info:false, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
 /* ============ TEMA TAMPILAN + PALET CANVAS ============
    Tema dipilih liwat tombol TEMA ing header (popup #themePop),
    disimpen ing localStorage "obhp_theme_v1", diterapne liwat atribut
@@ -6584,27 +6617,34 @@ function applyInfoVis(){
 }
 bindToggle("ind-info","info",applyInfoVis);
 applyInfoVis();
-/* ---- STANDAR ANYAR 27 Nov 04:40 + MIGRASI SEPIŠAN ----
+/* ---- STANDAR ANYAR 28 Nov 02:34 + MIGRASI SEPISAN v3 ----
    Standar toggle indikator anyar saka pemilik (screenshot popup
-   INDIKATOR ing XAU 15M): sing URIP kanthi standar = VOL, RSI,
-   STOCH, DINDING, BUBBLE, INFO CHART, SMC; sing MATI = EMA 20/50,
-   VWAP, MACD, CCI, ADX, OBV, MFI, RVOL, ZONA MSNR, PANEL, VPROF,
-   SMC OB SWING, SMC FVG, SMC P/D, SNR, VBAND, PIVOT, SUPERTREND,
-   BB, KELTNER, DONCHIAN, ORBS, STATS, HEAT, FOOT, ABSORB, TPO.
+   INDIKATOR): sing URIP kanthi standar = VOL, STOCH, DINDING,
+   BUBBLE, SMC, SMC OB SWING; sing MATI = EMA 20/50, VWAP, RSI,
+   MACD, CCI, ADX, OBV, MFI, RVOL, ZONA MSNR, PANEL, INFO CHART,
+   VPROF, SMC FVG, SMC P/D, SNR, VBAND, PIVOT, SUPERTREND, BB,
+   KELTNER, DONCHIAN, ORBS, STATS, HEAT, FOOT, ABSORB, TPO, SKOR,
+   PRESISI. Owahan saka standar v2: RSI urip->mati, INFO CHART
+   urip->mati, SMC OB SWING mati->urip.
    Simbol standar pas aplikasi dibukak = XAU (chart.sym bawaan
    "gold" + boot setChartSym("gold") ing ngisor).
    Migrasi sepisan nganggo flag localStorage anyar
-   "obhp_defmig_v2" (kapisah saka flag panel "obhp_panelmig_v1"):
-   nek flag durung ana — kaya ing HP pemilik sing wis nyimpen
-   kahanan saka versi lawas — kabeh field indikator ing objek
-   chart + aria-pressed tombol popup fx dipeksa menyang standar
-   anyar iki, pref PANEL diselaraskan mati liwat savePanelPref,
-   banjur flag dipasang. Sakwise kuwi ora ditimpa maneh: pilihan
-   pemilik dhewe sing mlaku (pref PANEL tetep disimpen/dibalekne
-   liwat obhp_panel_v1 kaya sadurunge). */
-var DEF_MIG_KEY="obhp_defmig_v2";
-var DEF_IND={ema:false,vwap:false,vol:true,rsi:true,macd:false,stoch:true,cci:false,adx:false,obv:false,mfi:false,rvol:false,walls:true,zones:false,bubbles:true,panel:false,vprof:false,smc:true,smcObs:false,smcFvg:false,smcPd:false,snr:false,vband:false,pivot:false,strend:false,bb:false,kelt:false,don:false,orbs:false,stats:false,heat:false,foot:false,absorb:false,tpo:false,info:true};
-var DEF_BTN={ema:"ind-ema",vwap:"ind-vwap",vol:"ind-vol",rsi:"ind-rsi",macd:"ind-macd",stoch:"ind-stoch",cci:"ind-cci",adx:"ind-adx",obv:"ind-obv",mfi:"ind-mfi",rvol:"ind-rvol",walls:"ind-walls",zones:"ind-zones",bubbles:"ind-bubbles",panel:"ind-panel",vprof:"ind-vprof",smc:"ind-smc",smcObs:"ind-smcobs",smcFvg:"ind-smcfvg",smcPd:"ind-smcpd",snr:"ind-snr",vband:"ind-vband",pivot:"ind-pivot",strend:"ind-strend",bb:"ind-bb",kelt:"ind-kelt",don:"ind-don",orbs:"ind-orbs",stats:"ind-stats",heat:"ind-heat",foot:"ind-foot",absorb:"ind-absorb",tpo:"ind-tpo",info:"ind-info"};
+   "obhp_defmig_v3" (nerusake v2; kapisah saka flag panel
+   "obhp_panelmig_v1"): nek flag durung ana — kaya ing HP pemilik
+   sing wis nyimpen kahanan saka versi lawas — kabeh field
+   indikator ing objek chart + aria-pressed tombol popup fx
+   dipeksa menyang standar anyar iki, pref PANEL diselaraskan
+   mati liwat savePanelPref, pref SKOR & PRESISI ditulis mati
+   menyang kunci localStorage-e dhewe-dhewe (kahanan sing padha
+   karo sing diwaca/ditulis toggle-e), banjur flag dipasang.
+   Sakwise kuwi ora ditimpa maneh: pilihan pemilik dhewe sing
+   mlaku (pref PANEL/SKOR/PRESISI tetep disimpen/dibalekne liwat
+   kunci pref-e kaya sadurunge). Instalasi anyar (ora ana
+   kahanan kesimpen) nampa standar sing padha langsung saka
+   nilai bawaan objek chart + aria-pressed HTML. */
+var DEF_MIG_KEY="obhp_defmig_v3";
+var DEF_IND={ema:false,vwap:false,vol:true,rsi:false,macd:false,stoch:true,cci:false,adx:false,obv:false,mfi:false,rvol:false,walls:true,zones:false,bubbles:true,panel:false,vprof:false,smc:true,smcObs:true,smcFvg:false,smcPd:false,snr:false,vband:false,pivot:false,strend:false,bb:false,kelt:false,don:false,orbs:false,stats:false,heat:false,foot:false,absorb:false,tpo:false,skor:false,presisi:false,info:false};
+var DEF_BTN={ema:"ind-ema",vwap:"ind-vwap",vol:"ind-vol",rsi:"ind-rsi",macd:"ind-macd",stoch:"ind-stoch",cci:"ind-cci",adx:"ind-adx",obv:"ind-obv",mfi:"ind-mfi",rvol:"ind-rvol",walls:"ind-walls",zones:"ind-zones",bubbles:"ind-bubbles",panel:"ind-panel",vprof:"ind-vprof",smc:"ind-smc",smcObs:"ind-smcobs",smcFvg:"ind-smcfvg",smcPd:"ind-smcpd",snr:"ind-snr",vband:"ind-vband",pivot:"ind-pivot",strend:"ind-strend",bb:"ind-bb",kelt:"ind-kelt",don:"ind-don",orbs:"ind-orbs",stats:"ind-stats",heat:"ind-heat",foot:"ind-foot",absorb:"ind-absorb",tpo:"ind-tpo",skor:"ind-skor",presisi:"ind-presisi",info:"ind-info"};
 try{
   if(!localStorage.getItem(DEF_MIG_KEY)){
     Object.keys(DEF_IND).forEach(function(k){
@@ -6612,6 +6652,13 @@ try{
       var db=$(DEF_BTN[k]); if(db) db.setAttribute("aria-pressed", DEF_IND[k]? "true":"false");
     });
     savePanelPref();
+    /* SKOR & PRESISI nduwe pref localStorage dhewe sing diwaca
+       maneh blok pemulihane ing ngisor script iki — tulis kahanan
+       standar (mati) menyang kunci sing padha persis (literal,
+       amarga konstanta SKOR_PREF_KEY / PRESISI_PREF_KEY ditetepne
+       ing ngisor titik iki) supaya pemulihan ora nguripne maneh. */
+    try{ localStorage.setItem("obhp_skor_v1", chart.skor? "1":"0"); }catch(e){}
+    try{ localStorage.setItem("obhp_presisi_v1", chart.presisi? "1":"0"); }catch(e){}
     applyInfoVis();
     localStorage.setItem(DEF_MIG_KEY,"1");
   }
@@ -7205,8 +7252,9 @@ function renderSkorPanel(){
   if(note) note.style.display= (!d||bias==="ranging")? "" : "none";
 }
 /* ---- toggle SKOR: standar MATI, disimpen pola pref PANEL
-   (localStorage "obhp_skor_v1"); ORA klebu migrasi standar apa wae
-   — pengguna sing wis ana tetep OFF nganti nguripne dhewe ---- */
+   (localStorage "obhp_skor_v1"); klebu migrasi standar
+   obhp_defmig_v3 (dipateni sepisan ing kono + pref ditulis "0"),
+   sakwise kuwi pilihan pengguna dhewe sing mlaku ---- */
 var SKOR_PREF_KEY="obhp_skor_v1";
 function saveSkorPref(){ try{ localStorage.setItem(SKOR_PREF_KEY, chart.skor? "1":"0"); }catch(e){} }
 try{
@@ -7375,8 +7423,9 @@ function drawPresisiData(cs,m){
   ctx.font="10px ui-monospace,Menlo,monospace";
 }
 /* ---- toggle PRESISI: standar MATI, disimpen pola pref SKOR
-   (localStorage "obhp_presisi_v1"); ORA klebu migrasi standar apa
-   wae — pengguna sing wis ana tetep OFF nganti nguripne dhewe ---- */
+   (localStorage "obhp_presisi_v1"); klebu migrasi standar
+   obhp_defmig_v3 (dipateni sepisan ing kono + pref ditulis "0"),
+   sakwise kuwi pilihan pengguna dhewe sing mlaku ---- */
 var PRESISI_PREF_KEY="obhp_presisi_v1";
 function savePresisiPref(){ try{ localStorage.setItem(PRESISI_PREF_KEY, chart.presisi? "1":"0"); }catch(e){} }
 try{
@@ -8173,10 +8222,10 @@ document.querySelectorAll("[data-tab]").forEach(function(b){
    puteran marquee mulus; nilai sing durung kasedhiya tampil "—".
    Animasi marquee & pulse logo mung CSS.
    fitPxPanel: min-height #tp-px disetel = dhuwur viewport − posisi
-   dokumen panel, supaya kolom flex panel PX pas sak layar lan
-   banner (flex:1) ngisi sisa dhuwur ing ngisore chart. Dihitung
-   maneh saben resize, saben banner-tick 5 detik, lan sakwise
-   header dilipat/dibukak. */
+   dokumen panel, supaya kolom flex panel PX pas sak layar (banner
+   saiki ing ndhuwur kanthi dhuwur alami). Dihitung maneh saben
+   resize, saben banner-tick 5 detik, lan sakwise header
+   dilipat/dibukak. */
 function jbnFundTxt(id,nm,alt){
   try{
     var g=(typeof fundEls!=="undefined")? fundEls[id] : null; if(!g) return "—";
