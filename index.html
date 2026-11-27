@@ -546,7 +546,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 12:42 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 13:19 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -2938,6 +2938,17 @@ function fmtCompact(v){
   if(a>=1e3) return (v/1e3).toFixed(1)+"K";
   return String(Math.round(v));
 }
+/* langkah tangga rega "nice": milih saka {1, 2, 2.5, 5} × 10^k
+   kanthi target ±11 garis (rentang/step kisaran 8–14 ndek sembarang
+   zoom). Conto: XAU rentang 140 → 20, rentang 30 → 2.5; BTC rentang
+   4000 → 500. */
+function nicePriceStep(range){
+  if(!(range>0)||!isFinite(range)) return 1;
+  var mag=Math.pow(10,Math.floor(Math.log10(range/11)));
+  var steps=[1,2,2.5,5,10], best=steps[steps.length-1]*mag, bd=Infinity;
+  for(var i=0;i<steps.length;i++){ var st=steps[i]*mag, d=Math.abs(range/st-11); if(d<bd){ bd=d; best=st; } }
+  return best;
+}
 /* ---- koordinat ---- */
 function X(t){ return view.offset + ((t-view.t0)/Math.max(1,(view.t1-view.t0)))*view.plotW; }
 function invX(x){ return view.t0 + ((x-view.offset)/Math.max(1,view.plotW))*(view.t1-view.t0); }
@@ -3406,13 +3417,22 @@ function drawChart(){
   view.step=view.plotW/Math.max(1,cs.length+rightOff);
   if(chart.pan<0) view.offset=4+chart.pan*view.step;
   else if(panFrac>0) view.offset=4+panFrac*view.step;
-  /* grid + sumbu harga */
+  /* grid + sumbu harga — TANGGA REGA "NICE" (arahan pemilik — sumbu
+     kudu rapet + rata kaya app referensi, garis kisi melintang sak
+     ambane plot kalebu ruang offset tengen tanpa wates): langkah
+     dipilih saka tangga {1, 2, 2.5, 5} × 10^k kanthi target ±11
+     garis, dietung ulang saben frame saka view min/max, dadi bener
+     otomatis kanggo pan / zoom / skala manual / fullscreen / loro
+     simbol / kabeh timeframe. Garis pisanan ndek ceil(min/step)*step,
+     banjur mlaku saben step nganti ngluwihi max. */
   ctx.font="10px ui-monospace,Menlo,monospace"; ctx.lineWidth=1;
-  for(var gy=0; gy<=4; gy++){
-    var p=min+(max-min)*gy/4, y=Y(p);
-    ctx.strokeStyle="#131c29"; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W-64,y); ctx.stroke();
+  var gStep=nicePriceStep(max-min), gP0=Math.ceil(min/gStep)*gStep;
+  ctx.strokeStyle="rgba(148,163,184,0.07)";
+  for(var gp=gP0; gp<=max; gp+=gStep){
+    var gy2=Y(gp);
+    ctx.beginPath(); ctx.moveTo(0,gy2); ctx.lineTo(W-64,gy2); ctx.stroke();
     /* label harga berwarna teal saat skala vertikal MANUAL aktif */
-    ctx.fillStyle= chart.yAuto? "#5b6b82" : "#2ee6a8"; ctx.fillText(fmt(p,m.dec), W-60, y+3);
+    ctx.fillStyle= chart.yAuto? "#5b6b82" : "#2ee6a8"; ctx.fillText(fmt(gp,m.dec), W-60, gy2+3);
   }
   for(var gx=0; gx<cs.length; gx+=Math.ceil(cs.length/5)){
     var x=X(cs[gx].t);
