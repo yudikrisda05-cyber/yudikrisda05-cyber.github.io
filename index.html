@@ -682,7 +682,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 22:40 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 22:52 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -939,10 +939,12 @@
         </div>
         <!-- DIALOG KALIBRASI PRESET — kothak cilik ngambang ing njero
              area chart: nampilne rega aplikasi saiki kanggo simbol
-             aktif, siji kolom rega referensi, SIMPAN (offset =
-             referensi − rega aplikasi, disimpen per preset+simbol),
-             RESET (mbusak offset kasimpen). Ing preset SPOT, SIMPAN
-             dipateni + ana katrangan. -->
+             aktif + baris MODE aktif (Otomatis +0,25% utawa
+             Kalibrasi manual), siji kolom rega referensi, SIMPAN
+             (kalibrasi manual: offset = referensi − rega aplikasi,
+             disimpen per preset+simbol, ngalahne otomatis), RESET
+             (mbusak kalibrasi manual → bali menyang OTOMATIS).
+             Ing preset SPOT, SIMPAN dipateni + ana katrangan. -->
         <div class="calibdlg" id="calibDlg" role="dialog" aria-label="Kalibrasi preset harga">
           <div class="calib-head"><span class="calib-title" id="calibTitle">KALIBRASI</span><button class="indpop-x" id="calibClose" aria-label="Tutup kalibrasi" title="Tutup">✕</button></div>
           <div class="calib-row">Rega aplikasi saiki (<span id="calibSym">XAU</span>): <b id="calibAppPx">—</b></div>
@@ -1130,7 +1132,7 @@
       <p>SMC: adhedhasar Smart Money Concepts [LuxAlgo] (CC BY-NC-SA 4.0)</p>
       <p>SKOR: skor confluence SMC (Struktur H1 + Zona premium/discount H1 + Sweep M15 + FVG M5 + Order Block M5; SETUP VALID nek ≥3/5) dietung saka candle Binance sing WES CLOSE (XAU = PAXG ≈ spot), aturan diporting saka desain SMC open-source; mung analisa, dudu perintah order.</p>
       <p>PRESISI: level saka rega swing H1 Binance/PAXG sing wes close + PDH/PDL, tanpa pelebaran ATR; band emas '2 METODE' = level PRESISI mlebu ndek njero zona JSNR (confluence loro metode); mung analisa, dudu perintah order.</p>
-      <p><b>Preset konversi harga (SPOT / OANDA / ICMARKETS)</b> di pojok kanan atas chart adalah <b>konversi TAMPILAN hasil kalibrasi manual</b> — <b>bukan</b> data live OANDA atau IC Markets: aplikasi tidak menarik harga dari kedua broker itu. Cara kerjanya: pilih preset, tekan <b>KALIBRASI</b>, lalu ketik harga referensi yang sedang Anda lihat di OANDA/IC Markets; aplikasi menyimpan selisihnya (offset) per preset dan per simbol (BTC/XAU), dan semua harga yang ditampilkan — candle, sumbu harga, zona JSNR, PRESISI, dinding, panel, strip JSNR mode OANDA, orderbook, scanner, dan tape — digeser sebesar offset itu. Data asli (candle tersimpan, mesin analisa, buku order) tidak pernah diubah; yang bergeser hanya tampilan. Preset <b>SPOT</b> = harga asli dari sumber aplikasi tanpa geseran apa pun. Selisih harga antar pasar <b>bergerak perlahan seiring waktu</b>, jadi offset bisa terasa meleset setelah beberapa lama — kalibrasi ulang kapan pun terasa tidak pas, atau tekan RESET untuk menghapus offset preset itu. Label kecil di bar kontrol chart menunjukkan preset aktif dan offset-nya (atau "durung dikalibrasi" bila preset itu belum punya offset untuk simbol aktif).</p>
+      <p><b>Preset konversi harga (SPOT / OANDA / ICMARKETS)</b> di pojok kanan atas chart adalah <b>konversi TAMPILAN</b> — <b>bukan</b> data live OANDA atau IC Markets: aplikasi tidak menarik harga dari kedua broker itu. Preset OANDA dan ICMARKETS membawa <b>konversi OTOMATIS +0,25%</b> yang langsung aktif sekali klik tanpa input apa pun: angka itu titik tengah diskon tipikal PAXG (sumber harga emas aplikasi ini) terhadap spot — median 30 hari −0,22% dan minggu berjalan −0,24% (data Nov 2026) — sementara OANDA dan IC Markets sama-sama mengutip harga yang pada dasarnya adalah spot mid, jadi koreksinya sama untuk keduanya. Angka +0,25% itu <b>angka tipikal, bukan umpan live</b> dari OANDA/IC Markets. Untuk ketepatan penuh, <b>kalibrasi manual menimpa konversi otomatis</b>: tekan <b>KALIBRASI</b>, ketik harga referensi yang sedang Anda lihat di OANDA/IC Markets, dan aplikasi menyimpan selisihnya (offset tetap) per preset dan per simbol (BTC/XAU); tekan <b>RESET</b> untuk menghapus kalibrasi manual dan kembali ke otomatis +0,25%. Semua harga yang ditampilkan — candle, sumbu harga, zona JSNR, PRESISI, dinding, panel, strip JSNR mode OANDA, orderbook, scanner, dan tape — dikonversi dengan cara yang sama. Data asli (candle tersimpan, mesin analisa, buku order) tidak pernah diubah; yang berubah hanya tampilan. Preset <b>SPOT</b> = harga asli dari sumber aplikasi tanpa konversi apa pun. Selisih harga antar pasar <b>bergerak perlahan seiring waktu</b> (offset melayang), jadi kalibrasi manual pun bisa terasa meleset setelah beberapa lama — kalibrasi ulang kapan pun terasa tidak pas. Label kecil di bar kontrol chart menunjukkan mode aktif preset: "≈OANDA +0,25% otomatis" atau "≈OANDA +$… kalibrasi".</p>
       <p>Heatmap orderbook (toggle HEAT di popup indikator) digambar sebagai lapisan latar chart dari rekaman buku jeru sesi ini — ia hanya menampilkan data sejak aplikasi dibuka pada sesi ini (rekaman disimpan di memori perangkat, hingga ±3 jam terakhir), bukan histori dari sebelum aplikasi dibuka.</p>
       <p>Footprint (toggle FOOT di popup indikator) diagregasi dari aggTrades Binance untuk candle yang terlihat saat mode FOOT aktif, bukan footprint tick-persis — candle di luar tampilan atau dari masa sebelum mode dihidupkan tidak memiliki data footprint dan digambar sebagai candle biasa; stacked imbalance dihitung dari perbandingan diagonal antar level harga di dalam candle yang sama.</p>
       <p>Absorption zones (toggle ABSORB di popup indikator) dihitung dari candle + delta taker-buy Binance yang tersimpan pada candle (delta = 2×takerBuy − volume, sama seperti kolom Δ pada STATS): candle dianggap absorpsi bila volumenya ≥1,5× rata-rata volume 20 candle sebelumnya dan |delta%| ≥40%, tetapi hasil harganya tidak sebanding — delta negatif kuat namun close tetap di paruh atas rentang candle (penjual diserap, zona mint) atau delta positif kuat namun close di paruh bawah rentang (pembeli diserap, zona merah muda). Zona digambar dari low–high candle itu dan memanjang ke kanan sampai ada body close menembus batasnya; maksimal 6 zona aktif terbaru yang digambar. Bila candle tidak memiliki data taker-buy (sumber cadangan Hyperliquid), ABSORB tidak menggambar apa pun.</p>
@@ -1156,24 +1158,36 @@ var MARKETS=[
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
 var chart={ sym:"gold", tf:300, itv:"15m", viewMode:"analisa", ema:false, vwap:false, vol:true, rsi:true, macd:false, stoch:true, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:false, bubbles:true, panel:false, vprof:false, smc:true, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, skor:false, presisi:false, info:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
-/* ============ PRESET KONVERSI REGA + KALIBRASI MANUAL ============
+/* ============ PRESET KONVERSI REGA + KALIBRASI ============
    Preset tampilan SPOT / OANDA / ICMARKETS (klaster overlay tengen-
-   ndhuwur chart, sakdhuwure toggle ANALISA/OANDA). SPOT = rega asli
-   sumber aplikasi (offset tansah 0). OANDA / ICMARKETS = KONVERSI
-   TAMPILAN nganggo offset kalibrasi manual sing disimpen per preset
-   LAN per simbol ing localStorage:
+   ndhuwur chart, sakdhuwure toggle ANALISA/OANDA). Konversi MUNG
+   kanggo tampilan, lumantar fungsi toDisplay(raw, id) /
+   fromDisplay(disp, id) sing moduse dietung dispModeOf() per
+   preset+simbol aktif:
+     - SPOT: mode "identity" — rega tampil = rega mentah, ora owah.
+     - OANDA / ICMARKETS tanpa kalibrasi manual: mode "prop" —
+       OTOMATIS proporsional, rega tampil = mentah × (1 + pct/100),
+       pct saka CALIB_AUTO_PCT (loro-lorone 0,25% saiki: diskon
+       tipikal PAXG marang spot ± −0,22…−0,37%, data Nov 2026).
+     - OANDA / ICMARKETS kanthi kalibrasi manual kasimpen: mode
+       "add" — rega tampil = mentah + offset tetep; kalibrasi
+       manual NGALAHNE konversi otomatis.
+   Kalibrasi manual disimpen per preset LAN per simbol ing
+   localStorage:
      obhp_calib_v1  = {OANDA:{BTC:{off,at},XAU:{off,at}}, ICMARKETS:{…}}
      obhp_preset_v1 = "SPOT" | "OANDA" | "ICMARKETS" (bawaan SPOT)
-   Offset MUNG kanggo tampilan: rega tampil = rega mentah + offset.
    Ora ana data kasimpen sing diowahi — candle, input mesin JSNR/
-   SKOR/PRESISI, lan data buku order tetep mentah; kabeh panggilan
-   gambar/teks rega sing nambahne offset sepisan ing titik tampil.
-   Kanggo dinding & bubble: rega gambar wis nampa geseran basis live
-   (drawShift, perp → ≈spot); offset kalibrasi numpuk ING NDHUWURE
-   persis sepisan ing teks rega sing dicithak (posisi piksel ora owah
-   amarga sumbu rega uga maca rega tampil — delok loop grid drawChart).
-   Fungsi murni (calibOffFrom / calibApply / calibCompose) kapacak
-   ing window.jametCalib ben isa dites saka njaba. */
+   SKOR/PRESISI, lan data buku order tetep mentah; kabeh titik
+   cithak rega (chart + sumbu, overlay, panel, DOM/Scanner/Tape,
+   ticker) ngliwati toDisplay() sepisan ing titik tampil.
+   Kanggo dinding & bubble: geseran basis live (drawShift,
+   perp → ≈spot mentah) diterapne DHISIK, banjur toDisplay()
+   persis sepisan ing teks rega sing dicithak (posisi piksel ora
+   owah amarga geometri Y() tetep ruang mentah lan tangga sumbu
+   dietung ing ruang rega tampil liwat fromDisplay()).
+   Fungsi murni (dispModeOf / calibToDisp / calibFromDisp /
+   calibCompose / calibOffFrom) kapacak ing window.jametCalib
+   ben isa dites saka njaba. */
 var CALIB_KEY="obhp_calib_v1", CALIB_PRESET_KEY="obhp_preset_v1";
 var CALIB_SYMKEY={ btc:"BTC", gold:"XAU" };
 function calibSymKey(id){ return CALIB_SYMKEY[id]||"XAU"; }
@@ -1194,15 +1208,50 @@ function calibOffFrom(store,preset,symKey){
   var e=calibEntryOf(store,preset,symKey);
   return e? e.off : 0;
 }
+/* persen konversi OTOMATIS per preset (angka persen, dudu pecahan):
+   loro-lorone 0,25% — titik tengah diskon tipikal PAXG marang spot
+   (median 30 dina −0,22%, minggu iki −0,24%; data Nov 2026), lan
+   OANDA & IC Markets loro-lorone regane meh persis spot mid.
+   Kapisah per preset ben mengko isa beda nek perlu. */
+var CALIB_AUTO_PCT={ OANDA:0.25, ICMARKETS:0.25 };
+/* mode transformasi tampil kanggo siji preset+simbol:
+   identity (SPOT) · prop (otomatis, persen) · add (kalibrasi manual) */
+function dispModeOf(store,preset,symKey){
+  if(preset!=="OANDA"&&preset!=="ICMARKETS") return { kind:"identity" };
+  var e=calibEntryOf(store,preset,symKey);
+  if(e) return { kind:"add", off:e.off };
+  return { kind:"prop", pct:CALIB_AUTO_PCT[preset]||0 };
+}
+/* terapne mode menyang rega mentah → rega tampil (murni) */
+function calibToDisp(mode,raw){
+  if(!mode||mode.kind==="identity") return raw;
+  if(mode.kind==="prop") return raw*(1+(mode.pct||0)/100);
+  return raw+(mode.off||0);
+}
+/* walikane calibToDisp: rega tampil → rega mentah (murni) */
+function calibFromDisp(mode,disp){
+  if(!mode||mode.kind==="identity") return disp;
+  if(mode.kind==="prop") return disp/(1+(mode.pct||0)/100);
+  return disp-(mode.off||0);
+}
 /* terapne offset menyang rega mentah (tampilan) */
 function calibApply(raw,off){ return raw+off; }
-/* komposisi karo geseran basis sing wis ana: mentah − basis + kalibrasi, sepisan */
-function calibCompose(raw,basisShift,off){ return raw-basisShift+off; }
+/* komposisi karo geseran basis sing wis ana: basis diterapne dhisik
+   (mentah − basis → ≈spot mentah), banjur transformasi tampil
+   persis sepisan */
+function calibCompose(store,preset,symKey,raw,basisShift){
+  return calibToDisp(dispModeOf(store,preset,symKey), raw-basisShift);
+}
 var calibStore=calibParseStore(null);
 try{ calibStore=calibParseStore(localStorage.getItem(CALIB_KEY)); }catch(e){}
 var calPreset="SPOT";
 try{ var cp0=localStorage.getItem(CALIB_PRESET_KEY); if(cp0==="OANDA"||cp0==="ICMARKETS"||cp0==="SPOT") calPreset=cp0; }catch(e){}
-function calibOff(id){ return calibOffFrom(calibStore,calPreset,calibSymKey(id)); }
+function calibMode(id){ return dispModeOf(calibStore,calPreset,calibSymKey(id)); }
+/* rega mentah → rega tampil miturut preset+simbol aktif (kabeh titik
+   konversi tampilan WAJIB ngliwati kene) */
+function toDisplay(raw,id){ return calibToDisp(calibMode(id),raw); }
+/* walikane toDisplay: rega tampil → rega mentah */
+function fromDisplay(disp,id){ return calibFromDisp(calibMode(id),disp); }
 function calibEntry(id){ return calibEntryOf(calibStore,calPreset,calibSymKey(id)); }
 function calibPersist(){ try{ localStorage.setItem(CALIB_KEY, JSON.stringify(calibStore)); }catch(e){} }
 function calibSetOff(preset,symKey,off){
@@ -1220,6 +1269,11 @@ function fmtCalOff(off){
   var t; try{ t=a.toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2}); }catch(e){ t=a.toFixed(2); }
   return (off<0? "\u2212$" : "+$")+t;
 }
+/* format persen konversi otomatis nganggo koma desimal id-ID, contone "+0,25%" */
+function fmtCalPct(pct){
+  var t; try{ t=Math.abs(pct).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2}); }catch(e){ t=Math.abs(pct).toFixed(2); }
+  return (pct<0? "\u2212" : "+")+t+"%";
+}
 function calibTimeTxt(at){
   try{ return new Date(at).toLocaleTimeString("id-ID",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; }
 }
@@ -1228,8 +1282,10 @@ function updateCalibLabel(){
   var el=$("calibLabel"); if(!el) return;
   var txt="";
   if(calPreset!=="SPOT"){
-    var e=calibEntry(chart.sym);
-    txt= e? ("\u2248"+calPreset+" "+fmtCalOff(e.off)) : ("\u2248"+calPreset+" durung dikalibrasi");
+    var md=calibMode(chart.sym);
+    txt= md.kind==="add"
+      ? ("\u2248"+calPreset+" "+fmtCalOff(md.off)+" kalibrasi")
+      : ("\u2248"+calPreset+" "+fmtCalPct(md.pct)+" otomatis");
   }
   if(txt===calibLabelCache) return;
   calibLabelCache=txt;
@@ -1297,17 +1353,19 @@ function calibDlgRefresh(){
   var symEl=$("calibSym"); if(symEl) symEl.textContent=sk;
   var ap=calibAppPrice(id);
   var apEl=$("calibAppPx"); if(apEl) apEl.textContent= ap!=null? "$"+fmt(ap,m.dec) : "— (candle durung kasedhiya)";
-  var cur=$("calibCur"), e=calibEntry(id);
+  var cur=$("calibCur"), e=calibEntry(id), md=calibMode(id);
   if(cur) cur.innerHTML= e
-    ? "Offset kasimpen: <b>"+fmtCalOff(e.off)+"</b> · dikalibrasi "+calibTimeTxt(e.at)
-    : "Durung ana kalibrasi kasimpen kanggo preset iki.";
+    ? "Mode aktif: <b>Kalibrasi manual "+fmtCalOff(e.off)+"</b> · dikalibrasi "+calibTimeTxt(e.at)
+    : (calPreset==="SPOT"
+      ? "Mode aktif: <b>SPOT</b> — rega asli, tanpa konversi."
+      : "Mode aktif: <b>Otomatis "+fmtCalPct(md.pct)+"</b> — konversi bawaan preset, durung ana kalibrasi manual.");
   var note=$("calibNote"), save=$("calibSave"), inp=$("calibInput");
   if(calPreset==="SPOT"){
     if(note) note.textContent="Preset SPOT = rega asli sumber aplikasi, ora ana kalibrasi. Pilih preset OANDA utawa ICMARKETS dhisik kanggo kalibrasi.";
     if(save) save.disabled=true;
     if(inp) inp.disabled=true;
   }else{
-    if(note) note.textContent="SIMPAN nyimpen offset = rega referensi − rega aplikasi kanggo preset "+calPreset+" · "+sk+". Kabeh rega tampil banjur digeser sakmono; data asli ora diowahi.";
+    if(note) note.textContent="Preset "+calPreset+" wis ngonversi OTOMATIS "+fmtCalPct(md.kind==="prop"? md.pct : CALIB_AUTO_PCT[calPreset])+" tanpa input apa-apa. SIMPAN nyimpen kalibrasi manual (offset = rega referensi − rega aplikasi) kanggo "+calPreset+" · "+sk+" sing NGALAHNE otomatis; RESET mbusak kalibrasi manual lan mbalekne menyang otomatis. Data asli ora diowahi.";
     if(save) save.disabled=false;
     if(inp) inp.disabled=false;
   }
@@ -1346,7 +1404,7 @@ if(calibResetEl) calibResetEl.addEventListener("click",function(){
   closeCalibDlg();
   calibRefreshAll();
 });
-try{ window.jametCalib={ offFrom:calibOffFrom, apply:calibApply, compose:calibCompose, parseStore:calibParseStore, parseNum:calibParseNum, entryOf:calibEntryOf }; }catch(e){}
+try{ window.jametCalib={ offFrom:calibOffFrom, apply:calibApply, compose:calibCompose, parseStore:calibParseStore, parseNum:calibParseNum, entryOf:calibEntryOf, modeOf:dispModeOf, toDisp:calibToDisp, fromDisp:calibFromDisp, autoPct:CALIB_AUTO_PCT, toDisplay:toDisplay, fromDisplay:fromDisplay }; }catch(e){}
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, cvdLog:[], cvdSeries:[], el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
@@ -1552,7 +1610,7 @@ function buildZonePanel(){
         tag=(z.rec? "★ REKOMENDASI · " : "")+z.type;
         note=(z.fresh? "fresh" : "tested")+(z.flip? " · flip "+(z.kind==="res"? "SBR" : "RBS") : "")+(z.conf? " · konfluen S/D swing" : "")+(z.swing? " · zona swing" : "")+" · skor "+fmtScore(z.score)+(z.rec? " · skor rekomendasi (dgn bias) "+fmtScore(z.adjScore) : "");
       } else { tag=z.type; note=z.note+(z.inv? ' <b>'+z.inv+'.</b>' : ''); }
-      html+='<div class="zrow" id="z-'+id+'-'+i+'"><span class="zr">'+fmt(z.lo+calibOff(id),mk.dec)+' – '+fmt(z.hi+calibOff(id),mk.dec)+'</span>'+
+      html+='<div class="zrow" id="z-'+id+'-'+i+'"><span class="zr">'+fmt(toDisplay(z.lo,id),mk.dec)+' – '+fmt(toDisplay(z.hi,id),mk.dec)+'</span>'+
         '<span class="zt '+(z.kind==="res"? "res" : "sup")+'">'+tag+'</span>'+
         '<span class="zm">'+note+'</span>'+
         '<span class="zd" data-zd>Jarak: menunggu harga…</span></div>';
@@ -1573,7 +1631,7 @@ function renderZones(id){
     var old=row.querySelector(".ztag"); if(old) old.parentNode.removeChild(old);
     if(mid>=z.lo&&mid<=z.hi){
       row.classList.add("inside");
-      zd.innerHTML='Harga berjalan $'+fmt(mid+calibOff(id),dec)+' — <span style="color:var(--amber)">DI DALAM ZONA</span>';
+      zd.innerHTML='Harga berjalan $'+fmt(toDisplay(mid,id),dec)+' — <span style="color:var(--amber)">DI DALAM ZONA</span>';
       var tg=document.createElement("span"); tg.className="ztag"; tg.textContent="DI DALAM ZONA"; row.querySelector(".zr").appendChild(tg);
     } else {
       var edge= mid<z.lo? z.lo : z.hi;
@@ -1679,14 +1737,14 @@ MARKETS.forEach(function(m){
     '</div>';
   scanEl.appendChild(div);
 });
-function scanRowsHtml(list, side, mid, m, maxSz, off){
+function scanRowsHtml(list, side, mid, m, maxSz){
   if(!list.length) return '<div class="scanempty">Belum ada tumpukan ≥2× median terdeteksi sisi ini.</div>';
   var html="";
   list.forEach(function(st,i){
     var dist=Math.abs(st.px-mid), pct=dist/mid*100;
     var w=maxSz>0? Math.max(5, st.sz/maxSz*100):0;
-    /* rega tumpukan dicithak +off (konversi tampilan); jarak iku selisih — ora digeser */
-    html+='<div class="srow'+(i===0?" top":"")+'"><span class="sp">$'+fmt(st.px+(off||0),m.dec)+(i===0?'<span class="stop-tag">TERBESAR</span>':"")+'</span>'+
+    /* rega tumpukan dicithak liwat toDisplay (konversi tampilan preset); jarak iku selisih — ora diowahi */
+    html+='<div class="srow'+(i===0?" top":"")+'"><span class="sp">$'+fmt(toDisplay(st.px,m.id),m.dec)+(i===0?'<span class="stop-tag">TERBESAR</span>':"")+'</span>'+
       '<span class="sbar"><i style="width:'+w.toFixed(0)+'%"></i></span>'+
       '<span class="ssz">'+fmt(st.sz,m.szDec)+' '+m.unit+'</span>'+
       '<span class="sm"><span>Jarak dari mid: <b>$'+fmt(dist,m.dec)+' ('+pct.toFixed(2)+'%)</b></span>'+
@@ -1701,13 +1759,13 @@ function renderScanner(id){
   if(id==="gold") xauSrcLabel();
   var mid=(bk.bids[0].px+bk.asks[0].px)/2;
   function sf(name){ return wrap.querySelector('[data-sf="'+name+'"]'); }
-  sf("mid").textContent="MID $"+fmt(mid+calibOff(id),m.dec);
+  sf("mid").textContent="MID $"+fmt(toDisplay(mid,id),m.dec);
   var all=Object.keys(s.stacks).map(function(k){ return s.stacks[k]; });
   var bids=all.filter(function(x){return x.side==="bid";}).sort(function(a,b){return b.sz-a.sz;}).slice(0,4);
   var asks=all.filter(function(x){return x.side==="ask";}).sort(function(a,b){return b.sz-a.sz;}).slice(0,4);
   var maxSz=0; all.forEach(function(x){ if(x.sz>maxSz) maxSz=x.sz; });
-  sf("bids").innerHTML=scanRowsHtml(bids,"bid",mid,m,maxSz,calibOff(id));
-  sf("asks").innerHTML=scanRowsHtml(asks,"ask",mid,m,maxSz,calibOff(id));
+  sf("bids").innerHTML=scanRowsHtml(bids,"bid",mid,m,maxSz);
+  sf("asks").innerHTML=scanRowsHtml(asks,"ask",mid,m,maxSz);
 }
 
 /* ============ status ============ */
@@ -2285,14 +2343,14 @@ function flushRender(){
 }
 
 /* ============ render market ============ */
-function rowsHtml(levels,isAsk,dec,szDec,off){
+function rowsHtml(levels,isAsk,dec,szDec,id){
   var med=median(levels.map(function(l){return l.sz;}));
   var cum=0, html="";
   var list=isAsk? levels.slice().reverse() : levels;
   list.forEach(function(l){
     cum+=l.sz;
-    /* rega level dicithak +off (konversi tampilan preset); data buku tetep mentah */
-    html+='<div class="brow '+(isAsk?"ask":"bid")+'"><span class="p">'+fmt(l.px+(off||0),dec)+(med>0&&l.sz>=3*med?'<span class="wall '+(isAsk?"wask":"wbid")+'">DINDING</span>':"")+'</span><span class="s">'+fmt(l.sz,szDec)+'</span><span class="t">'+fmt(cum,szDec)+'</span></div>';
+    /* rega level dicithak liwat toDisplay (konversi tampilan preset); data buku tetep mentah */
+    html+='<div class="brow '+(isAsk?"ask":"bid")+'"><span class="p">'+fmt(toDisplay(l.px,id),dec)+(med>0&&l.sz>=3*med?'<span class="wall '+(isAsk?"wask":"wbid")+'">DINDING</span>':"")+'</span><span class="s">'+fmt(l.sz,szDec)+'</span><span class="t">'+fmt(cum,szDec)+'</span></div>';
   });
   return html;
 }
@@ -2313,13 +2371,12 @@ function render(id){
   var bids=s.book.bids, asks=s.book.asks;
   var mid=(bids[0].px+asks[0].px)/2, spread=asks[0].px-bids[0].px;
   var last=s.trades.length? s.trades[0].px : mid;
-  /* konversi tampilan preset: rega & mid dicithak +off; SPREAD iku
-     selisih loro rega — ora digeser (selisih tetep padha) */
-  var offD=calibOff(id);
-  f(el,"price").textContent="$"+fmt(last+offD,m.dec);
-  f(el,"mid").textContent="$"+fmt(mid+offD,m.dec);
+  /* konversi tampilan preset: rega & mid dicithak liwat toDisplay;
+     SPREAD iku selisih loro rega — dicithak mentah apa anane */
+  f(el,"price").textContent="$"+fmt(toDisplay(last,id),m.dec);
+  f(el,"mid").textContent="$"+fmt(toDisplay(mid,id),m.dec);
   f(el,"spread").textContent="$"+fmt(spread,m.dec);
-  f(el,"midRow").textContent="MID $"+fmt(mid+offD,m.dec);
+  f(el,"midRow").textContent="MID $"+fmt(toDisplay(mid,id),m.dec);
   f(el,"spreadRow").textContent="SPREAD $"+fmt(spread,m.dec);
   f(el,"cvd").textContent=(s.cvd>0?"+":s.cvd<0?"−":"")+fmt(Math.abs(s.cvd),m.szDec)+" "+m.unit;
   f(el,"cvd").style.color= s.cvd>0? "var(--bid)": s.cvd<0? "var(--ask)":"inherit";
@@ -2331,20 +2388,20 @@ function render(id){
   f(el,"imbBar").style.width=pctB+"%";
   var dr=f(el,"depthRange");
   if(dr&&bids.length&&asks.length){ var dnR=(mid-bids[bids.length-1].px)/mid*100, upR=(asks[asks.length-1].px-mid)/mid*100; dr.textContent="JANGKAUAN −"+dnR.toFixed(2)+"% / +"+upR.toFixed(2)+"% DARI MID · "+bids.length+" LVL/SISI"; }
-  f(el,"asks").innerHTML=rowsHtml(asks,true,m.dec,m.szDec,offD);
-  f(el,"bids").innerHTML=rowsHtml(bids,false,m.dec,m.szDec,offD);
+  f(el,"asks").innerHTML=rowsHtml(asks,true,m.dec,m.szDec,id);
+  f(el,"bids").innerHTML=rowsHtml(bids,false,m.dec,m.szDec,id);
   f(el,"empty").style.display="none";
   paintBars(el,"ask",asks); paintBars(el,"bid",bids);
   var th="";
   if(!s.trades.length){ th='<div class="trow"><span style="color:var(--muted)">Belum ada trade terekam sesi ini.</span></div>'; }
   else s.trades.forEach(function(t){
     var tm=""; try{ tm=new Date(t.time).toLocaleTimeString("id-ID",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",second:"2-digit"}); }catch(e){}
-    th+='<div class="trow"><span class="tp '+(t.buy?"buy":"sell")+'">'+(t.buy?"BUY  ":"SELL ")+'$'+fmt(t.px+offD,m.dec)+'</span><span>'+fmt(t.sz,m.szDec)+' '+m.unit+'</span><span style="color:var(--dim)">'+tm+'</span></div>';
+    th+='<div class="trow"><span class="tp '+(t.buy?"buy":"sell")+'">'+(t.buy?"BUY  ":"SELL ")+'$'+fmt(toDisplay(t.px,id),m.dec)+'</span><span>'+fmt(t.sz,m.szDec)+' '+m.unit+'</span><span style="color:var(--dim)">'+tm+'</span></div>';
   });
   if(s.flowEl) f(s.flowEl,"trades").innerHTML=th;
   /* ticker */
   var tk=$("tick-"+id), tc=$("tick-"+id+"-chg");
-  if(tk) tk.textContent="$"+fmt(last+offD,m.dec);
+  if(tk) tk.textContent="$"+fmt(toDisplay(last,id),m.dec);
   if(tc&&s.firstMid){ var ch=(mid-s.firstMid)/s.firstMid*100; tc.textContent=(ch>=0?"+":"")+ch.toFixed(2)+"% SESI"; tc.className="chg "+(ch>=0?"up":"dn"); }
   updateReco(id);
   renderZones(id);
@@ -2378,10 +2435,10 @@ function updateReco(id){
       var dist=Math.abs(mid-wall.px)/mid*100;
       var prox=Math.max(0,20-dist*10);
       score+= dir>0? prox : -prox;
-      reasons.push('Dinding '+(dir>0?"bid":"ask")+' terdekat <b>$'+fmt(wall.px+calibOff(id),m.dec)+'</b> ('+fmt(wall.sz,m.szDec)+' '+m.unit+', '+dist.toFixed(2)+'% dari mid)');
+      reasons.push('Dinding '+(dir>0?"bid":"ask")+' terdekat <b>$'+fmt(toDisplay(wall.px,id),m.dec)+'</b> ('+fmt(wall.sz,m.szDec)+' '+m.unit+', '+dist.toFixed(2)+'% dari mid)');
     }
   }
-  reasons.push('Dinding bid terkuat: <b>$'+fmt(wallB.px+calibOff(id),m.dec)+'</b> · Dinding ask terkuat: <b>$'+fmt(wallA.px+calibOff(id),m.dec)+'</b>');
+  reasons.push('Dinding bid terkuat: <b>$'+fmt(toDisplay(wallB.px,id),m.dec)+'</b> · Dinding ask terkuat: <b>$'+fmt(toDisplay(wallA.px,id),m.dec)+'</b>');
   var conf=Math.min(95,Math.round(Math.abs(score)));
   if(dir===0){
     box.innerHTML='<span class="badge none">NO TRADE</span><span class="score">SKOR '+score.toFixed(0)+' — SINYAL TIDAK SEARAH / TERLALU LEMAH</span><ul class="reasons">'+reasons.map(function(r){return "<li>"+r+"</li>";}).join("")+'</ul>';
@@ -2396,9 +2453,9 @@ function updateReco(id){
   var rr=(reward/risk).toFixed(1);
   box.innerHTML='<span class="badge '+(dir>0?"long":"short")+'">'+(dir>0?"LONG":"SHORT")+'</span><span class="score">SKOR '+score.toFixed(0)+' · KEYAKINAN MEKANIS ±'+conf+'%</span>'+
     '<div class="levels">'+
-    '<div class="lv"><div class="k">Zona Entri</div><div class="v">$'+fmt(entryLo+calibOff(id),m.dec)+'–'+fmt(entryHi+calibOff(id),m.dec)+'</div></div>'+
-    '<div class="lv"><div class="k">Stop Loss</div><div class="v plain">$'+fmt(sl+calibOff(id),m.dec)+'</div></div>'+
-    '<div class="lv"><div class="k">Target</div><div class="v plain">$'+fmt(tp+calibOff(id),m.dec)+'</div></div>'+
+    '<div class="lv"><div class="k">Zona Entri</div><div class="v">$'+fmt(toDisplay(entryLo,id),m.dec)+'–'+fmt(toDisplay(entryHi,id),m.dec)+'</div></div>'+
+    '<div class="lv"><div class="k">Stop Loss</div><div class="v plain">$'+fmt(toDisplay(sl,id),m.dec)+'</div></div>'+
+    '<div class="lv"><div class="k">Target</div><div class="v plain">$'+fmt(toDisplay(tp,id),m.dec)+'</div></div>'+
     '<div class="lv"><div class="k">R : R</div><div class="v plain">1 : '+rr+'</div></div></div>'+
     '<ul class="reasons">'+reasons.map(function(r){return "<li>"+r+"</li>";}).join("")+'</ul>';
 }
@@ -3456,20 +3513,19 @@ function renderJsnrStrip(){
     return;
   }
   var mS=M[chart.sym].def;
-  var offS=calibOff(chart.sym);
   var biasTxtS= engS.bias===1? "BULLISH ▲" : engS.bias===-1? "BEARISH ▼" : "CAMPUR ◆";
   var bcolS= engS.bias===1? "#20e3a2" : engS.bias===-1? "#ff4d6a" : "#f0c84b";
-  var buyTxtS= engS.buy? fmt(engS.buy.lo+offS,mS.dec)+" – "+fmt(engS.buy.hi+offS,mS.dec)+"  ★"+fmtScore(engS.buy.adjScore) : "tidak ada zona layak";
-  var sellTxtS= engS.sell? fmt(engS.sell.lo+offS,mS.dec)+" – "+fmt(engS.sell.hi+offS,mS.dec)+"  ★"+fmtScore(engS.sell.adjScore) : "tidak ada zona layak";
+  var buyTxtS= engS.buy? fmt(toDisplay(engS.buy.lo,chart.sym),mS.dec)+" – "+fmt(toDisplay(engS.buy.hi,chart.sym),mS.dec)+"  ★"+fmtScore(engS.buy.adjScore) : "tidak ada zona layak";
+  var sellTxtS= engS.sell? fmt(toDisplay(engS.sell.lo,chart.sym),mS.dec)+" – "+fmt(toDisplay(engS.sell.hi,chart.sym),mS.dec)+"  ★"+fmtScore(engS.sell.adjScore) : "tidak ada zona layak";
   var footTxtS= engS.kz+" · ✓"+engS.nConf+" terkonfirmasi · ✗"+engS.nFail+" dihapus";
   var keyS="J|"+biasTxtS+"|"+buyTxtS+"|"+sellTxtS+"|"+engS.stateBuy+"|"+engS.stateSell+"|"+footTxtS+"|"+chart.sym;
   if(keyS===jsnrStripCache) return;
   jsnrStripCache=keyS;
   var buySegS= engS.buy
-    ? '<span class="k">BUY</span> '+fmt(engS.buy.lo+offS,mS.dec)+' – '+fmt(engS.buy.hi+offS,mS.dec)+' <span class="sc">★'+fmtScore(engS.buy.adjScore)+'</span> <span class="st'+(engS.stateBuy===2||engS.stateBuy===4? " in":"")+'">('+jsnrStateName(engS.stateBuy)+')</span>'
+    ? '<span class="k">BUY</span> '+fmt(toDisplay(engS.buy.lo,chart.sym),mS.dec)+' – '+fmt(toDisplay(engS.buy.hi,chart.sym),mS.dec)+' <span class="sc">★'+fmtScore(engS.buy.adjScore)+'</span> <span class="st'+(engS.stateBuy===2||engS.stateBuy===4? " in":"")+'">('+jsnrStateName(engS.stateBuy)+')</span>'
     : '<span class="k">BUY</span> tidak ada zona layak';
   var sellSegS= engS.sell
-    ? '<span class="k">SELL</span> '+fmt(engS.sell.lo+offS,mS.dec)+' – '+fmt(engS.sell.hi+offS,mS.dec)+' <span class="sc">★'+fmtScore(engS.sell.adjScore)+'</span> <span class="st'+(engS.stateSell===2||engS.stateSell===4? " in sell":"")+'">('+jsnrStateName(engS.stateSell)+')</span>'
+    ? '<span class="k">SELL</span> '+fmt(toDisplay(engS.sell.lo,chart.sym),mS.dec)+' – '+fmt(toDisplay(engS.sell.hi,chart.sym),mS.dec)+' <span class="sc">★'+fmtScore(engS.sell.adjScore)+'</span> <span class="st'+(engS.stateSell===2||engS.stateSell===4? " in sell":"")+'">('+jsnrStateName(engS.stateSell)+')</span>'
     : '<span class="k">SELL</span> tidak ada zona layak';
   main.innerHTML=
     '<span class="js-bias" style="color:'+bcolS+'">JSNR · '+biasTxtS+'</span>'
@@ -3494,9 +3550,8 @@ function updateMsnrPanel(){
   if(engP){
     var biasTxtP= engP.bias===1? "BULLISH ▲" : engP.bias===-1? "BEARISH ▼" : "CAMPUR ◆";
     var bcolP= engP.bias===1? "#20e3a2" : engP.bias===-1? "#ff4d6a" : "#f0c84b";
-    var offP=calibOff(chart.sym);
-    var buyTxtP= engP.buy? fmt(engP.buy.lo+offP,m.dec)+" – "+fmt(engP.buy.hi+offP,m.dec)+"  ★"+fmtScore(engP.buy.adjScore) : "tidak ada zona layak";
-    var sellTxtP= engP.sell? fmt(engP.sell.lo+offP,m.dec)+" – "+fmt(engP.sell.hi+offP,m.dec)+"  ★"+fmtScore(engP.sell.adjScore) : "tidak ada zona layak";
+    var buyTxtP= engP.buy? fmt(toDisplay(engP.buy.lo,chart.sym),m.dec)+" – "+fmt(toDisplay(engP.buy.hi,chart.sym),m.dec)+"  ★"+fmtScore(engP.buy.adjScore) : "tidak ada zona layak";
+    var sellTxtP= engP.sell? fmt(toDisplay(engP.sell.lo,chart.sym),m.dec)+" – "+fmt(toDisplay(engP.sell.hi,chart.sym),m.dec)+"  ★"+fmtScore(engP.sell.adjScore) : "tidak ada zona layak";
     var footTxtP= engP.kz+" · ✓"+engP.nConf+" terkonfirmasi · ✗"+engP.nFail+" dihapus";
     var keyP="J|"+biasTxtP+"|"+buyTxtP+"|"+sellTxtP+"|"+engP.stateBuy+"|"+engP.stateSell+"|"+footTxtP+"|"+chart.sym;
     if(keyP!==msnrPanelCache){
@@ -3531,9 +3586,8 @@ function updateMsnrPanel(){
   else if(res&&res.inside){ bias="BEARISH ▼"; bcol="#ff4d6a"; }
   else if(sup&&res){ if(sup.d<res.d){ bias="BULLISH ▲"; bcol="#20e3a2"; } else if(res.d<sup.d){ bias="BEARISH ▼"; bcol="#ff4d6a"; } else { bias="SIDEWAYS ◆"; bcol="#f0c84b"; } }
   else { bias="SIDEWAYS ◆"; bcol="#f0c84b"; }
-  var offF=calibOff(chart.sym);
-  var buyTxt= sup? fmt(sup.z.lo+offF,m.dec)+" – "+fmt(sup.z.hi+offF,m.dec) : "—";
-  var sellTxt= res? fmt(res.z.lo+offF,m.dec)+" – "+fmt(res.z.hi+offF,m.dec) : "—";
+  var buyTxt= sup? fmt(toDisplay(sup.z.lo,chart.sym),m.dec)+" – "+fmt(toDisplay(sup.z.hi,chart.sym),m.dec) : "—";
+  var sellTxt= res? fmt(toDisplay(res.z.lo,chart.sym),m.dec)+" – "+fmt(toDisplay(res.z.hi,chart.sym),m.dec) : "—";
   /* baris kaki tabel (pengganti baris killzone di screenshot — data
      killzone/sinyal tidak tersedia di aplikasi ini): status tambahan
      jujur dari data yang ada = zona terdekat keseluruhan + jarak % */
@@ -3804,11 +3858,14 @@ function drawChart(){
      dipaksa tampil lagi oleh drawRSI/drawMACD) */
   if(chart.viewMode==="oanda") return;
   var s=M[chart.sym], m=s.def;
-  /* offset kalibrasi preset aktif (tampilan wae): kabeh TEKS rega ing
-     frame iki dicithak +CAL, lan tangga sumbu dietung ing ruang rega
-     tampil; geometri Y() tetep ruang mentah — posisi piksel saben
-     level mentah persis ing label sumbu rega tampil-e */
-  var CAL=calibOff(chart.sym);
+  /* transformasi tampil preset aktif (tampilan wae): kabeh TEKS rega
+     ing frame iki dicithak liwat TD() (= toDisplay simbol aktif),
+     lan tangga sumbu dietung ing ruang rega tampil — garis kisi ing
+     rega tampil gp dipetakan bali nganggo FD() (= fromDisplay);
+     geometri Y() tetep ruang mentah — posisi piksel saben level
+     mentah persis ing label sumbu rega tampil-e */
+  var TD=function(p){ return toDisplay(p,chart.sym); };
+  var FD=function(p){ return fromDisplay(p,chart.sym); };
   try{ updateCalibLabel(); }catch(e){}
   var W=cv.clientWidth, H=cv.clientHeight; if(!W) return;
   var dpr=window.devicePixelRatio||1;
@@ -3850,11 +3907,11 @@ function drawChart(){
   function setReadout(c){
     if(!c){ leg.textContent=m.name+" · "+chart.itv.toUpperCase()+" · "+chartSrcTxt+" · menunggu candle…"; return; }
     var ch=(c.c-c.o)/c.o*100;
-    leg.innerHTML="<b>"+m.name+"</b> · "+chart.itv.toUpperCase()+" · <span class='legsrc'>"+chartSrcTxt+"</span> · "+fmtDateTime(c.t)+" JST &nbsp;O <b>"+fmt(c.o+CAL,m.dec)+"</b> H <b>"+fmt(c.h+CAL,m.dec)+"</b> L <b>"+fmt(c.l+CAL,m.dec)+"</b> C <b>"+fmt(c.c+CAL,m.dec)+"</b> <span style='color:"+(ch>=0?"#2ee6a8":"#e879f9")+"'>"+(ch>=0?"+":"")+ch.toFixed(2)+"%</span> Vol <b>"+fmt(c.v,m.szDec)+"</b>";
-    $("oh-o").textContent="$"+fmt(c.o+CAL,m.dec);
-    $("oh-high").textContent="$"+fmt(c.h+CAL,m.dec);
-    $("oh-low").textContent="$"+fmt(c.l+CAL,m.dec);
-    $("oh-last").textContent="$"+fmt(c.c+CAL,m.dec);
+    leg.innerHTML="<b>"+m.name+"</b> · "+chart.itv.toUpperCase()+" · <span class='legsrc'>"+chartSrcTxt+"</span> · "+fmtDateTime(c.t)+" JST &nbsp;O <b>"+fmt(TD(c.o),m.dec)+"</b> H <b>"+fmt(TD(c.h),m.dec)+"</b> L <b>"+fmt(TD(c.l),m.dec)+"</b> C <b>"+fmt(TD(c.c),m.dec)+"</b> <span style='color:"+(ch>=0?"#2ee6a8":"#e879f9")+"'>"+(ch>=0?"+":"")+ch.toFixed(2)+"%</span> Vol <b>"+fmt(c.v,m.szDec)+"</b>";
+    $("oh-o").textContent="$"+fmt(TD(c.o),m.dec);
+    $("oh-high").textContent="$"+fmt(TD(c.h),m.dec);
+    $("oh-low").textContent="$"+fmt(TD(c.l),m.dec);
+    $("oh-last").textContent="$"+fmt(TD(c.c),m.dec);
     var ce=$("oh-chg"); ce.textContent=(ch>=0?"+":"")+ch.toFixed(2)+"%"; ce.style.color= ch>=0? "var(--bid)":"var(--ask)";
     /* STATS: delta taker-buy candle iki (Δ = 2×takerBuy − volume);
        sumber tanpa data taker-buy (Hyperliquid) tampil "—" */
@@ -3937,14 +3994,14 @@ function drawChart(){
      tetep digambar ing ndhuwure mengko kaya biasane. */
   ctx.fillStyle="#0a0f16"; ctx.fillRect(W-64,0,64,H);
   ctx.font="11px ui-monospace,Menlo,monospace"; ctx.lineWidth=1;
-  /* tangga sumbu dietung ing RUANG REGA TAMPIL (mentah + CAL):
+  /* tangga sumbu dietung ing RUANG REGA TAMPIL:
      garis kisi & label maca rega hasil konversi preset, posisi piksel
-     saben garis = Y(rega tampil − CAL) = Y(rega mentah-e) */
-  var gStep=nicePriceStep(max-min), gP0=Math.ceil((min+CAL)/gStep)*gStep;
+     saben garis = Y(FD(rega tampil)) = Y(rega mentah-e) */
+  var gStep=nicePriceStep(TD(max)-TD(min)), gP0=Math.ceil(TD(min)/gStep)*gStep;
   ctx.strokeStyle="rgba(148,163,184,0.07)";
   ctx.textAlign="right";
-  for(var gp=gP0; gp<=max+CAL; gp+=gStep){
-    var gy2=Y(gp-CAL);
+  for(var gp=gP0; gp<=TD(max); gp+=gStep){
+    var gy2=Y(FD(gp));
     ctx.beginPath(); ctx.moveTo(0,gy2); ctx.lineTo(W-64,gy2); ctx.stroke();
     /* label harga berwarna teal saat skala vertikal MANUAL aktif */
     ctx.fillStyle= chart.yAuto? "#9fb0c3" : "#2ee6a8"; ctx.fillText(fmt(gp,m.dec), W-5, gy2+4);
@@ -4031,8 +4088,10 @@ function drawChart(){
         var wfade=1;
         if(st.absentSince) wfade=Math.max(0.3, 1-0.7*Math.min(1,(wallNow-st.absentSince)/STACK_GRACE_MS));
         wallItems.push({ side:cfg[0], col:cfg[1], wy:Y(drawPx), wfade:wfade,
-          /* rega label = komposisi sepisan: perp − basis halus + kalibrasi */
-          wlabel:cfg[2]+fmt(st.sz,m.szDec)+" "+m.unit+" · "+fmt(drawPx+CAL,m.dec) });
+          /* rega label = komposisi sepisan: basis halus diterapne
+             dhisik (drawPx = perp − basis → ≈spot mentah), banjur
+             transformasi tampil TD() persis sepisan */
+          wlabel:cfg[2]+fmt(st.sz,m.szDec)+" "+m.unit+" · "+fmt(TD(drawPx),m.dec) });
       });
     });
     if(wallItems.length){
@@ -4197,8 +4256,9 @@ function drawChart(){
     if(bubShift!==0){
       ctx.font="bold 8.5px ui-monospace,Menlo,monospace";
       bubItems.forEach(function(it){
-        /* rega label bubble = komposisi sepisan: perp − basis halus + kalibrasi */
-        it.ptxt="$"+fmt(it.drawPx+CAL,m.dec)+" ≈"+(CAL!==0? calPreset : "spot");
+        /* rega label bubble = komposisi sepisan: basis halus dhisik
+           (drawPx = perp − basis → ≈spot mentah), banjur TD() sepisan */
+        it.ptxt="$"+fmt(TD(it.drawPx),m.dec)+" ≈"+(calibMode(chart.sym).kind==="identity"? "spot" : calPreset);
         it.ptw=ctx.measureText(it.ptxt).width;
         it.pxLbl= it.bx+it.r+5+it.ptw<=view.offset+view.plotW? it.bx+it.r+5 : Math.max(2,it.bx-it.r-5-it.ptw);
         it.lblTop0=it.by-8; it.lblTop=it.lblTop0;
@@ -4378,7 +4438,7 @@ function drawChart(){
           drawZoneDot(keyEndX,dotY,colMain,zAlpha);
         }
         ctx.globalAlpha=1;
-        labelItems.push({dotY:dotY, dotX:keyEndX, col:colMain, alpha:zAlpha, priceTxt: z.jsnr? fmtJsnrPrice(edgePx+CAL,m.dec) : fmt(edgePx+CAL,m.dec), typeTxt:" "+ztype+" \u00b7 "+(tested? "tested":"fresh")+(z.jsnr&&z.rec? " \u2605"+fmtScore(z.adjScore) : "")});
+        labelItems.push({dotY:dotY, dotX:keyEndX, col:colMain, alpha:zAlpha, priceTxt: z.jsnr? fmtJsnrPrice(TD(edgePx),m.dec) : fmt(TD(edgePx),m.dec), typeTxt:" "+ztype+" \u00b7 "+(tested? "tested":"fresh")+(z.jsnr&&z.rec? " \u2605"+fmtScore(z.adjScore) : "")});
       });
       ctx.restore();
       /* LABEL di kanan dot pada ketinggian yang SAMA PERSIS dengan
@@ -4429,8 +4489,8 @@ function drawChart(){
         /* warna chip tepi juga menurut sisi zona, sama seperti garisnya */
         var colMain= isRes? "#ff4d6a" : "#20e3a2";
         var edge= above? z.lo : z.hi;
-        var pct=(edge-lastPx)/Math.max(1e-9,lastPx+CAL)*100;
-        var txt=(above? "▲ ZONA MSNR DI ATAS · " : "▼ ZONA MSNR DI BAWAH · ")+z.type.replace(" · "," ")+" "+fmt(z.lo+CAL,m.dec)+"–"+fmt(z.hi+CAL,m.dec)+" · "+(pct>=0?"+":"")+pct.toFixed(2)+"%";
+        var pct=(TD(edge)-TD(lastPx))/Math.max(1e-9,TD(lastPx))*100;
+        var txt=(above? "▲ ZONA MSNR DI ATAS · " : "▼ ZONA MSNR DI BAWAH · ")+z.type.replace(" · "," ")+" "+fmt(TD(z.lo),m.dec)+"–"+fmt(TD(z.hi),m.dec)+" · "+(pct>=0?"+":"")+pct.toFixed(2)+"%";
         ctx.font="bold 9px -apple-system,'Segoe UI',Roboto,sans-serif";
         var tw=ctx.measureText(txt).width, bw=Math.min(tw+12,W-76);
         /* chip zona TESTED ikut samar (.55), sama seperti garisnya */
@@ -4496,7 +4556,7 @@ function drawChart(){
   if(ly>0&&ly<H-30){
     ctx.strokeStyle="rgba(232,238,245,.45)"; ctx.setLineDash([4,4]); ctx.beginPath(); ctx.moveTo(0,ly); ctx.lineTo(W-64,ly); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle= lastDispC>=last.o? "#2ee6a8":"#e879f9"; ctx.fillRect(W-62,ly-9,62,18);
-    ctx.fillStyle="#04120c"; ctx.font="bold 11px ui-monospace,Menlo,monospace"; ctx.fillText(fmt(lastDispC+CAL,m.dec), W-58, ly+4);
+    ctx.fillStyle="#04120c"; ctx.font="bold 11px ui-monospace,Menlo,monospace"; ctx.fillText(fmt(TD(lastDispC),m.dec), W-58, ly+4);
   }
   /* crosshair */
   if(chart.cross&&chart.tool==="cursor"){
@@ -4505,7 +4565,7 @@ function drawChart(){
     ctx.beginPath(); ctx.moveTo(cxp,0); ctx.lineTo(cxp,H-30); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0,cyp); ctx.lineTo(W-64,cyp); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle="#1b2738"; ctx.fillRect(W-62,cyp-9,62,18);
-    ctx.fillStyle="#e8eef5"; ctx.font="bold 11px ui-monospace,Menlo,monospace"; ctx.fillText(fmt(invY(cyp)+CAL,m.dec), W-58, cyp+4);
+    ctx.fillStyle="#e8eef5"; ctx.font="bold 11px ui-monospace,Menlo,monospace"; ctx.fillText(fmt(TD(invY(cyp)),m.dec), W-58, cyp+4);
     var idx=Math.max(0,Math.min(cs.length-1, Math.floor((cxp-view.offset)/Math.max(1,view.step))));
     chart.hoverIdx=idx; setReadout(cs[idx]);
   } else {
@@ -4523,7 +4583,7 @@ function drawOneObject(d,m,draft){
   if(d.type==="hline"){
     var y=Y(d.p); ctx.strokeStyle=draft?"#f5a623":"rgba(245,166,35,.9)"; ctx.lineWidth=1.4; ctx.setLineDash(draft?[4,3]:[]);
     ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(view.W-64,y); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle="#f5a623"; ctx.fillRect(view.W-62,y-9,62,18); ctx.fillStyle="#171200"; ctx.font="bold 10px ui-monospace,Menlo,monospace"; ctx.fillText(fmt(d.p+calibOff(chart.sym),m.dec), view.W-58, y+3.5);
+    ctx.fillStyle="#f5a623"; ctx.fillRect(view.W-62,y-9,62,18); ctx.fillStyle="#171200"; ctx.font="bold 10px ui-monospace,Menlo,monospace"; ctx.fillText(fmt(toDisplay(d.p,chart.sym),m.dec), view.W-58, y+3.5);
   } else if(d.type==="trend"){
     ctx.strokeStyle=draft?"#38c6d9":"rgba(56,198,217,.95)"; ctx.lineWidth=1.6; ctx.setLineDash(draft?[4,3]:[]);
     ctx.beginPath(); ctx.moveTo(X(d.t1),Y(d.p1)); ctx.lineTo(X(d.t2),Y(d.p2)); ctx.stroke(); ctx.setLineDash([]);
@@ -4538,7 +4598,7 @@ function drawOneObject(d,m,draft){
     ctx.strokeStyle="#f0c84b"; ctx.lineWidth=1; ctx.setLineDash(draft?[4,3]:[7,4]); ctx.strokeRect(rx,ry,rw,rh); ctx.setLineDash([]);
     var ptag=(d.name&&String(d.name).trim())? String(d.name).trim() : "PERSONAL";
     ctx.fillStyle="#f0c84b"; ctx.font="bold 9.5px -apple-system,'Segoe UI',Roboto,sans-serif";
-    ctx.fillText(ptag+" · "+fmt(Math.min(d.p1,d.p2)+calibOff(chart.sym),m.dec)+"–"+fmt(Math.max(d.p1,d.p2)+calibOff(chart.sym),m.dec), rx+5, ry+13);
+    ctx.fillText(ptag+" · "+fmt(toDisplay(Math.min(d.p1,d.p2),chart.sym),m.dec)+"–"+fmt(toDisplay(Math.max(d.p1,d.p2),chart.sym),m.dec), rx+5, ry+13);
   }
   ctx.restore();
 }
@@ -5102,7 +5162,7 @@ function drawSNRData(d,m){
     var y=Y(lv.px); if(y<4||y>view.H-34) return;
     ctx.strokeStyle=colA; ctx.lineWidth=1; ctx.setLineDash([6,4]);
     ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(plotR,y); ctx.stroke(); ctx.setLineDash([]);
-    var txt=tag+" "+fmt(lv.px+calibOff(chart.sym),m.dec), tw=ctx.measureText(txt).width;
+    var txt=tag+" "+fmt(toDisplay(lv.px,chart.sym),m.dec), tw=ctx.measureText(txt).width;
     ctx.fillStyle="rgba(5,8,13,.8)"; ctx.fillRect(4,y-8,tw+6,13);
     ctx.fillStyle=col; ctx.fillText(txt,7,y+3);
   }
@@ -5193,7 +5253,7 @@ function drawPivotData(d,m){
     ctx.strokeStyle= main? "rgba(33,87,243,.9)" : "rgba(33,87,243,.5)";
     ctx.lineWidth=1; ctx.setLineDash(main? [6,4] : [2,3]);
     ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(plotR,y); ctx.stroke(); ctx.setLineDash([]);
-    var txt=tag+" "+fmt(px+calibOff(chart.sym),m.dec), tw=ctx.measureText(txt).width;
+    var txt=tag+" "+fmt(toDisplay(px,chart.sym),m.dec), tw=ctx.measureText(txt).width;
     ctx.fillStyle="rgba(5,8,13,.8)"; ctx.fillRect(4,y-8,tw+6,13);
     ctx.fillStyle= main? "#7ea4f8" : "#5f7fc9"; ctx.fillText(txt,7,y+3);
   }
@@ -6712,7 +6772,7 @@ function drawPresisiData(cs,m){
     var y=Y(l.p); if(y<4||y>view.H-34) return;
     ctx.strokeStyle="rgba(203,213,225,.40)"; ctx.lineWidth=1; ctx.setLineDash([1,3]);
     ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(plotR,y); ctx.stroke(); ctx.setLineDash([]);
-    var txt=fmt(l.p+calibOff(chart.sym),m.dec), tw=ctx.measureText(txt).width;
+    var txt=fmt(toDisplay(l.p,chart.sym),m.dec), tw=ctx.measureText(txt).width;
     ctx.fillStyle="rgba(5,8,13,.72)"; ctx.fillRect(4,y-7,tw+6,12);
     ctx.fillStyle="rgba(203,213,225,.78)"; ctx.fillText(txt,7,y+3);
   }
@@ -7228,7 +7288,7 @@ function renderWhales(){
   var html="";
   whales.forEach(function(w){
     var mk=M[w.id].def;
-    html+='<div class="wrow"><span class="wt">'+jstTime(w.t)+'</span><span class="wsym">'+(w.id==="gold"? "XAU" : "BTC")+'</span><span class="'+(w.buy? "lg-short" : "lg-long")+'">'+(w.buy? "BUY" : "SELL")+'</span><span class="wp">$'+fmt(w.px+calibOff(w.id),mk.dec)+'</span><span class="wu">'+fmtUsd(w.usd)+'</span></div>';
+    html+='<div class="wrow"><span class="wt">'+jstTime(w.t)+'</span><span class="wsym">'+(w.id==="gold"? "XAU" : "BTC")+'</span><span class="'+(w.buy? "lg-short" : "lg-long")+'">'+(w.buy? "BUY" : "SELL")+'</span><span class="wp">$'+fmt(toDisplay(w.px,w.id),mk.dec)+'</span><span class="wu">'+fmtUsd(w.usd)+'</span></div>';
   });
   host.innerHTML=html;
 }
