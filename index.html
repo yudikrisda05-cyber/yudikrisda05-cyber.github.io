@@ -14,6 +14,9 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
 <link rel="apple-touch-icon" href="icon-180.png" />
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
 <link rel="manifest" href="manifest.webmanifest" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <title>Orderbook Live — BTC &amp; Gold</title>
 <style>
   /* ===== SISTEM TEMA (4 tema, dipilih liwat tombol TEMA ing header,
@@ -35,35 +38,39 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
      Werna SEMANTIK ora melu tema: JSNR (--jsnr-*), dinding/ask
      violet --askv, oranye --orange, emas JSNR #f0c84b ing canvas. */
   :root, html[data-theme="institusional"]{
-    --bg:#0b0e13; --bg2:#0e1219; --panel:#10141c; --panel2:#131926;
-    --border:#232c3d; --border2:#2d3850;
-    --text:#e8edf5; --muted:#8b98ad; --faint:#5b6a80;
-    --accent:#22d3ee; --accent-dim:rgba(34,211,238,.14);
-    --up:#2ee6a8; --down:#ff4d6a; --gold:#f0c84b; --violet:#a78bfa;
-    --grid:rgba(139,152,173,.09); --glow:none;
-    --btn-bg:#131926; --btn-on:#22d3ee; --btn-on-text:#06222a;
-    --ink:#e8edf5; --dim:#5b6a80; --line:#232c3d; --line2:#171e2a; --head:#131926;
-    --teal:#2ee6a8; --teal-dim:rgba(46,230,168,.13);
-    --amber:#2ee6a8; --amber-dim:rgba(46,230,168,.13); --orange:#f5a623;
-    --bid:#2ee6a8; --bid-bg:rgba(46,230,168,.13);
+    /* palet redesign institusional: bg #080B10 · permukaan #10151D /
+       #151C26 · pinggir #26313D · teks #E6EBF2 / #8793A2 · bullish
+       #00C982 · bearish #F04452 · aksen #62C8E8 — ijo/abang mung
+       kanggo arah pasar & orderflow sing nduwe makna */
+    --bg:#080b10; --bg2:#0c1118; --panel:#10151d; --panel2:#151c26;
+    --border:#26313d; --border2:#303e4f;
+    --text:#e6ebf2; --muted:#8793a2; --faint:#5c6879;
+    --accent:#62c8e8; --accent-dim:rgba(98,200,232,.14);
+    --up:#00c982; --down:#f04452; --gold:#f0c84b; --violet:#a78bfa;
+    --grid:rgba(135,147,162,.09); --glow:none;
+    --btn-bg:#151c26; --btn-on:#62c8e8; --btn-on-text:#0a1a22;
+    --ink:#e6ebf2; --dim:#5c6879; --line:#26313d; --line2:#1a222d; --head:#151c26;
+    --teal:#00c982; --teal-dim:rgba(0,201,130,.13);
+    --amber:#00c982; --amber-dim:rgba(0,201,130,.13); --orange:#f5a623;
+    --bid:#00c982; --bid-bg:rgba(0,201,130,.13);
     --ask:#e879f9; --ask-bg:rgba(217,70,239,.13); --askv:#d946ef;
-    --cyan:#38c6d9;
-    --chart-bg:#05080d; --axis-bg:#10141c; --grid-strong:#232c3d;
-    --header-bg:rgba(11,14,19,.94); --popup-bg:rgba(16,20,28,.96);
-    --overlay-bg:rgba(13,18,27,.92); --overlay-bg-soft:rgba(13,18,27,.78); --overlay-border:#2d3850;
-    --input-bg:#131926; --label-bg:rgba(5,8,13,.85);
+    --cyan:#62c8e8;
+    --chart-bg:#05080d; --axis-bg:#10151d; --grid-strong:#26313d;
+    --header-bg:rgba(8,11,16,.94); --popup-bg:rgba(16,21,29,.96);
+    --overlay-bg:rgba(12,17,24,.92); --overlay-bg-soft:rgba(12,17,24,.78); --overlay-border:#303e4f;
+    --input-bg:#151c26; --label-bg:rgba(5,8,12,.86);
     --gold-dim:rgba(240,200,75,.07); --gold-mid:rgba(240,200,75,.16); --gold-line:rgba(240,200,75,.5);
-    --accent-line:rgba(34,211,238,.5); --accent-soft:#8fd8ea;
-    --headtx:#a9bfd4; --head-tint:rgba(34,211,238,.06);
+    --accent-line:rgba(98,200,232,.5); --accent-soft:#a5ddf2;
+    --headtx:#9fb2c8; --head-tint:rgba(98,200,232,.06);
     --err-tx:#fca5a5; --err-line:rgba(248,113,113,.55); --err-bg:rgba(248,113,113,.08);
-    --bid-tx:#5ff2c4; --ask-tx:#f0a6f7;
-    --glow-a:rgba(34,211,238,.05); --glow-b:rgba(167,139,250,.04); --up-glow:rgba(46,230,168,.22);
+    --bid-tx:#45e3a6; --ask-tx:#f0a6f7;
+    --glow-a:rgba(98,200,232,.05); --glow-b:rgba(167,139,250,.04); --up-glow:rgba(0,201,130,.22);
     --on-up:#04120c; --on-gold:#171200; --on-candle:#04120c;
-    --tag-bg:#232c3d; --tag-tx:#e8eef5;
-    --candle-up:#2ee6a8; --candle-down:#e879f9;
-    --candle-up-a:rgba(46,230,168,.35); --candle-down-a:rgba(232,121,249,.35);
-    --faint-a:rgba(139,155,176,.75); --cross-a:rgba(232,238,245,.45);
-    --scroll:#2d3850; --shadow:rgba(0,0,0,.5); --ladder-bg:rgba(5,8,13,.6);
+    --tag-bg:#26313d; --tag-tx:#e6ebf2;
+    --candle-up:#00c982; --candle-down:#f04452;
+    --candle-up-a:rgba(0,201,130,.35); --candle-down-a:rgba(240,68,82,.35);
+    --faint-a:rgba(135,147,162,.75); --cross-a:rgba(230,235,242,.45);
+    --scroll:#303e4f; --shadow:rgba(0,0,0,.5); --ladder-bg:rgba(5,8,12,.6);
     /* palet JSNR (konstanta warna dari script JSNR V1.0 pemilik) —
        SEMANTIK, tetep padha ing kabeh tema */
     --jsnr-buy:#20e3a2; --jsnr-sell:#ff4d6a; --jsnr-rec:#f0c84b;
@@ -177,7 +184,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;overflow-x:hidden;overflow-x:clip}
-  body{margin:0;overflow-x:hidden;overflow-x:clip;background:var(--bg);background-image:radial-gradient(1100px 480px at 75% -80px,var(--glow-a),transparent 65%),radial-gradient(900px 420px at 8% -60px,var(--glow-b),transparent 60%);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.45;font-size:13.5px}
+  body{margin:0;overflow-x:hidden;overflow-x:clip;background:var(--bg);background-image:radial-gradient(1100px 480px at 75% -80px,var(--glow-a),transparent 65%),radial-gradient(900px 420px at 8% -60px,var(--glow-b),transparent 60%);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.45;font-size:13.5px}
   button{min-height:36px;font-family:inherit}
   .wrap{width:100%;max-width:1320px;margin:0 auto;padding:0 0 28px}
   /* ===== header ramping satu baris + lipatan sembunyi =====
@@ -527,8 +534,8 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   .td-lrow .td-lch{width:32%;text-align:right;position:relative;z-index:1}
   .td-lrow.ask .td-lpx{color:var(--ask-tx)}.td-lrow.bid .td-lpx{color:var(--bid-tx)}
   .td-lrow .td-lbar{position:absolute;top:2px;bottom:2px;right:0;z-index:0}
-  .td-lrow.ask .td-lbar{background:rgba(255,77,106,.13)}
-  .td-lrow.bid .td-lbar{background:rgba(32,227,162,.11)}
+  .td-lrow.ask .td-lbar{background:rgba(240,68,82,.13)}
+  .td-lrow.bid .td-lbar{background:rgba(0,201,130,.11)}
   .td-lrow.midrow{background:var(--gold-dim);border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line)}
   .td-lrow.midrow .td-lpx{color:var(--gold)}
   .td-lch.up{color:var(--bid-tx)}.td-lch.dn{color:var(--ask-tx)}.td-lch.flat{color:var(--dim)}
@@ -926,6 +933,66 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   .themepop button .tp-check{color:var(--accent);font-weight:800;visibility:hidden}
   .themepop button.on{border-color:var(--accent);background:var(--accent-dim)}
   .themepop button.on .tp-check{visibility:visible}
+
+  /* ===== REDESIGN VISUAL HP (mung presentasi) =====
+     Lapisan pungkasan: (1) tandha merek ikon aplikasi ing header —
+     mung katon ing ambane HP; (2) panel RINGKESAN PASAR ing tab PX
+     — mung HP, desktop tetep kertu ticker lawas; (3) bagean WERNA
+     CANDLE ing popup SETUP; (4) media ≤700px: bar tab dadi navigasi
+     NGISOR tetep (safe-area iOS), tangga DOM luwih rapet, panel
+     analitik & panel ngambang JSNR/SKOR luwih ritmis. Ora ana aturan
+     ing kene sing ngowahi tata letak desktop (≥1100px). */
+  .brandmark{display:none}
+  .mov{display:none}
+  /* bagean WERNA CANDLE ing popup SETUP */
+  .setuppop .cc-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .setuppop .cc-row:first-of-type{margin-top:0}
+  .setuppop .cc-lab{flex:1;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+  .setuppop .cc-dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .setuppop input[type="color"]{width:46px;height:30px;min-height:30px;border:1px solid var(--line);border-radius:4px;background:var(--panel2);padding:2px;cursor:pointer;flex:none}
+  .setuppop #candleReset{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:4px;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:0 12px;min-height:30px;cursor:pointer;flex:none}
+  .setuppop #candleReset:active{color:var(--teal);border-color:var(--teal)}
+  .setuppop .cc-note{display:block;margin-top:6px;font-size:9.5px;color:var(--dim);line-height:1.45}
+  @media(max-width:700px){
+    /* header: tandha merek ikon aplikasi ing sandhinge judhul */
+    .brandmark{display:block;width:22px;height:22px;border-radius:5px;align-self:center;flex:none}
+    /* navigasi NGISOR tetep — bar tab sing padha (id & handler
+       tetep), mung panggon & kulite sing ganti ing HP; desktop tetep
+       bar ndhuwur kaya sadurunge */
+    .tabbar{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:70;gap:2px;padding:6px 8px calc(6px + env(safe-area-inset-bottom));border-bottom:0;border-top:1px solid var(--line);background:var(--header-bg);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .tabbar button{border:0;border-radius:4px;min-height:44px;padding:4px 6px 5px}
+    .tabbar button[aria-pressed="true"]{background:var(--accent-dim);box-shadow:inset 0 2px 0 var(--accent)}
+    .wrap{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+    /* panel RINGKESAN PASAR (tab PX, mung HP): nilai saka kahanan
+       aplikasi sing wis ana — diisi updateMov() */
+    .mov{display:block;margin:12px 12px 0;border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:10px 12px 11px}
+    .mov-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .mov-sym{display:block;font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--ink);line-height:1.2}
+    .mov-name{display:block;font-size:9.5px;font-weight:600;letter-spacing:.06em;color:var(--dim);margin-top:1px}
+    .mov-conn{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--muted);white-space:nowrap;padding-top:2px}
+    .mov-dot{width:7px;height:7px;border-radius:50%;background:var(--dim);flex:none}
+    .mov-dot.live{background:var(--teal)}
+    .mov-dot.off{background:#f87171}
+    .mov-pxrow{display:flex;align-items:baseline;gap:10px;margin-top:7px;flex-wrap:wrap}
+    .mov-px{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:23px;font-weight:700;letter-spacing:-.01em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.1}
+    .mov-chg{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+    .mov-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:9px;border-top:1px solid var(--line2)}
+    .mov-cell{padding:7px 2px 0;display:flex;flex-direction:column;gap:1px;min-width:0}
+    .mov-cell:nth-child(even){padding-left:12px;border-left:1px solid var(--line2)}
+    .mov-cell:nth-child(n+3){margin-top:7px;padding-top:7px;border-top:1px solid var(--line2)}
+    .mov-k{font-size:9px;font-weight:700;letter-spacing:.13em;color:var(--dim)}
+    .mov-v{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mov-v.sess{font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:12px}
+    /* tangga DOM: dhuwur baris konsisten, pamisah bid/ask luwih cetha */
+    .brow{padding-top:3px;padding-bottom:3px}
+    .bookhead{padding-bottom:5px}
+    .midrow{margin:6px 0;padding-top:8px;padding-bottom:8px}
+    .td-ladcol{padding-top:6px}
+    /* panel analitik & panel ngambang: ritme baris luwih ajeg */
+    .sk-row{padding-top:4px;padding-bottom:4px}
+    .mp-v{font-size:11px}
+    .kv .v,.lv .v{font-variant-numeric:tabular-nums}
+  }
 </style>
 </head>
 <body class="gate-locked">
@@ -974,10 +1041,10 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   <div class="cmdbar">
     <button class="chevbtn" id="btnFoldHeader" aria-expanded="true" aria-controls="diagBar" aria-label="Sembunyikan header" title="Sembunyikan / tampilkan header">▾</button>
     <span class="dot" id="statusDot"></span>
-    <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
+    <span class="brand"><svg class="brandmark" width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45" fill="none" stroke="#12303f" stroke-width="3"/><circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/><rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/><line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="2.4"/><rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/><line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="2.4"/><rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/><line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="2.4"/></svg>Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 01:18 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 02:15 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -989,7 +1056,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     </div>
     <div class="themepop" id="themePop" hidden role="menu" aria-label="Pilih tema tampilan">
       <div class="tp-title">Tema Tampilan</div>
-      <button data-theme-pick="institusional" role="menuitemradio" aria-checked="true"><span class="tp-sw" style="background:#10141c"></span><span class="tp-name">Institusional</span><span class="tp-check">✓</span></button>
+      <button data-theme-pick="institusional" role="menuitemradio" aria-checked="true"><span class="tp-sw" style="background:#10151d"></span><span class="tp-name">Institusional</span><span class="tp-check">✓</span></button>
       <button data-theme-pick="jamet" role="menuitemradio" aria-checked="false"><span class="tp-sw" style="background:#0b1119"></span><span class="tp-name">JAMET</span><span class="tp-check">✓</span></button>
       <button data-theme-pick="padhang" role="menuitemradio" aria-checked="false"><span class="tp-sw" style="background:#ffffff"></span><span class="tp-name">Padhang</span><span class="tp-check">✓</span></button>
       <button data-theme-pick="ijo" role="menuitemradio" aria-checked="false"><span class="tp-sw" style="background:#04140b"></span><span class="tp-name">Terminal Ijo</span><span class="tp-check">✓</span></button>
@@ -1058,6 +1125,27 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   <div class="td-alertbanner" id="tdAlertBanner" role="alert"></div>
   <div class="tabwrap">
   <div class="tabpanel on" id="tp-px">
+  <!-- RINGKESAN PASAR — mung katon ing HP (≤700px), manggon ing
+       ndhuwure panel chart: instrumen aktif, rega pungkasan + % sesi,
+       bid/ask/spread saka kahanan buku sing wis ana, jeneng sesi saka
+       killzone JSNR, lan status sambungan saka Diagnostik. Kabeh
+       diisi updateMov() saka nilai sing WIS dietung/ditampilne
+       aplikasi — ora ana etungan/fetch/sumber anyar; nilai sing
+       durung kasedhiya tampil "—". Desktop ora owah (display:none,
+       kertu ticker lawas tetep). -->
+  <div class="mov" id="marketOverview" aria-label="Ringkasan pasar simbol aktif">
+    <div class="mov-top">
+      <div><span class="mov-sym" id="movSym">—</span><span class="mov-name" id="movName">—</span></div>
+      <span class="mov-conn"><span class="mov-dot" id="movDot"></span><span id="movConn">—</span></span>
+    </div>
+    <div class="mov-pxrow"><span class="mov-px" id="movPx">—</span><span class="mov-chg" id="movChg">—</span></div>
+    <div class="mov-grid">
+      <div class="mov-cell"><span class="mov-k">BID</span><span class="mov-v" id="movBid">—</span></div>
+      <div class="mov-cell"><span class="mov-k">ASK</span><span class="mov-v" id="movAsk">—</span></div>
+      <div class="mov-cell"><span class="mov-k">SPREAD</span><span class="mov-v" id="movSpread">—</span></div>
+      <div class="mov-cell"><span class="mov-k">SESI</span><span class="mov-v sess" id="movSess">—</span></div>
+    </div>
+  </div>
   <!-- TERMINAL ANALISA — GAYA TRADINGVIEW -->
   <section class="panel term-panel" id="termPanel" aria-label="Terminal analisa">
     <div class="term-chart">
@@ -1275,6 +1363,13 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
             <button id="btnKalibrasi" title="Kalibrasi offset preset aktif terhadap harga referensi" aria-label="Kalibrasi preset harga">KALIBRASI</button>
             <button id="btnAlerts" title="Alert rega — prengetan nek rega nyabrang level" aria-label="Buka alert rega">ALERT</button>
             <button id="btnDual" aria-pressed="false" title="Chart dobel (mung layar amba): simbol liyane ing panel kapindho" aria-label="Saklar chart dobel">CHART 2</button>
+          </div>
+          <div class="setup-sec">
+            <span class="setup-lab">WERNA CANDLE</span>
+            <div class="cc-row"><span class="cc-dot" style="background:#00c982"></span><span class="cc-lab">Bullish (munggah)</span><input type="color" id="candleUpIn" value="#00c982" aria-label="Werna candle bullish" /></div>
+            <div class="cc-row"><span class="cc-dot" style="background:#f04452"></span><span class="cc-lab">Bearish (mudhun)</span><input type="color" id="candleDownIn" value="#f04452" aria-label="Werna candle bearish" /></div>
+            <div class="cc-row"><span class="cc-lab">Mbalik menyang werna tema</span><button id="candleReset" title="Busak werna candle custom — bali melu tema aktif" aria-label="Reset werna candle">RESET</button></div>
+            <span class="cc-note">Werna custom ngalahne werna candle tema ing kabeh tema (chart utama, CHART 2, candle cadangan footprint) lan kesimpen ing piranti iki. Data candle ora owah — mung tampilane.</span>
           </div>
         </div>
         <!-- DIALOG KALIBRASI PRESET — kothak cilik ngambang ing njero
@@ -1589,6 +1684,13 @@ var chart={ sym:"gold", tf:300, itv:"15m", viewMode:"analisa", ema:false, vwap:f
    ing institusional/jamet/ijo, luwih peteng mung ing padhang. */
 var THEME_KEY="obhp_theme_v1";
 var PALETTE=null;
+/* WERNA CANDLE CUSTOM (pilihan pemilik ing popup SETUP, disimpen ing
+   localStorage "obhp_candle_colors_v1" wujud {up,down} hex): nek
+   kasimpen, ngalahne --candle-up/--candle-down tema ing KABEH tema —
+   mung presentasi; data & etungan candle ora disentuh babar pisan. */
+var CANDLE_COLORS_KEY="obhp_candle_colors_v1";
+function ccHexA(hex,a){ var n=parseInt(hex.slice(1),16); return "rgba("+((n>>16)&255)+","+((n>>8)&255)+","+(n&255)+","+a+")"; }
+function ccLoad(){ try{ var c=JSON.parse(localStorage.getItem(CANDLE_COLORS_KEY)||"null"); if(c&&/^#[0-9a-fA-F]{6}$/.test(c.up||"")&&/^#[0-9a-fA-F]{6}$/.test(c.down||"")) return c; }catch(e){} return null; }
 function readPalette(){
   var cs=getComputedStyle(document.documentElement);
   function v(n){ return cs.getPropertyValue(n).trim(); }
@@ -1604,6 +1706,14 @@ function readPalette(){
     candleUpA:v("--candle-up-a"), candleDownA:v("--candle-down-a"),
     faintA:v("--faint-a"), crossA:v("--cross-a")
   };
+  /* terapan werna candle custom: sumbu & awak candle (chart utama,
+     CHART 2, candle cadangan footprint — kabeh maca PALETTE) melu
+     pilihan pemilik; varian alpha bar volume diturunne saka hex */
+  var cc=ccLoad();
+  if(cc){
+    PALETTE.candleUp=cc.up; PALETTE.candleDown=cc.down;
+    PALETTE.candleUpA=ccHexA(cc.up,.35); PALETTE.candleDownA=ccHexA(cc.down,.35);
+  }
   return PALETTE;
 }
 readPalette();
@@ -9159,6 +9269,7 @@ function applyTheme(name){
   document.documentElement.style.colorScheme= name==="padhang"? "light" : "dark";
   try{ localStorage.setItem(THEME_KEY,name); }catch(e){}
   readPalette();
+  try{ syncCandleInputs(); }catch(e){}
   var mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.setAttribute("content",PALETTE.bg);
   themeSyncMenu();
   try{ heatKey=""; }catch(e){}
@@ -9189,6 +9300,83 @@ themeSyncMenu();
 tdSyncSumberUI();
 tdBasisPoll();
 if(tdSumber==="TRADOOR") tdApplySumber("TRADOOR",true);
+/* ============ WERNA CANDLE CUSTOM — ikatan kontrol popup SETUP ====
+   Input werna Bullish/Bearish + RESET: pilihan disimpen ing
+   "obhp_candle_colors_v1", diterapne liwat readPalette() (PALETTE
+   diwaca kabeh pelukis canvas), banjur chart digambar ulang. RESET
+   mbusak simpanan → werna bali melu tema aktif. Mung presentasi. */
+function candleThemeDefaults(){
+  var cs=getComputedStyle(document.documentElement);
+  return { up:(cs.getPropertyValue("--candle-up").trim()||"#00c982"), down:(cs.getPropertyValue("--candle-down").trim()||"#f04452") };
+}
+function syncCandleInputs(){
+  var up=$("candleUpIn"), dn=$("candleDownIn"); if(!up||!dn) return;
+  var d=ccLoad()||candleThemeDefaults();
+  up.value=d.up; dn.value=d.down;
+}
+function candleRedraw(){
+  readPalette();
+  try{ markChartDirty(); }catch(e){}
+  try{ drawChart(); }catch(e){}
+  try{ if(tdDualOn) tdDualDraw(); }catch(e){}
+}
+(function(){
+  var up=$("candleUpIn"), dn=$("candleDownIn"), rs=$("candleReset");
+  function changed(){
+    if(!up||!dn) return;
+    try{ localStorage.setItem(CANDLE_COLORS_KEY, JSON.stringify({up:up.value, down:dn.value})); }catch(e){}
+    candleRedraw();
+  }
+  if(up) up.addEventListener("input",changed);
+  if(dn) dn.addEventListener("input",changed);
+  if(rs) rs.addEventListener("click",function(){
+    try{ localStorage.removeItem(CANDLE_COLORS_KEY); }catch(e){}
+    syncCandleInputs();
+    candleRedraw();
+  });
+  syncCandleInputs();
+})();
+/* ============ RINGKESAN PASAR — panel .mov (mung katon ing HP) ====
+   Rakitan PRESENTASI saka nilai sing wis dietung & ditampilne
+   aplikasi: rega + % sesi saka kertu ticker (tick-*), bid/ask/spread
+   saka kahanan buku sing wis ana (buku M; mode TRADOOR saka baris
+   tangga tdDom sing wis ana), sesi saka killzone mesin JSNR, status
+   sambungan saka panel Diagnostik (#sumWs). Ora ana etungan pasar,
+   fetch, utawa sumber anyar; sing durung kasedhiya tampil "—". */
+function updateMov(){
+  var symEl=$("movSym"); if(!symEl) return;
+  var id=chart.sym, s=M[id]; if(!s) return;
+  var def=s.def;
+  symEl.textContent=def.name;
+  var nm=$("movName"); if(nm) nm.textContent=def.tag;
+  var tk=$("tick-"+id), pxEl=$("movPx");
+  if(pxEl) pxEl.textContent= (tk&&tk.textContent.trim())? tk.textContent.trim() : "—";
+  var tc=$("tick-"+id+"-chg"), chEl=$("movChg");
+  if(chEl){
+    var ct=tc? tc.textContent.trim() : "";
+    chEl.textContent= ct? ct : "—";
+    chEl.className="mov-chg"+(ct? (tc.classList.contains("dn")? " dn" : " up") : "");
+  }
+  var bid=null, ask=null;
+  if(typeof tdSumber!=="undefined"&&tdSumber==="TRADOOR"&&typeof tdDom!=="undefined"&&tdDom&&tdDom.rows&&tdDom.midIdx>0){
+    var br=tdDom.rows[tdDom.midIdx-1], ar=tdDom.rows[tdDom.midIdx+1];
+    if(br&&br.side==="bid") bid=br.px;
+    if(ar&&ar.side==="ask") ask=ar.px;
+  }
+  if(bid==null&&s.book&&s.book.bids.length&&s.book.asks.length){ bid=s.book.bids[0].px; ask=s.book.asks[0].px; }
+  var bEl=$("movBid"), aEl=$("movAsk"), sEl=$("movSpread");
+  if(bEl) bEl.textContent= bid!=null? "$"+fmt(toDisplay(bid,id),def.dec) : "—";
+  if(aEl) aEl.textContent= ask!=null? "$"+fmt(toDisplay(ask,id),def.dec) : "—";
+  if(sEl) sEl.textContent= (bid!=null&&ask!=null)? "$"+fmt(ask-bid,def.dec) : "—";
+  var sess="—";
+  try{ var eng=(typeof jsnrRes!=="undefined"&&jsnrRes)? jsnrRes[id] : null; sess= (eng&&eng.kz)? eng.kz : jsnrKillzone(); }catch(e){}
+  var ssEl=$("movSess"); if(ssEl) ssEl.textContent= sess||"—";
+  var sw=$("sumWs"), cn=$("movConn"), dt=$("movDot");
+  if(cn) cn.textContent= sw? sw.textContent.trim() : "—";
+  if(dt) dt.className="mov-dot"+(sw? (sw.classList.contains("ws-on")? " live" : " off") : "");
+}
+updateMov();
+setInterval(function(){ if(document.hidden) return; try{ updateMov(); }catch(e){} },1000);
 };
 </script>
 <script>
