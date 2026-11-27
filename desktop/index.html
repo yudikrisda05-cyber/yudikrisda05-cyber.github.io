@@ -370,6 +370,7 @@
   .scanhead{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;align-items:baseline;margin-bottom:8px}
   .scanhead .a{color:var(--ink);font-weight:700;font-size:13px;letter-spacing:.02em}
   .scanhead .b{color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+  .scanhead .bsrc{font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--gold);border:1px solid rgba(232,195,58,.45);border-radius:999px;padding:1px 7px;white-space:nowrap}
   .scancols{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
   @media(min-width:640px){.scancols{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
   .scanside .sk{font-size:9.5px;font-weight:800;letter-spacing:.13em;margin-bottom:5px}
@@ -545,7 +546,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 04:40 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 12:42 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -933,8 +934,8 @@
     <div class="pbody" style="padding:8px 12px"><span class="note">Orderbook: perpetual Hyperliquid · Candle: BTC Binance Spot, XAU PAXG ≈ spot · Zona: mesin JSNR V1.0.</span><br><span class="note">Positioning, likuidasi &amp; key levels: SwiftEdge (swiftedge.uk) · Orderbook &amp; CVD: Hyperliquid · Candle: Binance</span></div>
     <div class="pinfo" id="footInfo" hidden>
       <p>Skor mekanis per panel: imbalance buku 20 level (bobot 50%) + arah CVD sesi (bobot 30%, aktif setelah ≥10 trade) + kedekatan harga ke dinding searah (bobot maks 20%). Skor ≥ +35 → LONG, ≤ −35 → SHORT, di antaranya → <b>NO TRADE</b>. Zona entri berjangkar dinding likuiditas searah terdekat (level ≥3× median ukuran = label <b>DINDING</b>); stop di luar dinding, target di dinding lawan atau 2× risiko bila target terlalu dekat.</p>
-      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar candle dari <b>sumber resmi per simbol</b>: untuk <b>BTC, Binance Spot (BTCUSDT)</b> — muat awal dari REST klines resmi Binance (data-api.binance.vision, cadangan api.binance.com) dan candle berjalan dari WebSocket kline resmi Binance (data-stream.binance.vision, cadangan stream.binance.com:9443), jadi bentuk candle persis pasar spot asli; untuk <b>emas, PAXG dari Binance</b> — simbol <b>PAXGUSDT</b> lewat pipa Binance yang sama dengan BTC (REST klines + WebSocket kline resmi); PAXG adalah emas token yang harganya mengikuti spot emas sehingga menjadi proksi spot untuk XAU (label simbol chart tetap XAU), dekat dengan acuan spot OANDA Zona Pantau MSNR — zona tidak digeser dan duduk apa adanya di chart PAXG ≈ spot. Percobaan koneksi TradingView sudah dihapus dari alur muat XAU: server TradingView terbukti menolak koneksi dari halaman ini (WebSocket tutup kode 1006 pada dua varian URL, tercatat di foto diagnostik pengguna). <b>Pembangunan candle lokal dari tick dagang sudah dihapus total</b> — jalur rakitan itulah yang dulu membuat candle tidak beraturan; tick dagang Hyperliquid kini hanya dipakai untuk harga terakhir, CVD, dan panel-panel lain, tidak pernah membentuk atau mengubah candle. Bila sumber utama sebuah simbol gagal tersambung, tidak mengirim candle dalam ±8–10 detik, atau putus di tengah, chart simbol itu <b>otomatis jatuh ke candle RESMI Hyperliquid (cadangan)</b> — hanya snapshot candleSnapshot REST + langganan WebSocket kanal candle resmi exchange, dengan snapshot disinkronkan ulang berkala tiap ±8 detik untuk mengoreksi candle berjalan, tanpa penggabungan rakitan lokal apa pun — dan sumber utama dicoba lagi berkala ±30 detik. Keheningan kline diawasi <b>watchdog khusus</b>: socket Binance yang tetap terbuka tapi tidak mengirim kline lebih dari 10 detik dinyatakan mati dan chart dialihkan ke cadangan saat itu juga (tidak menunggu socket tertutup); baris status menampilkan umur data candle terakhir sebagai <b>“Chart: X dtk lalu”</b> (merah bila &gt;10 detik). Di antara pembaruan kline, garis harga terakhir &amp; close candle tampilan di tepi live mengikuti <b>tick dagang Hyperliquid per tick</b> (tampilan saja, digeser sebesar basis terukur; candle tersimpan tetap murni dari sumber resmi). Mengganti timeframe meminta ulang candle dari sumber aktif untuk interval terpilih (nama interval chart 1m/5m/15m/1H/4H/1D sama dengan nama interval Binance &amp; kanal candle Hyperliquid). Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; sisi kanan chart selalu menyisakan ruang kosong tetap (±8% jendela tampil, 3–14 candle) antara candle terakhir dan sumbu harga ala offset kanan TradingView, jadi harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live dengan ruang kanan standar itu. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar personal yang tersimpan lokal per simbol di perangkat ini (trendline, garis harga, kotak zona personal bertepi emas putus-putus berlabel PERSONAL/nama sendiri) — data candle dari Binance Spot untuk BTC dan PAXG Binance untuk XAU (sumber yang sedang aktif per simbol selalu tertulis di baris legenda chart — “BINANCE SPOT” / “PAXG BINANCE ≈ SPOT” — termasuk saat jatuh ke cadangan Hyperliquid). Keselarasan orderbook di chart dijaga dengan <b>basis live terukur</b>: basis = mid perpetual Hyperliquid − mid spot Binance (BTC) atau mid PAXG (XAU, dari close bar terakhir); dinding &amp; bubble yang digambar di chart digeser sebesar basis itu — untuk gambar dipakai versi HALUSnya (rata-rata bergerak lambat dari basis mentah, diperbarui paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick (harga gambar = harga perp − basis halus, label harga bertanda ≈spot; nilai basis mentah tampil apa adanya sebagai teks BASIS di bar atas chart dan di label “Sumber:” pada baris DIAGNOSTIK LIVE), sedangkan panel orderbook, ladder, scanner, dan CVD selalu memakai harga perpetual Hyperliquid asli tanpa digeser. Label “Sumber:” menggantikan kolom TV lama — percobaan TradingView tidak lagi ditampilkan karena tidak lagi dilakukan. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
-      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya (median dihaluskan dengan rata-rata bergerak supaya ambang tidak berkedip): identitas tumpukan dikunci ke kisi harga absolut per simbol (BTC langkah $50, XAU langkah $5) supaya bucket agregasi nSigFigs yang bergeser mengikuti mid tidak terus mengganti identitas level yang sama; dicatat harga kisi, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; tumpukan yang sudah tampil dipertahankan dengan ukuran terakhirnya selama masa tenggang 45 detik sejak terakhir terlihat di buku (bubble di chart memudar selama tenggang, bukan lenyap seketika) dan hanya dihapus bila absen melewati tenggang itu atau ukurannya jatuh jauh di bawah ambang (&lt;1,2× median halus) saat masih ada di buku; keadaan scanner tidak direset saat WebSocket-nya reconnect sesaat — masa tenggang hanya berjalan oleh snapshot nyata yang diterima tanpa level itu, bukan oleh jeda sambungan. Tumpukan terbesar per sisi dari daftar scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus dinding berlabel singkat sisi + ukuran order + harga (lama bertahan tumpukan "awet …" tampil di Scanner) (bid teal, ask ungu; tombol DINDING) — dengan gerbang persistensi: garis hanya muncul setelah tumpukannya bertahan ≥30 detik di kisi tetap itu, dan tetap digambar memudar selama masa tenggang 45 detik saat levelnya absen sesaat, jadi dinding di chart adalah tumpukan awet yang sama dengan yang ditampilkan Scanner, bukan peringkat buku dangkal 20 level yang berubah tiap snapshot; pergeseran basis untuk menggambar dinding &amp; bubble memakai basis yang dihaluskan (rata-rata bergerak lambat dari basis mentah, diperbarui paling cepat tiap ±10 detik) supaya posisi garis tidak meluncur mengikuti jitter basis per tick — nilai basis mentah tetap ditampilkan apa adanya di teks BASIS bar atas chart dan baris DIAGNOSTIK LIVE — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tipis (1,4–1,5px; zona fresh warna penuh, zona tested disamarkan ke ±55% untuk garis, dot, dan labelnya) palet JSNR — merah muda resistance/SELL, hijau support/BUY (status flip SBR/RBS dibaca dari teks label, bukan warna) — pada level kunci zona, TERKUNCI ke pemetaan harga chart: posisi vertikalnya dihitung ulang setiap frame dari view.min/view.max lewat fungsi Y() yang sama dengan yang dipakai candle pada frame itu (termasuk pan sub-candle, skala manual, dan auto-scale) dan digambar dalam klip area plot yang sama dengan candle, jadi garis tidak lepas dari levelnya saat chart digeser/di-zoom; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; tiap garis memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada titik di ujung garisnya sendiri, tepat pada harga levelnya (zona lebar: dua garis tepi, masing-masing bertitik di level tepinya), label “harga level TIPE · fresh/tested” di kanan titik pada ketinggian yang sama persis dengan titiknya — label berdekatan hanya digeser mendatar dengan garis penghubung mungil, dot tidak pernah digeser dari levelnya; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status JSNR berbentuk tabel di pojok kanan atas chart kini diisi mesin JSNR asli (bias storyline W+D, zona BUY/SELL terbaik dengan ★skor dan tahap sinyal menunggu/AWAS/DI ZONA/PEMICU/KONFIRMASI, baris kaki killzone waktu New York + hitungan sinyal terkonfirmasi/dihapus) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing).</p>
+      <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar candle dari <b>sumber resmi per simbol</b>: untuk <b>BTC, Binance Spot (BTCUSDT)</b> — muat awal dari REST klines resmi Binance (data-api.binance.vision, cadangan api.binance.com) dan candle berjalan dari WebSocket kline resmi Binance (data-stream.binance.vision, cadangan stream.binance.com:9443), jadi bentuk candle persis pasar spot asli; untuk <b>emas, PAXG dari Binance</b> — simbol <b>PAXGUSDT</b> lewat pipa Binance yang sama dengan BTC (REST klines + WebSocket kline resmi); PAXG adalah emas token yang harganya mengikuti spot emas sehingga menjadi proksi spot untuk XAU (label simbol chart tetap XAU), dekat dengan acuan spot OANDA Zona Pantau MSNR — zona tidak digeser dan duduk apa adanya di chart PAXG ≈ spot. Percobaan koneksi TradingView sudah dihapus dari alur muat XAU: server TradingView terbukti menolak koneksi dari halaman ini (WebSocket tutup kode 1006 pada dua varian URL, tercatat di foto diagnostik pengguna). <b>Pembangunan candle lokal dari tick dagang sudah dihapus total</b> — jalur rakitan itulah yang dulu membuat candle tidak beraturan; tick dagang Hyperliquid kini hanya dipakai untuk harga terakhir, CVD, dan panel-panel lain, tidak pernah membentuk atau mengubah candle. Sumber utama bersifat <b>NEMPEL (sticky)</b>: keheningan kline sesaat <b>tidak</b> mengganti sumber yang ditampilkan — <b>watchdog khusus</b> memperbaiki sambungan di latar (sambung ulang WebSocket + sinkron ulang REST) sementara chart dan label sumbernya tetap pada Binance. Chart baru jatuh ke <b>candle RESMI Hyperliquid (cadangan)</b> — hanya snapshot candleSnapshot REST + langganan WebSocket kanal candle resmi exchange, dengan snapshot disinkronkan ulang berkala tiap ±8 detik untuk mengoreksi candle berjalan, tanpa penggabungan rakitan lokal apa pun — bila Binance <b>mati terus-menerus ≥60 detik</b> tanpa data segar meski sudah disambung ulang dan dicoba lewat REST; setelah jatuh ke cadangan, chart <b>tetap di cadangan minimal 5 menit</b> dan hanya kembali ke Binance setelah Binance mengirim data segar terus-menerus ±30 detik, jadi label legenda OHLC selalu menyebut sumber yang benar-benar sedang ditampilkan dan tidak lagi gonta-ganti. Baris status menampilkan umur data candle terakhir sebagai <b>“Chart: X dtk lalu”</b> (merah bila &gt;10 detik) — kebasian selama perbaikan latar tetap terlihat jujur di sana. Di antara pembaruan kline, garis harga terakhir &amp; close candle tampilan di tepi live mengikuti <b>tick dagang Hyperliquid per tick</b> (tampilan saja, digeser sebesar basis terukur; candle tersimpan tetap murni dari sumber resmi). Mengganti timeframe meminta ulang candle dari sumber aktif untuk interval terpilih (nama interval chart 1m/5m/15m/1H/4H/1D sama dengan nama interval Binance &amp; kanal candle Hyperliquid). Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; sisi kanan chart selalu menyisakan ruang kosong tetap (±8% jendela tampil, 3–14 candle) antara candle terakhir dan sumbu harga ala offset kanan TradingView, jadi harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live dengan ruang kanan standar itu. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar personal yang tersimpan lokal per simbol di perangkat ini (trendline, garis harga, kotak zona personal bertepi emas putus-putus berlabel PERSONAL/nama sendiri) — data candle dari Binance Spot untuk BTC dan PAXG Binance untuk XAU (sumber yang sedang aktif per simbol selalu tertulis di baris legenda chart — “BINANCE SPOT” / “PAXG BINANCE ≈ SPOT” — termasuk saat jatuh ke cadangan Hyperliquid). Keselarasan orderbook di chart dijaga dengan <b>basis live terukur</b>: basis = mid perpetual Hyperliquid − mid spot Binance (BTC) atau mid PAXG (XAU, dari close bar terakhir); dinding &amp; bubble yang digambar di chart digeser sebesar basis itu — untuk gambar dipakai versi HALUSnya (rata-rata bergerak lambat dari basis mentah, diperbarui paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick (harga gambar = harga perp − basis halus, label harga bertanda ≈spot; nilai basis mentah tampil apa adanya sebagai teks BASIS di bar atas chart dan di label “Sumber:” pada baris DIAGNOSTIK LIVE), sedangkan panel orderbook, ladder, scanner, dan CVD selalu memakai harga perpetual Hyperliquid asli tanpa digeser. Label “Sumber:” menggantikan kolom TV lama — percobaan TradingView tidak lagi ditampilkan karena tidak lagi dilakukan. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
+      <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya (median dihaluskan dengan rata-rata bergerak supaya ambang tidak berkedip): identitas tumpukan dikunci ke kisi harga absolut per simbol (BTC langkah $50, XAU langkah $5) supaya bucket agregasi nSigFigs yang bergeser mengikuti mid tidak terus mengganti identitas level yang sama; dicatat harga kisi, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; tumpukan yang sudah tampil dipertahankan dengan ukuran terakhirnya selama masa tenggang 45 detik sejak terakhir terlihat di buku (bubble di chart memudar selama tenggang, bukan lenyap seketika) dan hanya dihapus bila absen melewati tenggang itu atau ukurannya jatuh jauh di bawah ambang (&lt;1,2× median halus) saat masih ada di buku; keadaan scanner tidak direset saat WebSocket-nya reconnect sesaat — masa tenggang hanya berjalan oleh snapshot nyata yang diterima tanpa level itu, bukan oleh jeda sambungan. Tumpukan terbesar per sisi dari daftar scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus dinding berlabel singkat sisi + ukuran order + harga (lama bertahan tumpukan "awet …" tampil di Scanner) (bid teal, ask ungu; tombol DINDING) — dengan gerbang persistensi: garis hanya muncul setelah tumpukannya bertahan ≥30 detik di kisi tetap itu, dan tetap digambar memudar selama masa tenggang 45 detik saat levelnya absen sesaat, jadi dinding di chart adalah tumpukan awet yang sama dengan yang ditampilkan Scanner, bukan peringkat buku dangkal 20 level yang berubah tiap snapshot; pergeseran basis untuk menggambar dinding &amp; bubble memakai basis yang dihaluskan (rata-rata bergerak lambat dari basis mentah, diperbarui paling cepat tiap ±10 detik) supaya posisi garis tidak meluncur mengikuti jitter basis per tick — nilai basis mentah tetap ditampilkan apa adanya di teks BASIS bar atas chart dan baris DIAGNOSTIK LIVE — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tipis (1,4–1,5px; zona fresh warna penuh, zona tested disamarkan ke ±55% untuk garis, dot, dan labelnya) palet JSNR — merah muda resistance/SELL, hijau support/BUY (status flip SBR/RBS dibaca dari teks label, bukan warna) — pada level kunci zona, TERKUNCI ke pemetaan harga chart: posisi vertikalnya dihitung ulang setiap frame dari view.min/view.max lewat fungsi Y() yang sama dengan yang dipakai candle pada frame itu (termasuk pan sub-candle, skala manual, dan auto-scale) dan digambar dalam klip area plot yang sama dengan candle, jadi garis tidak lepas dari levelnya saat chart digeser/di-zoom; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; tiap garis memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada titik di ujung garisnya sendiri, tepat pada harga levelnya (zona lebar: dua garis tepi, masing-masing bertitik di level tepinya), label “harga level TIPE · fresh/tested” di kanan titik pada ketinggian yang sama persis dengan titiknya — label berdekatan hanya digeser mendatar dengan garis penghubung mungil, dot tidak pernah digeser dari levelnya; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status JSNR berbentuk tabel di pojok kanan atas chart kini diisi mesin JSNR asli (bias storyline W+D, zona BUY/SELL terbaik dengan ★skor dan tahap sinyal menunggu/AWAS/DI ZONA/PEMICU/KONFIRMASI, baris kaki killzone waktu New York + hitungan sinyal terkonfirmasi/dihapus) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing). Khusus XAU, tumpukan juga bisa berasal dari buku order publik yang lebih dalam — Binance Futures, OKX, atau Gate — yang dicoba berurutan sebagai kaskade: sumber sehat pertama yang dipakai, dan sumber yang sedang aktif tertulis sebagai label kecil di header seksi XAU Scanner; bila ketiganya tidak sehat, scanner otomatis kembali ke buku jeru Hyperliquid seperti biasa. Level dari sumber eksternal digeser memakai basis live terhadap PAXG supaya tetap selaras dengan harga spot di chart.</p>
       <p>SMC: adhedhasar Smart Money Concepts [LuxAlgo] (CC BY-NC-SA 4.0)</p>
       <p>Heatmap orderbook (toggle HEAT di popup indikator) digambar sebagai lapisan latar chart dari rekaman buku jeru sesi ini — ia hanya menampilkan data sejak aplikasi dibuka pada sesi ini (rekaman disimpan di memori perangkat, hingga ±3 jam terakhir), bukan histori dari sebelum aplikasi dibuka.</p>
       <p>Footprint (toggle FOOT di popup indikator) diagregasi dari aggTrades Binance untuk candle yang terlihat saat mode FOOT aktif, bukan footprint tick-persis — candle di luar tampilan atau dari masa sebelum mode dihidupkan tidak memiliki data footprint dan digambar sebagai candle biasa; stacked imbalance dihitung dari perbandingan diagonal antar level harga di dalam candle yang sama.</p>
@@ -1280,7 +1281,7 @@ function fmtDur(ms){
 var scanEl=$("scanner");
 MARKETS.forEach(function(m){
   var div=document.createElement("div"); div.className="scangroup"; div.id="scan-"+m.id;
-  div.innerHTML='<div class="scanhead"><span class="a">'+m.name+' — TUMPUKAN TERBESAR</span><span class="b" data-sf="mid">MID —</span></div>'+
+  div.innerHTML='<div class="scanhead"><span class="a">'+m.name+' — TUMPUKAN TERBESAR</span>'+(m.id==="gold"? '<span class="bsrc" data-sf="src">HYPERLIQUID</span>':"")+'<span class="b" data-sf="mid">MID —</span></div>'+
     '<div class="scancols">'+
     '<div class="scanside bid"><div class="sk">BID — PENAHAN DI BAWAH</div><div data-sf="bids"><div class="scanempty">Menunggu data orderbook…</div></div></div>'+
     '<div class="scanside ask"><div class="sk">ASK — PENAHAN DI ATAS</div><div data-sf="asks"><div class="scanempty">Menunggu data orderbook…</div></div></div>'+
@@ -1305,6 +1306,7 @@ function scanRowsHtml(list, side, mid, m, maxSz){
 function renderScanner(id){
   var s=M[id]; var bk=s.deepBook||s.book; if(!bk) return;
   var m=s.def, wrap=$("scan-"+id); if(!wrap) return;
+  if(id==="gold") xauSrcLabel();
   var mid=(bk.bids[0].px+bk.asks[0].px)/2;
   function sf(name){ return wrap.querySelector('[data-sf="'+name+'"]'); }
   sf("mid").textContent="MID $"+fmt(mid,m.dec);
@@ -1496,6 +1498,12 @@ function stopWS(){
 var scanState={ ws:null, ok:false, pingTimer:null, retryTimer:null };
 function applyDeepBook(id,data){
   if(!data||!data.levels||data.levels.length<2) return;
+  /* KASKADE EKSTERNAL XAU: selama sumber buku eksternal (Binance/OKX/
+     Gate) sehat & aktif, snapshot buku jeru Hyperliquid untuk XAU
+     DILEWATI — scanner XAU diumpan sumber eksternal lewat xauIngest.
+     Begitu kaskade jatuh (xauExt.src<0), gerbang ini membuka lagi dan
+     jalur Hyperliquid mengisi scanner persis seperti sebelumnya. */
+  if(id==="gold"&&typeof xauExt!=="undefined"&&xauExt&&xauExt.src>=0) return;
   var s=M[id];
   s.lastDeepAt=Date.now();
   s.deepBook={ bids:data.levels[0].slice(0,20).map(function(l){return{px:+l.px,sz:+l.sz};}),
@@ -1648,6 +1656,210 @@ function stopScanWS(){
   stopScanPing(); stopScanReconnect();
   if(scanState.ws){ try{ scanState.ws.onclose=null; scanState.ws.close(); }catch(e){} scanState.ws=null; }
   scanState.ok=false;
+}
+
+/* ============ KASKADE SUMBER BUKU EKSTERNAL — SCANNER XAU SAJA ============
+   Buku jeru Hyperliquid kanggo scanner XAU kap wates 20 level nSigFigs 3.
+   Kaskade iki nyoba telung buku REST publik tanpa kunci (perp emas) kanthi
+   urutan prioritas BINANCE → OKX → GATE; sing sehat pisanan menang lan
+   NEMPEL (sticky). Nek sumber eksternal sehat, dheweke NGANTIKNE buku jeru
+   Hyperliquid dadi input scanner XAU — liwat dalan ingesti sing padha
+   (xauIngest → s.deepBook → updateStacks), dadi prilaku kisi $5 / median
+   alus / grace 45 dtk / gerbang dinding 30 dtk identik. Nek kabeh eksternal
+   ora sehat, scanner XAU bali diisi buku jeru Hyperliquid persis kaya
+   sadurunge (gerbang ing applyDeepBook mbukak maneh). BTC ora kena:
+   tetep 100% Hyperliquid; panel DOM/ladder uga tetep Hyperliquid.
+   Kabeh level dikonversi menyang oz (unit scanner XAU):
+   - Binance USD-M: qty wis oz apa anane.
+   - OKX: size ing kontrak, ctVal KAPESTHI 0.001 XAU/kontrak → oz = size×0.001.
+   - Gate: s ing kontrak, quanto_multiplier KAPESTHI 0.0001 → oz = s×0.0001.
+   Kesehatan sumber: respon ke-parse, ≥20 level saben sisih, lan mid-e
+   sajroning ±3% saka mid PAXG saiki (cek kewarasan; dilangkau nek mid
+   PAXG durung kasedhiya). Polling sumber aktif saben ±2 detik; 3× gagal
+   saurutan UTAWA data basi >8 detik → probe maneh kaskade saka ndhuwur.
+   Sajroning mlaku ndek sumber prioritas luwih endhek (utawa cadangan
+   Hyperliquid), sumber prioritas luwih dhuwur di-probe maneh saben
+   ±60 detik lan ganti munggah nek ana sing dadi sehat. Sajroning ganti
+   sumber scanner ora dikosongne — tumpukan pungkasan dipertahanke
+   logika grace sing wis ana. Kabeh di-isolasi try/catch: kaskade mati
+   total ora oleh ngrusak scanner Hyperliquid. */
+function xauConvLevels(arr, mul, isObj){
+  var out=[];
+  if(!Array.isArray(arr)) return out;
+  for(var i=0;i<arr.length;i++){
+    var l=arr[i]; if(!l) continue;
+    var px, sz;
+    if(isObj){ px=parseFloat(l.p); sz=parseFloat(l.s)*mul; }
+    else { px=parseFloat(l[0]); sz=parseFloat(l[1])*mul; }
+    if(isFinite(px)&&isFinite(sz)&&px>0&&sz>0) out.push({px:px,sz:sz});
+  }
+  return out;
+}
+function xauParseBinance(d){
+  if(!d||!Array.isArray(d.bids)||!Array.isArray(d.asks)) return null;
+  var b=xauConvLevels(d.bids,1,false), a=xauConvLevels(d.asks,1,false);
+  b.sort(function(x,y){return y.px-x.px;}); a.sort(function(x,y){return x.px-y.px;});
+  return (b.length&&a.length)? {bids:b,asks:a} : null;
+}
+function xauParseOkx(d){
+  var b0=d&&Array.isArray(d.data)? d.data[0] : null;
+  if(!b0||!Array.isArray(b0.bids)||!Array.isArray(b0.asks)) return null;
+  var b=xauConvLevels(b0.bids,0.001,false), a=xauConvLevels(b0.asks,0.001,false);
+  b.sort(function(x,y){return y.px-x.px;}); a.sort(function(x,y){return x.px-y.px;});
+  return (b.length&&a.length)? {bids:b,asks:a} : null;
+}
+function xauParseGate(d){
+  if(!d||!Array.isArray(d.bids)||!Array.isArray(d.asks)) return null;
+  var b=xauConvLevels(d.bids,0.0001,true), a=xauConvLevels(d.asks,0.0001,true);
+  b.sort(function(x,y){return y.px-x.px;}); a.sort(function(x,y){return x.px-y.px;});
+  return (b.length&&a.length)? {bids:b,asks:a} : null;
+}
+var XAU_SRC=[
+  {key:"binance", label:"BINANCE PERP", basisName:"BINANCE",
+   url:"https://fapi.binance.com/fapi/v1/depth?symbol=XAUUSDT&limit=1000", parse:xauParseBinance},
+  {key:"okx", label:"OKX PERP", basisName:"OKX",
+   url:"https://www.okx.com/api/v5/market/books?instId=XAU-USDT-SWAP&sz=400", parse:xauParseOkx},
+  {key:"gate", label:"GATE PERP", basisName:"GATE",
+   url:"https://api.gateio.ws/api/v4/futures/usdt/order_book?contract=XAU_USDT&limit=300", parse:xauParseGate}
+];
+/* src = indeks XAU_SRC sing aktif; -1 = cadangan Hyperliquid */
+var xauExt={ src:-1, fails:0, lastOkAt:0, mid:null, busy:false, timer:null, upTimer:null };
+var XAU_EXT_KEEP=250; /* wates level/sisih sing disimpen menyang s.deepBook */
+function xauBookMid(bk){ return (bk.bids[0].px+bk.asks[0].px)/2; }
+function xauBookHealthy(bk){
+  if(!bk||!bk.bids||!bk.asks) return false;
+  if(bk.bids.length<20||bk.asks.length<20) return false;
+  var mid=xauBookMid(bk);
+  if(!isFinite(mid)||mid<=0) return false;
+  var spot=(typeof spotMid!=="undefined"&&spotMid)? spotMid.gold : null;
+  if(spot!=null&&isFinite(spot)&&spot>0){
+    if(Math.abs(mid-spot)/spot>0.03) return false; /* kewarasan ±3% saka PAXG */
+  }
+  return true;
+}
+function xauFetchJson(url){
+  var ctrl=(typeof AbortController!=="undefined")? new AbortController() : null;
+  var to=ctrl? setTimeout(function(){ try{ ctrl.abort(); }catch(e){} },5000) : null;
+  var done=function(){ if(to){ clearTimeout(to); to=null; } };
+  return fetch(url, ctrl? {signal:ctrl.signal} : undefined).then(function(r){
+    done();
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return r.json();
+  }).catch(function(e){ done(); throw e; });
+}
+function xauFetchBook(idx){
+  var def=XAU_SRC[idx];
+  return xauFetchJson(def.url).then(function(j){
+    var bk=def.parse(j);
+    if(!xauBookHealthy(bk)) throw new Error("ora sehat");
+    return bk;
+  });
+}
+/* label sumber aktif ndek header seksi XAU panel Scanner */
+function xauSrcLabel(){
+  try{
+    var w=$("scan-gold"); if(!w) return;
+    var el=w.querySelector('[data-sf="src"]'); if(!el) return;
+    el.textContent= xauExt.src>=0? XAU_SRC[xauExt.src].label : "HYPERLIQUID";
+  }catch(e){}
+}
+/* INGESTI: dalan sing padha karo applyDeepBook Hyperliquid — snapshot
+   mlebu s.deepBook banjur updateStacks (kisi/median/grace padha).
+   Bedane mung loro: (1) buku eksternal luwih jeru, disimpen nganti
+   XAU_EXT_KEEP level/sisih; (2) rekaman HEAT diwenehi tampilan nduwur
+   40 level wae ben ukuran ring buffer heatmap tetep entheng kaya
+   jaman buku 20 level. */
+function xauIngest(bk){
+  try{
+    var s=M.gold; if(!s||!bk||!bk.bids.length||!bk.asks.length) return;
+    s.lastDeepAt=Date.now();
+    xauExt.mid=xauBookMid(bk);
+    s.deepBook={ bids:bk.bids.slice(0,XAU_EXT_KEEP), asks:bk.asks.slice(0,XAU_EXT_KEEP) };
+    try{ updateStacks("gold"); }catch(e){}
+    var full=s.deepBook;
+    s.deepBook={ bids:full.bids.slice(0,40), asks:full.asks.slice(0,40) };
+    try{ recordHeat("gold"); }catch(e){}
+    s.deepBook=full;
+    markDirty("gold");
+  }catch(e){}
+}
+function xauSetSrc(idx,bk){
+  xauExt.src=idx; xauExt.fails=0; xauExt.lastOkAt=Date.now();
+  if(bk) xauIngest(bk);
+  xauSrcLabel();
+  try{ updateBasisLiveChip(); }catch(e){}
+}
+/* probe urutan indeks [lo..hi]; sing sehat pisanan menang & langsung
+   di-ingest ben ora ana kesenjangan. busy njaga probe/poll ora tumpuk. */
+function xauProbeRange(lo,hi){
+  if(xauExt.busy) return;
+  xauExt.busy=true;
+  var i=lo;
+  (function next(){
+    if(i>hi){ xauExt.busy=false; return; }
+    var idx=i++;
+    xauFetchBook(idx).then(function(bk){
+      xauExt.busy=false;
+      xauSetSrc(idx,bk);
+    }).catch(function(){ next(); });
+  })();
+}
+function xauProbeAll(){ xauProbeRange(0,XAU_SRC.length-1); }
+function xauExtTick(){
+  try{
+    if(state.mode!=="live"||xauExt.busy) return;
+    var now=Date.now();
+    if(xauExt.src>=0){
+      if(now-xauExt.lastOkAt>8000){ /* data basi >8 dtk → probe maneh saka ndhuwur */
+        xauExt.src=-1; xauExt.fails=0; xauSrcLabel();
+        xauProbeAll();
+        return;
+      }
+      var idx=xauExt.src;
+      xauExt.busy=true;
+      xauFetchBook(idx).then(function(bk){
+        xauExt.busy=false;
+        if(xauExt.src!==idx) return; /* sumber wis ganti sajroning mabur */
+        xauExt.fails=0; xauExt.lastOkAt=Date.now();
+        xauIngest(bk);
+      }).catch(function(){
+        xauExt.busy=false;
+        if(xauExt.src!==idx) return;
+        xauExt.fails++;
+        if(xauExt.fails>=3){ /* 3× gagal saurutan → probe maneh saka ndhuwur */
+          xauExt.src=-1; xauExt.fails=0; xauSrcLabel();
+          xauProbeAll();
+        }
+      });
+    }
+    /* src<0 (cadangan Hyperliquid): ora probe ndek tick 2 dtk iki —
+       probe maneh ditindakake langsung pas tiba (3× gagal / basi) lan
+       berkala ±60 dtk liwat xauUpgradeTick, ben ora ngremuk server. */
+  }catch(e){}
+}
+function xauUpgradeTick(){
+  try{
+    if(state.mode!=="live"||xauExt.busy) return;
+    if(xauExt.src===0) return; /* wis ndek prioritas paling dhuwur */
+    var hi= xauExt.src<0? XAU_SRC.length-1 : xauExt.src-1;
+    xauProbeRange(0,hi); /* mung sumber sing luwih dhuwur prioritase */
+  }catch(e){}
+}
+function startXauCascade(){
+  try{
+    if(xauExt.timer) return;
+    xauProbeAll();
+    xauExt.timer=setInterval(xauExtTick,2000);
+    xauExt.upTimer=setInterval(xauUpgradeTick,60000);
+  }catch(e){}
+}
+function stopXauCascade(){
+  try{
+    if(xauExt.timer){ clearInterval(xauExt.timer); xauExt.timer=null; }
+    if(xauExt.upTimer){ clearInterval(xauExt.upTimer); xauExt.upTimer=null; }
+    xauExt.src=-1; xauExt.fails=0; xauExt.mid=null;
+    xauSrcLabel();
+  }catch(e){}
 }
 /* CADANGAN TERAKHIR: hanya berjalan saat WebSocket putus/belum tersambung */
 function startPolling(){ if(state.pollTimer) return; state.pollTimer=setInterval(function(){ if(state.mode==="live"&&!state.wsOk) fetchSnapshot(); },2000); }
@@ -1969,13 +2181,18 @@ function updateSourceChip(){
      ditulis GABUNG ing baris legenda OHLC chart (chartSrcTxt, diwaca
      setReadout ing drawChart) + label simbol ing bar ngisor — ora
      ana chip ngambang ing area chart maneh. */
+  /* sajroning MASA TETEP HL (hlSince>0) label kudu tetep jujur
+     "HYPERLIQUID (CADANGAN)" — upaya probe Binance ndek latar ora
+     oleh ketulis "MENGHUBUNGKAN…" amarga candle sing ditampilne
+     pancen isih HL nganti ganti-mbalik tenan kelakon */
+  var inHold= (typeof binH!=="undefined"&&binH&&binH[id]&&binH[id].hlSince>0);
   if(id==="btc"){
     if(candleSrc.btc==="bin"){ txt="BINANCE SPOT"; }
-    else if(typeof bin!=="undefined"&&bin.pending&&bin.id==="btc"){ txt="MENGHUBUNGKAN BINANCE…"; }
+    else if(typeof bin!=="undefined"&&bin.pending&&bin.id==="btc"&&!inHold){ txt="MENGHUBUNGKAN BINANCE…"; }
     else { txt="HYPERLIQUID (CADANGAN)"; }
   } else {
     if(candleSrc.gold==="paxg"){ txt="PAXG BINANCE ≈ SPOT"; }
-    else if(typeof bin!=="undefined"&&bin.pending&&bin.id==="gold"){ txt="MENGHUBUNGKAN PAXG BINANCE…"; }
+    else if(typeof bin!=="undefined"&&bin.pending&&bin.id==="gold"&&!inHold){ txt="MENGHUBUNGKAN PAXG BINANCE…"; }
     else { txt="HYPERLIQUID (CADANGAN)"; }
   }
   chartSrcTxt=txt;
@@ -2020,7 +2237,11 @@ var spotMid={ btc:null, gold:null };
 function computeBasis(id){
   var st=M[id]; if(!st) return basisVal[id];
   var perpMid=null;
-  if(st.book&&st.book.bids.length&&st.book.asks.length) perpMid=(st.book.bids[0].px+st.book.asks[0].px)/2;
+  /* XAU + sumber eksternal aktif: basis dietung saka mid SUMBER AKTIF
+     (dudu mid perp Hyperliquid) — drawShift alus sing padha banjur
+     nggeser dinding/bubble eksternal ben sejajar karo PAXG/spot. */
+  if(id==="gold"&&typeof xauExt!=="undefined"&&xauExt&&xauExt.src>=0&&xauExt.mid!=null&&isFinite(xauExt.mid)) perpMid=xauExt.mid;
+  else if(st.book&&st.book.bids.length&&st.book.asks.length) perpMid=(st.book.bids[0].px+st.book.asks[0].px)/2;
   else if(st.deepBook&&st.deepBook.bids.length&&st.deepBook.asks.length) perpMid=(st.deepBook.bids[0].px+st.deepBook.asks[0].px)/2;
   var spot= spotMid[id];
   if((spot==null||!isFinite(spot))&&st.candles.length&&candleSrc[id]!=="hl") spot=st.candles[st.candles.length-1].c;
@@ -2068,7 +2289,9 @@ function updateBasisLiveChip(){
   var b=computeBasis(id);
   if(b==null){ el.style.display="none"; return; }
   el.textContent= id==="gold"
-    ? "BASIS "+fmtBasis(b,M.gold.def.dec).replace(".",",")
+    ? ((typeof xauExt!=="undefined"&&xauExt&&xauExt.src>=0)
+        ? "BASIS "+XAU_SRC[xauExt.src].basisName+"–SPOT "+fmtBasis(b,M.gold.def.dec).replace(".",",")
+        : "BASIS "+fmtBasis(b,M.gold.def.dec).replace(".",","))
     : "BASIS PERP–SPOT "+fmtBasis(b,M.btc.def.dec);
   el.style.display="";
 }
@@ -2265,16 +2488,59 @@ function tvConnectAttempt(){
    api.binance.com), candle berjalan dari WebSocket kline resmi
    (host data-stream.binance.vision, cadangan
    stream.binance.com:9443). Interval chart (1m/5m/15m/1h/4h/1d)
-   sama persis dengan nama interval Binance. Bila Binance tidak
-   terjangkau dari perangkat (kedua host REST + kedua host WS
-   gagal, atau tidak ada kline dalam ±10 detik), simbol itu jatuh
-   ke candle resmi Hyperliquid (cadangan) dan Binance dicoba lagi
-   berkala ±30 detik. */
+   sama persis dengan nama interval Binance. Sumber iki NEMPEL
+   (sticky — kaya terminal rujukan sing duwe): kasepen sesaat ora
+   ngganti sumber sing ditampilne; watchdog ndandani sambungan
+   meneng ndek latar. Simbol mung jatuh menyang candle resmi
+   Hyperliquid (cadangan) nek Binance mati terus ≥60 detik, tetep
+   ndek cadangan paling ora 5 menit, lan mung bali menyang Binance
+   sakwise data seger mili terus ±30 detik (rincian ndek blok
+   HISTERESIS SUMBER CANDLE ing ngisor). */
 var BN_REST=["https://data-api.binance.vision/api/v3/klines","https://api.binance.com/api/v3/klines"];
 var BN_WS=["wss://data-stream.binance.vision/ws/","wss://stream.binance.com:9443/ws/"];
 var BIN_SYM={ btc:"BTCUSDT", gold:"PAXGUSDT" };
 var BIN_STREAM={ btc:"btcusdt", gold:"paxgusdt" };
 var BIN_SRCVAL={ btc:"bin", gold:"paxg" };
+/* ============ HISTERESIS SUMBER CANDLE (NEMPEL / STICKY) ============
+   Masalah lawas: kasepen WS Binance >10 detik langsung mbalik chart
+   + label sumber menyang "HYPERLIQUID (CADANGAN)" banjur mbalik
+   maneh — gonta-ganti sing mbingungake. Saiki sumber sing DITAMPILNE
+   (candleSrc) kakunci kanthi ambang histeresis:
+   - Binance tampil & meneng >10 dtk (BIN_SILENCE_MS): NDANDANI
+     MENENG ndek latar (reconnect WS + resync REST) — candle & label
+     tetep Binance; umur data jujur tetep katon ing readout
+     Diagnostik "Chart: X dtk lalu".
+   - Binance mati terus ≥60 dtk (BIN_DOWN_MS, ora ana data seger
+     sanajan wis reconnect + upaya REST): lagi pindah HL; hlSince
+     kacathet lan freshSince direset.
+   - Lagi tampil HL: tetep paling ora 5 menit (BIN_HL_MIN_MS);
+     ganti mbalik menyang Binance mung nek Binance wis ngirim data
+     seger TERUS ±30 dtk (BIN_BACK_MS — rentetan seger diukur saka
+     freshSince, sing diwiwiti maneh saben ana celah >10 dtk) lan
+     data pungkasan isih seger. Ganti mbalik ditindakake liwat
+     reload REST penuh (binSwitchBack) ben buffer ora kecampur.
+   - Fase muat awal (hlSince=0, durung tau jatuh): data seger
+     pisanan langsung nampil — ora ana masa tetep.
+   Label legenda OHLC maca candleSrc apa anane, dadi tansah nyebut
+   sumber sing pancen lagi ditampilne. Mekanisme iki dienggo bareng
+   BTC & XAU (pipa bin sing padha) — prilaku nempel-e padha. */
+var BIN_DOWN_MS=60000, BIN_HL_MIN_MS=300000, BIN_BACK_MS=30000;
+var binH={ btc:{hlSince:0,freshSince:0,lastAt:0,repairAt:0}, gold:{hlSince:0,freshSince:0,lastAt:0,repairAt:0} };
+var binApplyNext=false; /* true = reload REST sabanjure kudu diterapne dadi ganti-mbalik */
+function binNoteData(id){
+  var h=binH[id]; if(!h) return;
+  var now=Date.now();
+  if(!h.freshSince||now-h.lastAt>BIN_SILENCE_MS) h.freshSince=now; /* celah >10 dtk → rentetan seger anyar */
+  h.lastAt=now;
+}
+function binDecide(dispBin,h,now){
+  if(dispBin){
+    return (h.lastAt&&now-h.lastAt>=BIN_DOWN_MS)? "hl" : null;
+  }
+  if(h.hlSince&&now-h.hlSince<BIN_HL_MIN_MS) return null; /* masa tetep HL */
+  if(h.freshSince&&h.lastAt&&now-h.lastAt<=BIN_SILENCE_MS&&(!h.hlSince||now-h.freshSince>=BIN_BACK_MS)) return "bin";
+  return null;
+}
 var bin={ id:null, ws:null, gen:0, pending:false, gotBars:false, timer:null, retry:null, intentional:false, hostIdx:0, lastError:"", lastKlineAt:0 };
 function binScheduleRetry(){
   if(bin.retry) clearTimeout(bin.retry);
@@ -2282,8 +2548,19 @@ function binScheduleRetry(){
 }
 function binFallback(){
   var id=bin.id||chart.sym;
+  var h=binH[id];
+  /* GERBANG NEMPEL: nek Binance isih sing ditampilne lan data seger
+     pungkasan durung basi ≥60 dtk, AJA ganti sumber — kegagalan iki
+     mung micu ndandani meneng liwat watchdog. Fallback tenan mung
+     sakwise ambang BIN_DOWN_MS kepenuhan. */
+  if(isSpotActive(id)&&h&&h.lastAt&&Date.now()-h.lastAt<BIN_DOWN_MS){
+    bin.pending=false;
+    return;
+  }
+  var wasSpot=isSpotActive(id);
   bin.pending=false;
   candleSrc[id]="hl";
+  if(wasSpot&&h){ h.hlSince=Date.now(); h.freshSince=0; } /* miwiti masa tetep HL 5 menit */
   updateSourceChip();
   /* tarik candle resmi Hyperliquid sekarang juga (lewati dedupe) —
      setelah itu kanal candle WS + resync berkala yang menjaganya */
@@ -2300,6 +2577,10 @@ function binWsFailed(gen,hostIdx){
   if(hostIdx+1<BN_WS.length){ binConnectWS(gen,hostIdx+1); return; }
   bin.lastError="WebSocket kline Binance gagal di semua host";
   binKillWs();
+  /* nek Binance isih sing ditampilne, AJA langsung fallback —
+     watchdog sing mutusne (ndandani meneng / pindah HL sakwise
+     mati terus ≥60 dtk) */
+  if(bin.id&&isSpotActive(bin.id)) return;
   binFallback();
 }
 function binApplyKline(k){
@@ -2310,6 +2591,22 @@ function binApplyKline(k){
   var c={ t:+k.t, o:+k.o, h:+k.h, l:+k.l, c:+k.c, v:+k.v||0, tb:(k.V!=null? +k.V : null) };
   if(!c.t||!c.o) return;
   var s=M[id];
+  /* kesegaran Binance tansah dicathet — iki bahan keputusan
+     histeresis (binDecide), kapisah saka candle sing ditampilne */
+  binNoteData(id);
+  bin.lastKlineAt=Date.now();
+  bin.gotBars=true; bin.pending=false;
+  if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+  if(!isSpotActive(id)){
+    /* MODE PROBE sajroning masa tetep HL: kline mung dicathet
+       kesegaran-e — buffer candle & label TETEP HL, ora kecampur;
+       ganti mbalik ditindakake watchdog liwat reload REST penuh.
+       spotMid tetep dianyari (bahan basis + cek kewarasan kaskade
+       scanner), nanging lastCandleAt ORA didemek — kuwi umur candle
+       sing pancen ditampilne (HL). */
+    spotMid[id]=c.c;
+    return;
+  }
   var last=s.candles[s.candles.length-1];
   if(!last){ s.candles.push(c); }
   else if(c.t===last.t){ s.candles[s.candles.length-1]=c; }
@@ -2322,9 +2619,7 @@ function binApplyKline(k){
   /* harga spot/proksi spot terakhir untuk pengukuran basis live */
   spotMid[id]=c.c;
   computeBasis(id);
-  bin.lastKlineAt=Date.now(); lastCandleAt[id]=bin.lastKlineAt;
-  bin.gotBars=true; bin.pending=false;
-  if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+  lastCandleAt[id]=bin.lastKlineAt;
   if(candleSrc[id]!==BIN_SRCVAL[id]) candleSrc[id]=BIN_SRCVAL[id];
   updateSourceChip();
   if(chart.sym===id) markChartDirty();
@@ -2343,15 +2638,26 @@ function binLoadRest(gen){
           .filter(function(c){ return c.t&&c.o>0&&c.h>0&&c.l>0&&c.c>0; })
           .sort(function(a,b){ return a.t-b.t; });
         if(!mapped.length){ tryHost(idx+1); return; }
+        binNoteData(id);
+        bin.lastKlineAt=Date.now();
+        bin.gotBars=true; bin.pending=false;
+        if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+        if(!isSpotActive(id)&&!binApplyNext){
+          /* MODE PROBE sajroning masa tetep HL: kesegaran kacathet,
+             nanging buffer & label TETEP HL — REST iki ora oleh
+             ndemek candle sing lagi ditampilne */
+          spotMid[id]=mapped[mapped.length-1].c;
+          return;
+        }
+        binApplyNext=false;
         /* riwayat Binance MENGGANTIKAN buffer sepenuhnya — tidak
            dicampur dengan candle sumber lain */
         M[id].candles=mapped.slice(-700);
         spotMid[id]=mapped[mapped.length-1].c;
         computeBasis(id);
-        bin.lastKlineAt=Date.now(); lastCandleAt[id]=bin.lastKlineAt;
-        bin.gotBars=true; bin.pending=false;
-        if(bin.timer){ clearTimeout(bin.timer); bin.timer=null; }
+        lastCandleAt[id]=bin.lastKlineAt;
         if(candleSrc[id]!==BIN_SRCVAL[id]) candleSrc[id]=BIN_SRCVAL[id];
+        binH[id].hlSince=0; /* ganti-mbalik / akuisisi kelakon — masa tetep rampung */
         updateSourceChip();
         if(chart.sym===id) markChartDirty();
       })
@@ -2408,28 +2714,55 @@ function stopBinance(){
   binKillWs();
   updateSourceChip();
 }
-/* ============ WATCHDOG KEHENINGAN KLINE BINANCE ============
-   Akar masalah "chart membeku padahal orderbook tetap live": socket
-   kline Binance bisa TETAP TERBUKA tapi berhenti mengirim (koneksi
-   mati setengah-terbuka, umum di jaringan HP) — onclose tidak pernah
-   terpanggil dan timer awal 10 detik di startBinance hanya menjaga
-   fase muat pertama, jadi tidak ada yang menyatakan sumber mati dan
-   candle berhenti selamanya, sementara WS Hyperliquid (socket
-   terpisah yang punya watchdog sendiri) terus mengalir ke panel.
-   Watchdog ini memeriksa umur kline terakhir tiap 2 detik: bila
-   sumber utama (Binance Spot / PAXG) diam >10 detik, sumber
-   dinyatakan mati SAAT ITU JUGA dan chart dialihkan ke cadangan
-   Hyperliquid (binFallback juga menjadwalkan coba ulang Binance
-   ±30 detik kemudian) — tidak menunggu socket tertutup. */
+/* ============ WATCHDOG KEHENINGAN KLINE BINANCE (NEMPEL) ============
+   Akar masalah lawas: socket kline Binance bisa TETAP TERBUKA tapi
+   berhenti mengirim (koneksi mati setengah-terbuka, umum di jaringan
+   HP) — onclose tidak pernah terpanggil. Watchdog lawas langsung
+   mbalik chart menyang HL saben kasepen >10 detik, banjur mbalik
+   maneh — gonta-ganti sing mbingungake sing duwe. Saiki watchdog iki
+   dadi penegak HISTERESIS (deleng blok binH ing ndhuwur):
+   - Binance tampil & diam >10 dtk: NDANDANI MENENG (binRepair —
+     reconnect WS + resync REST), paling kerep saben ±12 dtk; chart
+     & label TETEP Binance, kabasi-an jujur katon ing readout
+     Diagnostik "Chart: X dtk lalu".
+   - Binance mati terus ≥60 dtk: binFallback tenan menyang HL
+     (gerbang ndek binFallback mesthekne ambang iki kepenuhan).
+   - Lagi tampil HL & syarat ganti-mbalik binDecide kepenuhan
+     (masa tetep 5 menit liwat + data seger terus ±30 dtk):
+     binSwitchBack — reload REST penuh sing ngganti buffer & label
+     bebarengan, ora kecampur. */
 var BIN_SILENCE_MS=10000;
+function binRepair(id){
+  if(bin.id!==id) return;
+  binKillWs(); bin.intentional=false;
+  binLoadRest(bin.gen);
+  binConnectWS(bin.gen,0);
+}
+function binSwitchBack(id){
+  if(bin.id!==id||state.mode!=="live") return;
+  binApplyNext=true;
+  binLoadRest(bin.gen);
+  if(!bin.ws){ bin.intentional=false; binConnectWS(bin.gen,0); }
+}
 function binCheckSilence(){
   if(state.mode!=="live"||document.hidden) return;
-  if(bin.id!==chart.sym||!isSpotActive(chart.sym)) return;
-  if(!bin.gotBars||!bin.lastKlineAt) return; /* fase muat awal dijaga timer startBinance */
-  if(Date.now()-bin.lastKlineAt>BIN_SILENCE_MS){
-    bin.lastError="kline Binance diam >10 dtk (socket terbuka tapi bungkam) — dialihkan ke cadangan HL";
-    binKillWs();
-    binFallback();
+  if(bin.id!==chart.sym) return;
+  var id=chart.sym, h=binH[id]; if(!h) return;
+  var now=Date.now();
+  if(isSpotActive(id)){
+    if(!h.lastAt) return; /* fase muat awal dijaga timer startBinance */
+    var stale=now-h.lastAt;
+    if(stale>=BIN_DOWN_MS){
+      bin.lastError="Binance mati terus ≥60 dtk — pindah cadangan HL (tetep ≥5 mnt)";
+      binKillWs();
+      binFallback();
+    } else if(stale>BIN_SILENCE_MS&&now-h.repairAt>=12000){
+      h.repairAt=now;
+      bin.lastError="kline Binance diam — ndandani sambungan ndek latar, sumber tetep Binance…";
+      binRepair(id);
+    }
+  } else if(binDecide(false,h,now)==="bin"){
+    binSwitchBack(id);
   }
 }
 setInterval(binCheckSilence,2000);
@@ -3141,9 +3474,15 @@ function drawChart(){
            sama seperti bubble — bukan lenyap seketika */
         var wfade=1;
         if(st.absentSince) wfade=Math.max(0.3, 1-0.7*Math.min(1,(wallNow-st.absentSince)/STACK_GRACE_MS));
-        ctx.save(); ctx.globalAlpha=wfade;
-        ctx.strokeStyle=cfg[1]; ctx.lineWidth=1.4; ctx.setLineDash([7,4]);
+        /* BOBOT VISUAL DINDING DIKURANGI (arahan pemilik — "ben penak
+           di sawang"): garis tetep 1px nanging alpha stroke mung 0.40
+           (× fade masa tenggang), label font 8px kanthi latar separo
+           alpha lawas. Logika dinding/rega/gerbang persistensi/werna
+           sisih ora owah; bubble ora didemek. */
+        ctx.save(); ctx.globalAlpha=wfade*0.40;
+        ctx.strokeStyle=cfg[1]; ctx.lineWidth=1; ctx.setLineDash([7,4]);
         ctx.beginPath(); ctx.moveTo(0,wy); ctx.lineTo(W-64,wy); ctx.stroke(); ctx.setLineDash([]);
+        ctx.globalAlpha=wfade;
         /* label dinding SINGKAT (arahan pemilik — label lawas
            "DINDING ASK … · $… · awet …" dawa banget, nutupi candle
            lan tabrakan karo skala rega): mung SISI + UKURAN + REGA
@@ -3153,12 +3492,12 @@ function drawChart(){
            lan ambane label diwatesi mandeg ing pinggir plot
            (W-64) supaya ora mlebu ngisor skala rega. */
         var wlabel=cfg[2]+fmt(st.sz,m.szDec)+" "+m.unit+" · "+fmt(drawPx,m.dec);
-        ctx.font="bold 9px -apple-system,'Segoe UI',Roboto,sans-serif";
-        var wtw=ctx.measureText(wlabel).width, chipY= wy<20? wy+4 : wy-17;
+        ctx.font="bold 8px -apple-system,'Segoe UI',Roboto,sans-serif";
+        var wtw=ctx.measureText(wlabel).width, chipY= wy<20? wy+4 : wy-16;
         var chipW=Math.min(wtw+10, Math.max(30,(W-64)-6));
-        ctx.fillStyle= cfg[0]==="bid"? "rgba(3,26,18,.78)" : "rgba(30,4,38,.78)";
-        ctx.fillRect(6,chipY,chipW,13);
-        ctx.fillStyle=cfg[1]; ctx.fillText(wlabel,11,chipY+10);
+        ctx.fillStyle= cfg[0]==="bid"? "rgba(3,26,18,.39)" : "rgba(30,4,38,.39)";
+        ctx.fillRect(6,chipY,chipW,12);
+        ctx.fillStyle=cfg[1]; ctx.fillText(wlabel,11,chipY+9);
         ctx.font="10px ui-monospace,Menlo,monospace";
         ctx.restore();
       });
@@ -5209,6 +5548,11 @@ document.querySelectorAll("[data-itv]").forEach(function(b){
        interval terpilih di fetchAllCandles() + resubCandles() di bawah */
     candleFetchAt={};
     candleSrc={ btc:"hl", gold:"hl" };
+    /* ganti timeframe = reset penuh sing disengaja pengguna — kahanan
+       histeresis sumber candle melu direset (akuisisi anyar), padha
+       karo candleSrc & buffer sing dibuwang ndek kene */
+    binH={ btc:{hlSince:0,freshSince:0,lastAt:0,repairAt:0}, gold:{hlSince:0,freshSince:0,lastAt:0,repairAt:0} };
+    binApplyNext=false;
     MARKETS.forEach(function(m){ M[m.id].candles=[]; });
     document.querySelectorAll("[data-itv]").forEach(function(x){ x.setAttribute("aria-pressed", x===b? "true":"false"); });
     fetchAllCandles(); resubCandles(); startCandleSource(); drawChart(); syncAutoDepth();
@@ -5244,9 +5588,9 @@ function setMode(mode){
   bRef.setAttribute("aria-pressed", mode==="refresh"? "true":"false");
   if(mode==="live"){
     setStatus("poll","MENGHUBUNGKAN…");
-    fetchSnapshot(); fetchRecentTrades(); startWS(); startScanWS(); startCandleSource();
+    fetchSnapshot(); fetchRecentTrades(); startWS(); startScanWS(); startCandleSource(); startXauCascade();
   } else {
-    stopWS(); stopScanWS(); stopPolling(); stopTV(); stopBinance();
+    stopWS(); stopScanWS(); stopPolling(); stopTV(); stopBinance(); stopXauCascade();
     setStatus("poll","MODE REFRESH · MANUAL");
     fetchSnapshot();
   }
@@ -5303,7 +5647,7 @@ function updateDiag(){
   if(srcEl){
     /* label "Sumber:": sumber candle aktif per simbol + basis
        terukur — TIDAK lagi menampilkan percobaan TradingView */
-    function srcName(id){ return candleSrc[id]==="bin"? "BINANCE SPOT" : candleSrc[id]==="paxg"? "PAXG ≈SPOT" : ((bin.pending&&bin.id===id)? "BINANCE…" : "HL CADANGAN"); }
+    function srcName(id){ return candleSrc[id]==="bin"? "BINANCE SPOT" : candleSrc[id]==="paxg"? "PAXG ≈SPOT" : ((bin.pending&&bin.id===id&&!(binH[id]&&binH[id].hlSince>0))? "BINANCE…" : "HL CADANGAN"); }
     var bB=computeBasis("btc"), bG=computeBasis("gold");
     srcEl.textContent="BTC "+srcName("btc")+" · XAU "+srcName("gold")
       +" · Basis BTC "+(bB==null? "—" : fmtBasis(bB,0))
