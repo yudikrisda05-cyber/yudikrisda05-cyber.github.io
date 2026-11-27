@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pembuat Hash Sandi — JAMET TERMINAL</title>
+<style>
+  body{margin:0;background:#060a10;color:#dbe4f0;font-family:ui-monospace,Menlo,Consolas,monospace;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+  .card{background:#0a0f16;border:1px solid #1c2940;border-radius:14px;padding:22px;max-width:420px;width:100%}
+  h1{font-size:16px;margin:0 0 4px;color:#f0c84b;letter-spacing:1px}
+  p{font-size:12px;line-height:1.6;color:#8fa3b8;margin:6px 0}
+  label{display:block;font-size:11px;color:#8fa3b8;margin:14px 0 5px;letter-spacing:.5px}
+  input{width:100%;box-sizing:border-box;background:#060a10;border:1px solid #263650;border-radius:8px;color:#fff;padding:11px;font-size:15px}
+  button{width:100%;margin-top:16px;background:#12312a;color:#2ee6a8;border:1px solid #1f5c4d;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer}
+  .hash{margin-top:16px;background:#060a10;border:1px dashed #f0c84b;border-radius:8px;padding:11px;font-size:11px;word-break:break-all;color:#f0c84b;display:none}
+  .err{color:#ff4d6a;font-size:12px;min-height:16px;margin-top:8px}
+  .warn{color:#f0c84b}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>JAMET TERMINAL</h1>
+  <p><b>Pembuat Hash Sandi Akses.</b> Kaca iki mlaku 100% ndek piranti sampean — sandi sing diketik ora dikirim menyang endi-endi.</p>
+  <label>SANDI AKSES ANYAR (minimal 8 karakter, luwih apik frasa dawa)</label>
+  <input id="p1" type="password" autocomplete="new-password">
+  <label>KETIK MANEH SANDINE</label>
+  <input id="p2" type="password" autocomplete="new-password">
+  <div class="err" id="err"></div>
+  <button id="go">GAWE HASH</button>
+  <div class="hash" id="out"></div>
+  <p class="warn">Salin HASH sing metu (64 karakter) lan kirim menyang JAMET ndek WhatsApp. Aja ngirim sandine dhewe — cukup hash-e wae.</p>
+</div>
+<script>
+const SALT = "JAMETGATEv2|";
+const ITER = 10000;
+async function hashPassword(pw){
+  const enc = new TextEncoder();
+  let buf = enc.encode(SALT + pw);
+  for(let i=0;i<ITER;i++){
+    buf = new Uint8Array(await crypto.subtle.digest("SHA-256", buf));
+  }
+  return Array.from(buf).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+document.getElementById("go").addEventListener("click", async ()=>{
+  const p1 = document.getElementById("p1").value;
+  const p2 = document.getElementById("p2").value;
+  const err = document.getElementById("err");
+  const out = document.getElementById("out");
+  err.textContent = ""; out.style.display = "none";
+  if(p1.length < 8){ err.textContent = "Sandine kurang dawa — minimal 8 karakter."; return; }
+  if(p1 !== p2){ err.textContent = "Loro-lorone ora padha — ketik maneh."; return; }
+  const h = await hashPassword(p1);
+  out.textContent = h;
+  out.style.display = "block";
+});
+</script>
+</body>
+</html>
