@@ -314,7 +314,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   .js-wait{color:var(--muted)}
   .js-note{font-size:9.5px;color:var(--dim);margin-top:2px;line-height:1.4}
   /* bar nama zona personal (pengganti dialog penamaan bawaan browser yang tidak jalan di iframe) */
-  .zonenamebar{display:none;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 8px;background:var(--overlay-bg);border:1px solid var(--gold-line);border-radius:10px;font-size:11px;color:var(--gold);font-weight:700;position:absolute;top:80px;left:50%;transform:translateX(-50%);z-index:7;width:min(94%,460px);box-shadow:0 3px 14px var(--shadow)}
+  .zonenamebar{display:none;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 8px;background:var(--overlay-bg);border:1px solid var(--gold-line);border-radius:10px;font-size:11px;color:var(--gold);font-weight:700;position:absolute;top:142px;left:50%;transform:translateX(-50%);z-index:7;width:min(94%,460px);box-shadow:0 3px 14px var(--shadow)}
   .zonenamebar.on{display:flex}
   .zonenamebar input{flex:1;min-width:130px;background:var(--input-bg);border:1px solid var(--gold-line);border-radius:8px;color:var(--ink);font-size:12px;padding:7px 10px;min-height:32px;font-family:inherit}
   .zonenamebar button{border:1px solid var(--gold-line);background:var(--panel2);color:var(--gold);border-radius:999px;font-size:10.5px;font-weight:800;padding:0 12px;min-height:30px;cursor:pointer;letter-spacing:.03em}
@@ -333,7 +333,12 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   /* tumpukan panel ngambang pojok tengen ndhuwur chart: wadhah flex
      kolom — panel JSNR anak pertama, panel SKOR anak kapindho ing
      ngisore; nek panel JSNR didhelikake, panel SKOR munggah dhewe */
-  .panelstack{position:absolute;top:110px;right:70px;z-index:4;width:238px;max-width:calc(100% - 84px);display:flex;flex-direction:column;gap:6px;pointer-events:none}
+  /* panelstack dijangkar ing NGISORE legenda OHLC (legenda sakbaris
+     ±30px ing layar amba) ben panel JSNR/SKOR ora tau numpuk teks
+     legenda — ing ambane HP legenda kebungkus nganti 4 baris, dadi
+     jangkar digeser luwih mudhun maneh (media ≤640px) */
+  .panelstack{position:absolute;top:180px;right:70px;z-index:4;width:238px;max-width:calc(100% - 84px);display:flex;flex-direction:column;gap:6px;pointer-events:none}
+  @media(min-width:641px) and (max-width:900px){.panelstack{top:196px}}
   .panelstack>*{pointer-events:auto}
   .msnr-panel{position:relative;width:100%;background:var(--overlay-bg);border:1px solid var(--overlay-border);border-radius:3px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);font-size:10.5px;overflow:hidden;box-shadow:0 3px 14px var(--shadow)}
   /* ===== panel SKOR CONFLUENCE SMC — kulawarga visual padha karo
@@ -382,7 +387,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
      cilik mung isi simbol "▶", SKALA AUTO mung isi "↕" — gaya werna
      persis sadurunge (ijo teal / emas .gold), dhuwur & ambane sejajar
      tombol ikon fx/✎; fungsi tombol dijelasne liwat title+aria-label */
-  .ovlact.ovlicon{width:30px;padding:0;text-align:center;font-size:12.5px;letter-spacing:0;border-radius:8px}
+  .ovlact.ovlicon{width:32px;height:32px;padding:0;text-align:center;font-size:12.5px;letter-spacing:0;border-radius:8px}
   /* ===== terminal analisa: FULL-BLEED + OVERLAY ing njero chart =====
      Ora ana toolbar numpuk ing ndhuwur chart maneh: kabeh menu chart
      ngambang ing njero .chartstage (gaya SwiftEdge Depth). Kontainer
@@ -394,12 +399,23 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   .ovl{position:absolute;z-index:6;display:flex;gap:6px;align-items:flex-start;pointer-events:none}
   .ovl>*{pointer-events:auto}
   .ovl .tgl,.ovl .symtabs{background:var(--overlay-bg);border-color:var(--overlay-border);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-  .ovl-tl{top:8px;left:8px;flex-wrap:wrap;max-width:calc(100% - 84px)}
-  .ovl-tr{top:8px;right:74px;align-items:center;gap:7px}
-  .ovlbtn{border:1px solid var(--overlay-border);background:var(--overlay-bg);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--teal);border-radius:9px;width:30px;height:30px;min-height:30px;font-size:15px;line-height:1;cursor:pointer;flex:none;padding:0}
+  /* TATA LETAK RAPAT (audit kerapian): klaster kiwa = 2 baris tetep
+     (simbol, banjur timeframe ing baris dhewe sing isa digeser sisih);
+     klaster tengen = 2 baris tetep (mode, banjur countdown+ⓘ+layar
+     penuh). Ora ana baris katelu, ora ana sing numpuk utawa nutupi
+     sumbu rega 64px (kabeh klaster mandheg ≥72px saka pinggir tengen). */
+  .ovl-tl{top:8px;left:8px;flex-direction:column;flex-wrap:nowrap;gap:5px;max-width:calc(100% - 80px)}
+  .ovl-tl .tgl button,.ovl-tl .symtabs button,.ovl-tr .tgl button{min-height:32px}
+  .ovl-tl .tfr{overflow-x:auto;overflow-y:hidden;max-width:100%;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .ovl-tl .tfr::-webkit-scrollbar{display:none}
+  .ovl-tl .tfr button{flex:none}
+  .ovl-tr{top:8px;right:72px;flex-direction:column;align-items:flex-end;gap:5px}
+  .ovl-tr2{display:flex;align-items:center;gap:5px}
+  .ovl-tr2>*{pointer-events:auto}
+  .ovlbtn{border:1px solid var(--overlay-border);background:var(--overlay-bg);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--teal);border-radius:9px;width:32px;height:32px;min-height:32px;font-size:15px;line-height:1;cursor:pointer;flex:none;padding:0}
   .ovlbtn:active{border-color:var(--teal);filter:brightness(1.25)}
   .ovl .cdchip{background:var(--overlay-bg);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-  .ovl-ctrl{top:44px;left:8px;right:74px;align-items:center;flex-wrap:nowrap;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;scrollbar-width:none;background:var(--overlay-bg);border:1px solid var(--overlay-border);border-radius:10px;padding:3px 5px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:auto;touch-action:pan-x}
+  .ovl-ctrl{top:96px;left:8px;right:72px;align-items:center;flex-wrap:nowrap;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;scrollbar-width:none;background:var(--overlay-bg);border:1px solid var(--overlay-border);border-radius:10px;padding:3px 5px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:auto;touch-action:pan-x}
   .ovl-ctrl::-webkit-scrollbar{display:none}
   .ovl-ctrl>*{flex:none}
   .ovl-ctrl .ovlbasis{flex:1 1 auto;min-width:0;max-width:none}
@@ -417,7 +433,23 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   .fxbtn{border:1px solid var(--gold-line);background:var(--overlay-bg);color:var(--gold);border-radius:999px;font-size:9.5px;font-weight:800;letter-spacing:.04em;padding:0 8px;min-height:22px;cursor:pointer;flex:none;pointer-events:auto;white-space:nowrap}
   /* varian ikon kompak (arahan pemilik): tombol kothak cilik mung isi
      simbol "fx" / "✎" tanpa tembung, dhuwur sejajar bar kontrol */
-  .fxbtn.fxicon{width:30px;padding:0;text-align:center;font-size:12.5px;letter-spacing:0;border-radius:8px}
+  .fxbtn.fxicon{width:32px;height:32px;padding:0;text-align:center;font-size:12.5px;letter-spacing:0;border-radius:8px}
+  /* tombol SETUP ing bar kontrol: mbukak popup SETUP (isi preset rega,
+     sumber, kalibrasi, alert — kabeh dipindah saka klaster overlay) */
+  .fxbtn.setupbtn{border-radius:8px;min-height:32px;padding:0 12px;font-size:10.5px}
+  /* teks status kompak ing bar kontrol: preset rega + sumber aktif,
+     contone "OANDA +0,25% · TRADOOR" — diisi updateSetupState() */
+  #setupState{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px;font-weight:800;color:var(--muted);letter-spacing:.02em;white-space:nowrap;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+  /* ===== POPUP SETUP — grup kontrol sing dipindah saka permukaan
+     overlay: PRESET REGA / SUMBER / KALIBRASI / ALERT, saben grup
+     nganggo label dhewe; wadhah & prilaku persis kulawarga .indpop ===== */
+  .setuppop .setup-sec{margin-top:10px}
+  .setuppop .setup-sec:first-of-type{margin-top:2px}
+  .setuppop .setup-lab{display:block;font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--dim);margin-bottom:5px}
+  .setuppop #sumberSeg{grid-template-columns:repeat(2,1fr)}
+  .setuppop #tdPresetNote{display:block;margin-top:5px;white-space:normal;line-height:1.45}
+  .setuppop .setup-btns{display:flex;gap:6px;flex-wrap:wrap}
+  .setuppop #btnKalibrasi,.setuppop #btnAlerts,.setuppop #btnDual{min-height:32px;padding:0 14px;font-size:10.5px}
   .fxbtn[aria-expanded="true"]{background:var(--gold);color:var(--on-gold)}
   /* ===== PRESET KONVERSI REGA + KALIBRASI =====
      Seg preset SPOT|OANDA|ICMARKETS manggon ing klaster overlay
@@ -428,13 +460,13 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
      kewaca & isa ditutul (ora ketutup bar liyane). Dialog kalibrasi
      = kothak ngambang ing njero area chart, kulawarga visual
      .indpop / .zonenamebar. */
-  #presetSeg button{padding:0 7px;font-size:9.5px;min-height:24px;letter-spacing:.02em}
+  #presetSeg button{padding:0 7px;font-size:9.5px;min-height:32px;letter-spacing:.02em}
   #btnKalibrasi{border:1px solid var(--gold-line);background:var(--overlay-bg);color:var(--gold);border-radius:999px;font-size:9.5px;font-weight:800;letter-spacing:.04em;padding:0 9px;min-height:24px;cursor:pointer;flex:none;pointer-events:auto;white-space:nowrap;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
   #btnKalibrasi:active{filter:brightness(1.25)}
   #calibLabel{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:9.5px;font-weight:800;color:var(--teal);letter-spacing:.02em;white-space:nowrap;font-variant-numeric:tabular-nums;padding:0 2px}
-  .calibdlg{display:none;position:absolute;top:80px;left:50%;transform:translateX(-50%);z-index:8;width:min(94%,360px);background:var(--popup-bg);border:1px solid var(--gold-line);border-radius:12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:10px 12px;box-shadow:0 6px 22px var(--shadow);font-size:11.5px;color:var(--ink)}
+  .calibdlg{display:none;position:absolute;top:142px;left:50%;transform:translateX(-50%);z-index:8;width:min(94%,360px);background:var(--popup-bg);border:1px solid var(--gold-line);border-radius:12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:10px 12px;box-shadow:0 6px 22px var(--shadow);font-size:11.5px;color:var(--ink)}
   .calibdlg.on{display:block}
-  @media(max-width:640px){.calibdlg{top:106px}}
+  @media(max-width:640px){.calibdlg{top:142px}}
   .calibdlg .calib-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
   .calibdlg .calib-title{font-size:10.5px;font-weight:800;letter-spacing:.1em;color:var(--gold)}
   .calibdlg .calib-row{margin:4px 0;color:var(--muted);line-height:1.5}
@@ -452,7 +484,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
      Kabeh gaya fitur anyar manggon ing kene; mode ORIGINAL ora
      ndemek siji-sijine aturan lawas. */
   .sumberlab{font-size:8.5px;font-weight:800;letter-spacing:.08em;color:var(--dim);align-self:center}
-  #sumberSeg button{padding:0 7px;font-size:9.5px;min-height:24px;letter-spacing:.02em}
+  #sumberSeg button{padding:0 7px;font-size:9.5px;min-height:32px;letter-spacing:.02em}
   #sumberSeg button[aria-pressed="true"]{background:var(--gold-mid);border-color:var(--gold-line);color:var(--gold)}
   #tdPresetNote{font-size:9px;color:var(--gold);letter-spacing:.02em;white-space:nowrap}
   body.td-on #presetSeg{opacity:.45}
@@ -527,7 +559,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   .td-dualwrap{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
   .td-dualwrap canvas{display:block;width:100%;height:230px}
   @media(max-width:1099px){ .td-dualwrap{display:none!important} }
-  .indpop{position:absolute;left:8px;top:80px;z-index:7;max-height:calc(100% - 88px);overflow-y:auto;width:262px;max-width:calc(100% - 88px);background:var(--popup-bg);border:1px solid var(--overlay-border);border-radius:12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:9px;box-shadow:0 6px 22px var(--shadow);display:none}
+  .indpop{position:absolute;left:8px;top:142px;z-index:7;max-height:calc(100% - 150px);overflow-y:auto;width:262px;max-width:calc(100% - 88px);background:var(--popup-bg);border:1px solid var(--overlay-border);border-radius:12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:9px;box-shadow:0 6px 22px var(--shadow);display:none}
   .indpop.on{display:block}
   .indpop-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
   .indpop-title{font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--muted)}
@@ -557,22 +589,25 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   .drawlist button[aria-pressed="true"]{background:var(--teal);color:var(--on-up);border-color:var(--teal)}
   .drawlist button.danger{color:var(--ask-tx)}
   .drawlist button:active{filter:brightness(1.2)}
-  .term-legend{position:absolute;top:80px;left:10px;z-index:3;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--muted);background:var(--overlay-bg-soft);border:1px solid var(--line2);border-radius:8px;padding:5px 9px;pointer-events:none;max-width:calc(100% - 84px);line-height:1.5}
+  .term-legend{position:absolute;top:142px;left:10px;z-index:3;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--muted);background:var(--overlay-bg-soft);border:1px solid var(--line2);border-radius:8px;padding:5px 9px;pointer-events:none;max-width:calc(100% - 84px);line-height:1.5}
   .term-legend b{color:var(--ink)}
   /* sumber candle saiki gabung ing baris legenda OHLC (pengganti chip
      ngambang sing dibusak): teks cilik warna kalem mburi timeframe */
   .term-legend .legsrc{color:var(--dim);font-size:10px;letter-spacing:.03em}
   .term-hint{font-size:11px;color:var(--dim);padding:7px 12px;border-top:1px solid var(--line2);line-height:1.55}
   @media(max-width:640px){
-    .ovl-tl{flex-direction:column;flex-wrap:nowrap;gap:5px}
-    .ovl-tl .tgl button,.ovl-tl .symtabs button{padding:0 6px;font-size:10.5px;min-height:22px}
-    .ovl-tr{flex-wrap:wrap;justify-content:flex-end;max-width:178px;gap:6px}
-    .ovl-tr .tgl button{padding:0 6px;font-size:10px;min-height:22px}
-    .term-legend{top:106px}
-    .panelstack{top:140px}
-    .zonenamebar{top:106px}
-    .ovl-ctrl{top:70px;right:8px}
-    .indpop{top:106px;max-height:calc(100% - 114px)}
+    /* ambane HP: geometri tumpukan overlay PADHA karo desktop (2 baris
+       saben klaster + bar kontrol ing ngisore, mandheg sadurunge sumbu
+       rega) — sing owah mung ambane maksimum klaster kiwa: baris
+       timeframe kudu mandheg sadurunge klaster tengen (countdown/ⓘ/
+       layar penuh), turahane digeser sisih ing njero barise dhewe */
+    .ovl-tl{max-width:calc(100% - 214px)}
+    .ovl-tl .tgl button,.ovl-tl .symtabs button{padding:0 6px}
+    .ovl-tr .tgl button{padding:0 6px}
+    .term-legend{top:142px}
+    .panelstack{top:226px}
+    .zonenamebar{top:142px}
+    .indpop{top:142px;max-height:calc(100% - 150px)}
   }
   @media(max-width:480px){.cdt{display:none}}
   .ohlc{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line2)}
@@ -838,7 +873,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
   #gateOverlay{display:none}
   body.gate-locked #gateOverlay{display:flex}
   #gateOverlay{position:fixed;inset:0;z-index:1000;background:var(--bg);background-image:radial-gradient(1100px 480px at 75% -80px,var(--glow-a),transparent 65%),radial-gradient(900px 420px at 8% -60px,var(--glow-b),transparent 60%);align-items:center;justify-content:center;padding:20px 16px;overflow-y:auto}
-  .gate-card{width:100%;max-width:360px;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:26px 22px 20px;box-shadow:0 10px 40px var(--shadow)}
+  .gate-card{width:100%;max-width:360px;margin:auto;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:26px 22px 20px;box-shadow:0 10px 40px var(--shadow)}
   .gate-logo{display:flex;justify-content:center;margin-bottom:10px}
   .gate-title{text-align:center;font-size:19px;font-weight:800;letter-spacing:2.2px;color:var(--text);line-height:1.18}
   .gate-title span{color:var(--teal)}
@@ -942,7 +977,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 01:02 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 01:18 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -1071,19 +1106,22 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
             <div class="js-note">Level JSNR saka mesin ANALISA (Binance/PAXG) — referensi, ora digambar ndek njero chart OANDA</div>
           </div>
         </div>
-        <!-- OVERLAY MENU CHART — ngambang ing njero area chart (gaya
-             SwiftEdge): simbol+timeframe ndhuwur-kiwa, mode+countdown+
-             layar penuh ndhuwur-tengen, lan BAR KONTROL (tombol ikon
-             fx + ✎ + ▶ KE TERBARU + ↕ SKALA AUTO, banjur teks BASIS)
-             sakbaris ing ndhuwur persis ngisore bar chip simbol/timeframe.
-             Kabeh id & handler tetep persis; mung posisine wadhah
-             sing dipindah. -->
+        <!-- OVERLAY MENU CHART — ngambang ing njero area chart.
+             TATA LETAK RAPAT (audit kerapian, ora ana obyek tabrakan):
+             kiwa-ndhuwur = 2 baris tetep: chip simbol, banjur chip
+             timeframe ing barise dhewe sing isa digeser sisih (mandheg
+             sadurunge sumbu rega 64px); tengen-ndhuwur = 2 baris tetep:
+             toggle ANALISA|OANDA, banjur countdown + ⓘ + layar penuh
+             sakbaris kompak. Preset rega, SUMBER, KALIBRASI & ALERT
+             WIS PINDAH menyang popup SETUP ing bar kontrol — status
+             aktife tetep katon minangka teks kompak #setupState ing
+             bar kontrol. Kabeh id & handler tetep persis. -->
         <div class="ovl ovl-tl">
           <div class="symtabs" role="group" aria-label="Pilih simbol terminal">
             <button id="tab-btc" aria-pressed="false">BTC</button>
             <button id="tab-gold" aria-pressed="true">XAU</button>
           </div>
-          <div class="tgl" role="group" aria-label="Timeframe candle">
+          <div class="tgl tfr" role="group" aria-label="Timeframe candle">
             <button data-itv="1m">1m</button>
             <button data-itv="5m">5m</button>
             <button data-itv="15m" aria-pressed="true">15m</button>
@@ -1097,40 +1135,30 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
             <button id="modeAnalisa" aria-pressed="true">ANALISA</button>
             <button id="modeOanda" aria-pressed="false">OANDA</button>
           </div>
-          <div class="tgl" id="presetSeg" role="group" aria-label="Preset konversi harga tampilan">
-            <button data-preset="SPOT" aria-pressed="true">SPOT</button>
-            <button data-preset="OANDA" aria-pressed="false">OANDA</button>
-            <button data-preset="ICMARKETS" aria-pressed="false">ICMARKETS</button>
+          <div class="ovl-tr2">
+            <span class="cdchip" title="Sisa waktu nganti tutup candle timeframe aktif"><span class="cdt">TUTUP</span> <b id="cdTime">--:--</b></span>
+            <button class="ovlbtn" data-info="termInfo" aria-expanded="false" title="Panduan lengkap chart" aria-label="Panduan lengkap chart">ⓘ</button>
+            <button class="ovlbtn" id="btnFs" title="Layar penuh" aria-label="Layar penuh">⛶</button>
           </div>
-          <span class="sumberlab" id="sumberLab">SUMBER</span>
-          <div class="tgl" id="sumberSeg" role="group" aria-label="Preset sumber data">
-            <button data-sumber="ORIGINAL" aria-pressed="true">ORIGINAL</button>
-            <button data-sumber="TRADOOR" aria-pressed="false">TRADOOR</button>
-          </div>
-          <span id="tdPresetNote" style="display:none">preset rega mung ndek mode ORIGINAL</span>
-          <span class="cdchip" title="Sisa waktu nganti tutup candle timeframe aktif"><span class="cdt">TUTUP</span> <b id="cdTime">--:--</b></span>
-          <button class="ovlbtn" id="btnFs" title="Layar penuh" aria-label="Layar penuh">⛶</button>
-          <button class="ovlbtn" data-info="termInfo" aria-expanded="false" title="Panduan lengkap chart" aria-label="Panduan lengkap chart">ⓘ</button>
         </div>
-        <!-- BAR KONTROL NDHUWUR CHART — bar sing biyen ing ngisor chart
-             saiki PINDAH mrene (arahan pemilik): sakbaris overlay
-             ngambang ing sisih ndhuwur chart, persis ngisore bar chip
-             simbol/timeframe. Kabeh tombol saiki IKON KOTHAK CILIK
-             nglumpuk ing kiwa: fx (indikator) + ✎ (gambar) + ▶
-             (KE TERBARU) + ↕ (SKALA AUTO); sakwise kuwi teks BASIS
-             ngisi papan turah ing tengen (di-truncate nek sempit).
-             Kabeh id/handler/logika tombol ora owah — mung tampilan &
-             urutan wadhah-e. Ing mode OANDA bar iki didhelikake
-             total (setChartViewMode). -->
+        <!-- BAR KONTROL NDHUWUR CHART — sakbaris overlay ngambang ing
+             ngisore tumpukan chip (top:96px, mandheg sadurunge sumbu
+             rega ing kabeh ambane): ikon fx (indikator) + ✎ (gambar) +
+             ▶ (KE TERBARU) + ↕ (SKALA AUTO), banjur tombol SETUP sing
+             mbukak popup SETUP (preset rega + sumber + kalibrasi +
+             alert), banjur teks status ngisi papan turah: #setupState
+             (preset + sumber kompak), teks BASIS, lan label kalibrasi
+             (di-truncate nek sempit). Kabeh id/handler/logika tombol
+             ora owah. Ing mode OANDA bar iki didhelikake total
+             (setChartViewMode). -->
         <div class="ovl ovl-ctrl" id="ctrlBar">
           <button class="fxbtn fxicon" id="btnIndPop" aria-expanded="false" aria-controls="indPop" title="Indikator" aria-label="Buka daftar indikator">fx</button>
           <button class="fxbtn fxicon" id="btnDrawPop" aria-expanded="false" aria-controls="drawPop" title="Alat gambar" aria-label="Buka alat gambar">✎</button>
           <button id="btnLatest" class="ovlact ovlicon" style="display:none" title="Ke terbaru — kembali ke tepi live" aria-label="Ke terbaru, kembali ke tepi live">▶</button>
           <button id="btnScale" class="ovlact gold ovlicon" style="display:none" title="Skala otomatis" aria-label="Kembali ke skala otomatis">↕</button>
-          <button id="btnKalibrasi" title="Kalibrasi offset preset aktif terhadap harga referensi" aria-label="Kalibrasi preset harga">KALIBRASI</button>
-          <button id="btnAlerts" title="Alert rega — prengetan nek rega nyabrang level" aria-label="Buka alert rega">ALERT</button>
-          <button id="btnDual" aria-pressed="false" title="Chart dobel (mung layar amba): simbol liyane ing panel kapindho" aria-label="Saklar chart dobel">CHART 2</button>
+          <button class="fxbtn setupbtn" id="btnSetupPop" aria-expanded="false" aria-controls="setupPop" title="Setup: preset rega, sumber data, kalibrasi, alert" aria-label="Buka setup rega lan sumber data">SETUP</button>
           <span class="td-perpmark" id="tdPerpMark" style="display:none" title="Rega sing ditampilne = rega perpetual (mode SUMBER TRADOOR)">PERP</span>
+          <span id="setupState" title="Preset rega + sumber data aktif">SPOT · ORIGINAL</span>
           <span class="ovlbasis" id="basisLiveChip" style="display:none"></span>
           <span id="calibLabel" style="display:none"></span>
         </div>
@@ -1213,6 +1241,40 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
             <button data-tool="rect" aria-pressed="false"><span class="dic">▭</span> Kotak Zona</button>
             <button data-tool="erase" aria-pressed="false"><span class="dic">⌫</span> Hapus Objek</button>
             <button id="btnClearDraw" class="danger"><span class="dic">✕</span> Bersihkan</button>
+          </div>
+        </div>
+        <!-- POPUP SETUP — kontrol sing DIPINDAH saka klaster overlay
+             chart (audit kerapian: permukaan chart mung isi chip
+             simbol/timeframe + mode + countdown; liyane mlebu kene):
+             (a) PRESET REGA, (b) SUMBER, (c) KALIBRASI, (d) ALERT —
+             saben grup nganggo label dhewe. Kabeh id/handler/state
+             tetep persis — iki mung mindhah wadhah, dudu mbangun
+             maneh. Pola bukak/tutup persis popup fx/GAMBAR: tombol
+             SETUP ing bar kontrol, ✕, utawa nutul area chart.
+             Dialog KALIBRASI & popup ALERT tetep mbukak saka kene
+             (lan nutup popup SETUP dhisik ben ora tabrakan). -->
+        <div class="indpop setuppop" id="setupPop" aria-label="Setup rega lan sumber data">
+          <div class="indpop-head"><span class="indpop-title">SETUP</span><button class="indpop-x" id="setupPopClose" aria-label="Tutup setup" title="Tutup">✕</button></div>
+          <div class="setup-sec">
+            <span class="setup-lab">PRESET REGA</span>
+            <div class="tgl" id="presetSeg" role="group" aria-label="Preset konversi harga tampilan">
+              <button data-preset="SPOT" aria-pressed="true">SPOT</button>
+              <button data-preset="OANDA" aria-pressed="false">OANDA</button>
+              <button data-preset="ICMARKETS" aria-pressed="false">ICMARKETS</button>
+            </div>
+            <span id="tdPresetNote" style="display:none">preset rega mung ndek mode ORIGINAL</span>
+          </div>
+          <div class="setup-sec">
+            <span class="sumberlab setup-lab" id="sumberLab">SUMBER</span>
+            <div class="tgl" id="sumberSeg" role="group" aria-label="Preset sumber data">
+              <button data-sumber="ORIGINAL" aria-pressed="true">ORIGINAL</button>
+              <button data-sumber="TRADOOR" aria-pressed="false">TRADOOR</button>
+            </div>
+          </div>
+          <div class="setup-sec setup-btns">
+            <button id="btnKalibrasi" title="Kalibrasi offset preset aktif terhadap harga referensi" aria-label="Kalibrasi preset harga">KALIBRASI</button>
+            <button id="btnAlerts" title="Alert rega — prengetan nek rega nyabrang level" aria-label="Buka alert rega">ALERT</button>
+            <button id="btnDual" aria-pressed="false" title="Chart dobel (mung layar amba): simbol liyane ing panel kapindho" aria-label="Saklar chart dobel">CHART 2</button>
           </div>
         </div>
         <!-- DIALOG KALIBRASI PRESET — kothak cilik ngambang ing njero
@@ -1478,17 +1540,17 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
       <p>SMC: adhedhasar Smart Money Concepts [LuxAlgo] (CC BY-NC-SA 4.0)</p>
       <p>SKOR: skor confluence SMC (Struktur H1 + Zona premium/discount H1 + Sweep M15 + FVG M5 + Order Block M5; SETUP VALID nek ≥3/5) dietung saka candle Binance sing WES CLOSE (XAU = PAXG ≈ spot), aturan diporting saka desain SMC open-source; mung analisa, dudu perintah order.</p>
       <p>PRESISI: level saka rega swing H1 Binance/PAXG sing wes close + PDH/PDL, tanpa pelebaran ATR; band emas '2 METODE' = level PRESISI mlebu ndek njero zona JSNR (confluence loro metode); mung analisa, dudu perintah order.</p>
-      <p><b>Preset konversi harga (SPOT / OANDA / ICMARKETS)</b> di pojok kanan atas chart adalah <b>konversi TAMPILAN</b> — <b>bukan</b> data live OANDA atau IC Markets: aplikasi tidak menarik harga dari kedua broker itu. Preset OANDA dan ICMARKETS membawa <b>konversi OTOMATIS +0,25%</b> yang langsung aktif sekali klik tanpa input apa pun: angka itu titik tengah diskon tipikal PAXG (sumber harga emas aplikasi ini) terhadap spot — median 30 hari −0,22% dan minggu berjalan −0,24% (data Nov 2026) — sementara OANDA dan IC Markets sama-sama mengutip harga yang pada dasarnya adalah spot mid, jadi koreksinya sama untuk keduanya. Angka +0,25% itu <b>angka tipikal, bukan umpan live</b> dari OANDA/IC Markets. Untuk ketepatan penuh, <b>kalibrasi manual menimpa konversi otomatis</b>: tekan <b>KALIBRASI</b>, ketik harga referensi yang sedang Anda lihat di OANDA/IC Markets, dan aplikasi menyimpan selisihnya (offset tetap) per preset dan per simbol (BTC/XAU); tekan <b>RESET</b> untuk menghapus kalibrasi manual dan kembali ke otomatis +0,25%. Semua harga yang ditampilkan — candle, sumbu harga, zona JSNR, PRESISI, dinding, panel, strip JSNR mode OANDA, orderbook, scanner, dan tape — dikonversi dengan cara yang sama. Data asli (candle tersimpan, mesin analisa, buku order) tidak pernah diubah; yang berubah hanya tampilan. Preset <b>SPOT</b> = harga asli dari sumber aplikasi tanpa konversi apa pun. Selisih harga antar pasar <b>bergerak perlahan seiring waktu</b> (offset melayang), jadi kalibrasi manual pun bisa terasa meleset setelah beberapa lama — kalibrasi ulang kapan pun terasa tidak pas. Label kecil di bar kontrol chart menunjukkan mode aktif preset: "≈OANDA +0,25% otomatis" atau "≈OANDA +$… kalibrasi".</p>
+      <p><b>Preset konversi harga (SPOT / OANDA / ICMARKETS)</b> di popup SETUP (tombol SETUP di bar kontrol chart) adalah <b>konversi TAMPILAN</b> — <b>bukan</b> data live OANDA atau IC Markets: aplikasi tidak menarik harga dari kedua broker itu. Preset OANDA dan ICMARKETS membawa <b>konversi OTOMATIS +0,25%</b> yang langsung aktif sekali klik tanpa input apa pun: angka itu titik tengah diskon tipikal PAXG (sumber harga emas aplikasi ini) terhadap spot — median 30 hari −0,22% dan minggu berjalan −0,24% (data Nov 2026) — sementara OANDA dan IC Markets sama-sama mengutip harga yang pada dasarnya adalah spot mid, jadi koreksinya sama untuk keduanya. Angka +0,25% itu <b>angka tipikal, bukan umpan live</b> dari OANDA/IC Markets. Untuk ketepatan penuh, <b>kalibrasi manual menimpa konversi otomatis</b>: buka <b>SETUP</b> lalu tekan <b>KALIBRASI</b>, ketik harga referensi yang sedang Anda lihat di OANDA/IC Markets, dan aplikasi menyimpan selisihnya (offset tetap) per preset dan per simbol (BTC/XAU); tekan <b>RESET</b> untuk menghapus kalibrasi manual dan kembali ke otomatis +0,25%. Semua harga yang ditampilkan — candle, sumbu harga, zona JSNR, PRESISI, dinding, panel, strip JSNR mode OANDA, orderbook, scanner, dan tape — dikonversi dengan cara yang sama. Data asli (candle tersimpan, mesin analisa, buku order) tidak pernah diubah; yang berubah hanya tampilan. Preset <b>SPOT</b> = harga asli dari sumber aplikasi tanpa konversi apa pun. Selisih harga antar pasar <b>bergerak perlahan seiring waktu</b> (offset melayang), jadi kalibrasi manual pun bisa terasa meleset setelah beberapa lama — kalibrasi ulang kapan pun terasa tidak pas. Label kecil di bar kontrol chart menunjukkan mode aktif preset: "≈OANDA +0,25% otomatis" atau "≈OANDA +$… kalibrasi".</p>
       <p>Heatmap orderbook (toggle HEAT di popup indikator) digambar sebagai lapisan latar chart dari rekaman buku jeru sesi ini — ia hanya menampilkan data sejak aplikasi dibuka pada sesi ini (rekaman disimpan di memori perangkat, hingga ±3 jam terakhir), bukan histori dari sebelum aplikasi dibuka.</p>
       <p>Footprint (toggle FOOT di popup indikator) diagregasi dari aggTrades Binance untuk candle yang terlihat saat mode FOOT aktif, bukan footprint tick-persis — candle di luar tampilan atau dari masa sebelum mode dihidupkan tidak memiliki data footprint dan digambar sebagai candle biasa; stacked imbalance dihitung dari perbandingan diagonal antar level harga di dalam candle yang sama.</p>
       <p>Absorption zones (toggle ABSORB di popup indikator) dihitung dari candle + delta taker-buy Binance yang tersimpan pada candle (delta = 2×takerBuy − volume, sama seperti kolom Δ pada STATS): candle dianggap absorpsi bila volumenya ≥1,5× rata-rata volume 20 candle sebelumnya dan |delta%| ≥40%, tetapi hasil harganya tidak sebanding — delta negatif kuat namun close tetap di paruh atas rentang candle (penjual diserap, zona mint) atau delta positif kuat namun close di paruh bawah rentang (pembeli diserap, zona merah muda). Zona digambar dari low–high candle itu dan memanjang ke kanan sampai ada body close menembus batasnya; maksimal 6 zona aktif terbaru yang digambar. Bila candle tidak memiliki data taker-buy (sumber cadangan Hyperliquid), ABSORB tidak menggambar apa pun.</p>
       <p>TPO profile (toggle TPO di popup indikator) adalah profil Time Price Opportunity hari ini (UTC): hari dibagi blok 30 menit (huruf A, B, C, …), tiap blok menandai baris harga yang tersentuh rentang high–low dalam blok itu, dihitung dari candle chart yang aktif — bila timeframe lebih besar dari 30 menit, tiap candle menjadi satu blok. Baris dengan huruf terbanyak adalah POC (diserot emas + garis POC), dan 70% huruf di sekitar POC membentuk value area yang disorot lebih terang. TPO ini didekati dari rentang candle per blok 30 menit, bukan dari data tick, jadi huruf per baris adalah pendekatan, bukan hitungan tick persis.</p>
-      <p><b>Preset SUMBER data (ORIGINAL / TRADOOR)</b> di klaster kanan atas chart memilih dunia data terminal. <b>ORIGINAL</b> = pipa persis seperti sebelumnya: candle Binance Spot (BTC) / PAXG (XAU), orderbook &amp; scanner Hyperliquid + kaskade XAU Binance→OKX→Gate, tape &amp; CVD Hyperliquid. <b>TRADOOR</b> = dunia Binance USD-M Perpetual yang koheren (BTCUSDT / XAUUSDT perp): candle chart dari klines fapi + WebSocket fstream, DOM &amp; scanner dari buku jeru fapi (1.000 level), tape &amp; CVD dari aggTrades perp. Bila fapi tidak terjangkau dari jaringan perangkat (mis. blokir wilayah), pipa TRADOOR turun berurutan ke <b>OKX perp → Gate perp → sumber ORIGINAL</b>, dan sumber yang sedang aktif selalu tertulis di header panel terkait — tidak pernah halaman kosong. Mesin analisa (JSNR, SKOR, PRESISI) tetap dihitung dari candle spot/PAXG di kedua mode; khusus mode TRADOOR, harga turunan mesin yang tampil di chart dan panel/strip JSNR <b>digeser sebesar basis perp−spot live yang dihaluskan</b> supaya duduk di istilah perp chart, dan permukaan PX bertanda <b>PERP</b>. Preset konversi harga (SPOT/OANDA/ICMARKETS) <b>terkunci ke SPOT mentah selama mode TRADOOR</b> — konversi itu dikalibrasi untuk pipa spot; catatan di kontrol preset berbunyi "preset rega mung ndek mode ORIGINAL".</p>
+      <p><b>Preset SUMBER data (ORIGINAL / TRADOOR)</b> di popup SETUP (tombol SETUP di bar kontrol chart) memilih dunia data terminal. <b>ORIGINAL</b> = pipa persis seperti sebelumnya: candle Binance Spot (BTC) / PAXG (XAU), orderbook &amp; scanner Hyperliquid + kaskade XAU Binance→OKX→Gate, tape &amp; CVD Hyperliquid. <b>TRADOOR</b> = dunia Binance USD-M Perpetual yang koheren (BTCUSDT / XAUUSDT perp): candle chart dari klines fapi + WebSocket fstream, DOM &amp; scanner dari buku jeru fapi (1.000 level), tape &amp; CVD dari aggTrades perp. Bila fapi tidak terjangkau dari jaringan perangkat (mis. blokir wilayah), pipa TRADOOR turun berurutan ke <b>OKX perp → Gate perp → sumber ORIGINAL</b>, dan sumber yang sedang aktif selalu tertulis di header panel terkait — tidak pernah halaman kosong. Mesin analisa (JSNR, SKOR, PRESISI) tetap dihitung dari candle spot/PAXG di kedua mode; khusus mode TRADOOR, harga turunan mesin yang tampil di chart dan panel/strip JSNR <b>digeser sebesar basis perp−spot live yang dihaluskan</b> supaya duduk di istilah perp chart, dan permukaan PX bertanda <b>PERP</b>. Preset konversi harga (SPOT/OANDA/ICMARKETS) <b>terkunci ke SPOT mentah selama mode TRADOOR</b> — konversi itu dikalibrasi untuk pipa spot; catatan di kontrol preset berbunyi "preset rega mung ndek mode ORIGINAL".</p>
       <p><b>DOM jeru (mode TRADOOR)</b>: tab DOM menjadi tangga buku penuh yang bisa digulung — kolom ukuran | harga | perubahan (perubahan = selisih ukuran level itu vs snapshot sebelumnya, gaya pull/stack, bertanda +/− berwarna), header mid + spread menempel di atas, level MENTAH tanpa agregasi utawa akumulasi — saben baris persis siji level rega asli saka bursa ing langkah tik asline (nganti 1.000 level per sisih ing Binance, 400 ing OKX, 1.000 ing Gate), tombol KE TENGAH, dan pamilih bursa BINANCE | OKX | GATE (AUTO = kaskade). Rendering tangga di-window supaya ribuan baris tetap ringan di HP. <b>Mode ORIGINAL tidak punya tangga jeru</b>: tangga DOM-nya tetap 20 level per sisi karena memang itulah batas sumber Hyperliquid — kedalaman penuh hanya ada dari buku perp. Konversi ukuran: OKX XAU ×0,001 (ctVal), Gate XAU ×0,0001 (quanto), BTC dalam satuan koin per bursa.</p>
       <p><b>Likuidasi</b>: mode ORIGINAL memakai panel SwiftEdge (poll ±60 detik). Mode TRADOOR memakai <b>stream forceOrder Binance Futures langsung (BINANCE PERP LIVE)</b> untuk BTCUSDT &amp; XAUUSDT — waktu, sisi (LONG/SHORT yang terlikuidasi), harga, dan nilai USD, plus total berjalan per simbol selama sesi halaman ini.</p>
       <p><b>Volume Profile, TPO &amp; Footprint — basis data per mode</b>: mode ORIGINAL memakai pendekatan dari rentang candle (VPROF menyebar volume candle merata di rentang high–low; TPO menandai baris yang tersentuh rentang candle per blok 30 menit; FOOT mengagregasi aggTrades <i>spot</i> Binance untuk candle yang terlihat). Mode TRADOOR memakai <b>trade perp sungguhan</b>: aggTrades Binance Futures hari ini (UTC) ditarik mundur lewat REST (berbatas &amp; bertahap, di-cache per hari) lalu diakumulasi dari stream live — VPROF menumpuk kuantitas trade per baris harga, TPO menandai baris dari harga trade per blok 30 menit, dan FOOT mengisi candle-candle awal hari ini dari aggTrades perp, bukan hanya candle sejak aplikasi dibuka. Bila penarikan mundur mencapai batas halamannya, profil bersifat parsial untuk hari itu dan tetap ditambah stream live.</p>
       <p><b>Papan Basis Lintas Bursa</b> (tab SCAN, kedua mode) membandingkan perp XAU &amp; BTC di Binance / OKX / Gate: harga terakhir, spread bid–ask, dan basis terhadap spot Binance (BTC spot / PAXG); venue basis tertinggi ditandai MIMPIN. Poll ±10 detik; venue yang gagal tampil "—" tanpa mengganggu baris lain.</p>
-      <p><b>Alert harga</b> (tombol ALERT di bar kontrol chart) tersimpan lokal di perangkat ini dan <b>hanya berjalan selama aplikasi terbuka</b> — tidak ada server yang menjaga alert saat aplikasi ditutup. Alert menembak saat harga live (ticker kedua simbol, bekerja juga untuk simbol yang sedang tidak dilihat) menyentuh/menyilang harga pemicu: banner di dalam aplikasi + bunyi WebAudio + getar bila perangkat mendukung; setelah menembak, alert mati sendiri.</p>
+      <p><b>Alert harga</b> (tombol ALERT di popup SETUP — tombol SETUP di bar kontrol chart) tersimpan lokal di perangkat ini dan <b>hanya berjalan selama aplikasi terbuka</b> — tidak ada server yang menjaga alert saat aplikasi ditutup. Alert menembak saat harga live (ticker kedua simbol, bekerja juga untuk simbol yang sedang tidak dilihat) menyentuh/menyilang harga pemicu: banner di dalam aplikasi + bunyi WebAudio + getar bila perangkat mendukung; setelah menembak, alert mati sendiri.</p>
       <p><b>Chart dobel</b> (tombol CHART 2, hanya layar ≥1100px) menampilkan panel kedua hanya-baca berisi candle simbol lainnya dari pipa candle yang sama + EMA 20 + harga terakhir; tidak ada tumpukan indikator terpisah. Lebar HP tidak terpengaruh.</p>
       <p><b>Kode akses:</b> aplikasi ini dilindungi satu kode akses bersama yang diatur oleh PAKPOH; halaman ini hanya menyimpan hash-nya. Jika kode lupa, pemilik mengatur ulang dengan membangun kode baru ke dalam aplikasi — tidak ada pemulihan di dalam aplikasi.</p>
       <p><b>Pasang di HP:</b> halaman ini adalah <b>web app</b> — tidak bisa menginstal dirinya sendiri seperti APK Play Store, tapi bisa dipasang ke layar utama dan dibuka seperti aplikasi, lengkap dengan <b>ikon aplikasi khusus</b> yang akan muncul di layar utama setelah dipasang (bukan ikon bawaan browser). <b>iPhone (Safari):</b> tombol <b>Bagikan</b> → <b>Tambah ke Layar Utama</b> → <b>Tambah</b>. <b>Android (Chrome):</b> menu <b>⋮</b> → <b>Tambahkan ke Layar Utama</b> / <b>Instal aplikasi</b>. Bila ikon lama sudah terpasang sebelum ikon khusus ini ada, hapus dulu ikon lama dari layar utama lalu pasang ulang supaya ikon barunya muncul. APK Android sungguhan = proyek terpisah (dibangun &amp; ditandatangani di luar halaman ini) — bilang saja bila mau disiapkan jalurnya.</p>
@@ -1664,8 +1726,24 @@ function fmtCalPct(pct){
 function calibTimeTxt(at){
   try{ return new Date(at).toLocaleTimeString("id-ID",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit"}); }catch(e){ return ""; }
 }
+/* teks status kompak ing bar kontrol: preset rega aktif + mode
+   SUMBER, contone "OANDA +0,25% · TRADOOR" — ben kahanan sing saiki
+   manggon ing popup SETUP tetep katon sak pandelengan ing bar.
+   Dianyari saka updateCalibLabel (preset/offset owah) lan
+   tdSyncSumberUI (sumber owah). */
+function updateSetupState(){
+  var el=$("setupState"); if(!el) return;
+  var p="SPOT";
+  if(calPreset!=="SPOT"){
+    var md=calibMode(chart.sym);
+    p= calPreset+" "+(md.kind==="add"? fmtCalOff(md.off) : fmtCalPct(md.pct));
+  }
+  var s= (typeof tdSumber!=="undefined"&&tdSumber)? tdSumber : "ORIGINAL";
+  el.textContent= p+" \u00B7 "+s;
+}
 var calibLabelCache="";
 function updateCalibLabel(){
+  try{ updateSetupState(); }catch(e){}
   var el=$("calibLabel"); if(!el) return;
   var txt="";
   if(calPreset!=="SPOT"){
@@ -1761,6 +1839,7 @@ function openCalibDlg(){
   if(!calibDlgEl) return;
   try{ hideIndPop(); }catch(e){}
   try{ hideDrawPop(); }catch(e){}
+  try{ hideSetupPop(); }catch(e){}
   calibDlgRefresh();
   calibDlgEl.classList.add("on");
   var inp=$("calibInput"); if(inp){ inp.value=""; setTimeout(function(){ try{ inp.focus(); }catch(e){} },60); }
@@ -6437,7 +6516,7 @@ if(btnIndPopEl) btnIndPopEl.addEventListener("click",function(){
   if(!indPopEl) return;
   var on=indPopEl.classList.toggle("on");
   btnIndPopEl.setAttribute("aria-expanded", on? "true":"false");
-  if(on) hideDrawPop();
+  if(on){ hideDrawPop(); hideSetupPop(); }
 });
 var indPopCloseEl=$("indPopClose");
 if(indPopCloseEl) indPopCloseEl.addEventListener("click",hideIndPop);
@@ -6455,11 +6534,27 @@ if(btnDrawPopEl) btnDrawPopEl.addEventListener("click",function(){
   if(!drawPopEl) return;
   var on=drawPopEl.classList.toggle("on");
   btnDrawPopEl.setAttribute("aria-expanded", on? "true":"false");
-  if(on) hideIndPop();
+  if(on){ hideIndPop(); hideSetupPop(); }
 });
 var drawPopCloseEl=$("drawPopClose");
 if(drawPopCloseEl) drawPopCloseEl.addEventListener("click",hideDrawPop);
-cv.addEventListener("pointerdown",function(){ hideIndPop(); hideDrawPop(); });
+/* ---- popup SETUP (tombol SETUP ing bar kontrol): pola persis popup
+   fx/GAMBAR — tutul SETUP = bukak/tutup, ✕ = tutup, nutul area chart
+   = tutup, lan ora tau mbukak bareng popup liyane. Isine kontrol
+   preset rega + sumber + KALIBRASI + ALERT sing dipindah saka
+   klaster overlay; kabeh handler-e tetep nempel ing id sing padha. ---- */
+var setupPopEl=$("setupPop"), btnSetupPopEl=$("btnSetupPop");
+function hideSetupPop(){ if(setupPopEl) setupPopEl.classList.remove("on"); if(btnSetupPopEl) btnSetupPopEl.setAttribute("aria-expanded","false"); }
+if(btnSetupPopEl) btnSetupPopEl.addEventListener("click",function(){
+  if(!setupPopEl) return;
+  var on=setupPopEl.classList.toggle("on");
+  btnSetupPopEl.setAttribute("aria-expanded", on? "true":"false");
+  if(on){ hideIndPop(); hideDrawPop(); }
+});
+var setupPopCloseEl=$("setupPopClose");
+if(setupPopCloseEl) setupPopCloseEl.addEventListener("click",hideSetupPop);
+try{ updateSetupState(); }catch(e){}
+cv.addEventListener("pointerdown",function(){ hideIndPop(); hideDrawPop(); hideSetupPop(); });
 /* tombol di panel MSNR sendiri: ✕ menutup (sinkron dengan toggle
    PANEL di toolbar), – melipat/membuka isi panel */
 $("msnrPanelClose").addEventListener("click",function(){
@@ -6485,6 +6580,7 @@ $("btnScale").addEventListener("click",function(){ resetYScale(); });
 var pendingZoneName=null;
 function askZoneName(d){
   pendingZoneName=d;
+  try{ hideIndPop(); hideDrawPop(); hideSetupPop(); }catch(e){}
   var bar=$("zoneNameBar"), inp=$("zoneNameInput");
   if(!bar||!inp) return;
   inp.value="";
@@ -6562,7 +6658,7 @@ function setChartViewMode(mode){
      tetep aktif: strip JSNR ing ngisore widget melu offset-e */
   var ps=$("presetSeg"); if(ps) ps.style.display= oanda? "none":"";
   var bk=$("btnKalibrasi"); if(bk) bk.style.display= oanda? "none":"";
-  if(oanda){ hideDrawPop(); closeCalibDlg(); }
+  if(oanda){ hideDrawPop(); hideIndPop(); hideSetupPop(); closeCalibDlg(); }
   var cw=document.querySelector(".chartwrap"); if(cw) cw.style.display= oanda? "none":"";
   var zn=$("zoneNameBar"); if(zn&&oanda) zn.classList.remove("on");
   var tw=$("tvWrap"); if(tw) tw.classList.toggle("on",oanda);
@@ -8937,6 +9033,7 @@ function tdSyncSumberUI(){
   if(liqHead) liqHead.textContent= tdSumber==="TRADOOR"? "BINANCE PERP LIVE · FORCEORDER" : "SWIFTEDGE · POLL 60 DTK";
   var cvdHead=document.querySelector("#tp-cvd .phead .r");
   if(cvdHead) cvdHead.textContent= tdSumber==="TRADOOR"? "STREAM AGGTRADE PERP BINANCE · SESI INI" : "STREAM TRADE HYPERLIQUID · SESI INI";
+  try{ updateSetupState(); }catch(e){}
 }
 function tdApplySumber(mode,initial){
   tdSumber= mode==="TRADOOR"? "TRADOOR" : "ORIGINAL";
@@ -8981,7 +9078,7 @@ var tdCenterBtn=$("tdDomCenter");
 if(tdCenterBtn) tdCenterBtn.addEventListener("click",function(){ tdDomCenter(); });
 /* ikatan alert */
 var tdAlertDlg=$("tdAlertDlg");
-function tdAlertOpenDlg(){ tdAlertRenderList(); if(tdAlertDlg) tdAlertDlg.classList.add("on"); }
+function tdAlertOpenDlg(){ try{ hideSetupPop(); }catch(e){} tdAlertRenderList(); if(tdAlertDlg) tdAlertDlg.classList.add("on"); }
 function tdAlertCloseDlg(){ if(tdAlertDlg) tdAlertDlg.classList.remove("on"); }
 var tdBtnAlerts=$("btnAlerts");
 if(tdBtnAlerts) tdBtnAlerts.addEventListener("click",function(){
