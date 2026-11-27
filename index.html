@@ -546,7 +546,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 13:19 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 13:26 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -2939,14 +2939,14 @@ function fmtCompact(v){
   return String(Math.round(v));
 }
 /* langkah tangga rega "nice": milih saka {1, 2, 2.5, 5} × 10^k
-   kanthi target ±11 garis (rentang/step kisaran 8–14 ndek sembarang
-   zoom). Conto: XAU rentang 140 → 20, rentang 30 → 2.5; BTC rentang
-   4000 → 500. */
+   kanthi target ±16 garis (rentang/step kisaran 14–18 ndek sembarang
+   zoom — bar sumbu rega kebak rapet kaya app referensi). Conto: XAU
+   rentang 140 → 10, rentang 320 → 20; BTC rentang 4000 → 250. */
 function nicePriceStep(range){
   if(!(range>0)||!isFinite(range)) return 1;
-  var mag=Math.pow(10,Math.floor(Math.log10(range/11)));
+  var mag=Math.pow(10,Math.floor(Math.log10(range/16)));
   var steps=[1,2,2.5,5,10], best=steps[steps.length-1]*mag, bd=Infinity;
-  for(var i=0;i<steps.length;i++){ var st=steps[i]*mag, d=Math.abs(range/st-11); if(d<bd){ bd=d; best=st; } }
+  for(var i=0;i<steps.length;i++){ var st=steps[i]*mag, d=Math.abs(range/st-16); if(d<bd){ bd=d; best=st; } }
   return best;
 }
 /* ---- koordinat ---- */
@@ -3417,23 +3417,33 @@ function drawChart(){
   view.step=view.plotW/Math.max(1,cs.length+rightOff);
   if(chart.pan<0) view.offset=4+chart.pan*view.step;
   else if(panFrac>0) view.offset=4+panFrac*view.step;
-  /* grid + sumbu harga — TANGGA REGA "NICE" (arahan pemilik — sumbu
-     kudu rapet + rata kaya app referensi, garis kisi melintang sak
-     ambane plot kalebu ruang offset tengen tanpa wates): langkah
-     dipilih saka tangga {1, 2, 2.5, 5} × 10^k kanthi target ±11
-     garis, dietung ulang saben frame saka view min/max, dadi bener
-     otomatis kanggo pan / zoom / skala manual / fullscreen / loro
-     simbol / kabeh timeframe. Garis pisanan ndek ceil(min/step)*step,
-     banjur mlaku saben step nganti ngluwihi max. */
-  ctx.font="10px ui-monospace,Menlo,monospace"; ctx.lineWidth=1;
+  /* grid + sumbu harga — BAR SUMBU REGA KEBAK kaya app referensi
+     (arahan pemilik): kolom sumbu tengen (W-64..W) diwenehi latar
+     panel padhet #0a0f16 saka nduwur nganti ngisor ben kewaca dadi
+     bar sing beda saka area plot; tangga rega "nice" luwih rapet —
+     langkah dipilih saka tangga {1, 2, 2.5, 5} × 10^k kanthi target
+     ±16 garis, dietung ulang saben frame saka view min/max, dadi
+     bener otomatis kanggo pan / zoom / skala manual / fullscreen /
+     loro simbol / kabeh timeframe. Garis kisi melintang sak ambane
+     plot kalebu ruang offset tengen tanpa wates, sinkron karo label
+     amarga nganggo fungsi langkah sing padha. Garis pisanan ndek
+     ceil(min/step)*step, banjur mlaku saben step nganti ngluwihi max.
+     Latar bar digambar ing kene (sadurunge garis + label): blit
+     heatmap mung ngisi kolom nganti W-64, dadi strip sumbu ora tau
+     ketutup lapisan heatmap, lan tag rega saiki (fillRect W-62)
+     tetep digambar ing ndhuwure mengko kaya biasane. */
+  ctx.fillStyle="#0a0f16"; ctx.fillRect(W-64,0,64,H);
+  ctx.font="11px ui-monospace,Menlo,monospace"; ctx.lineWidth=1;
   var gStep=nicePriceStep(max-min), gP0=Math.ceil(min/gStep)*gStep;
   ctx.strokeStyle="rgba(148,163,184,0.07)";
+  ctx.textAlign="right";
   for(var gp=gP0; gp<=max; gp+=gStep){
     var gy2=Y(gp);
     ctx.beginPath(); ctx.moveTo(0,gy2); ctx.lineTo(W-64,gy2); ctx.stroke();
     /* label harga berwarna teal saat skala vertikal MANUAL aktif */
-    ctx.fillStyle= chart.yAuto? "#5b6b82" : "#2ee6a8"; ctx.fillText(fmt(gp,m.dec), W-60, gy2+3);
+    ctx.fillStyle= chart.yAuto? "#9fb0c3" : "#2ee6a8"; ctx.fillText(fmt(gp,m.dec), W-5, gy2+4);
   }
+  ctx.textAlign="left"; ctx.font="10px ui-monospace,Menlo,monospace";
   for(var gx=0; gx<cs.length; gx+=Math.ceil(cs.length/5)){
     var x=X(cs[gx].t);
     ctx.strokeStyle="#0d141f"; ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H-30); ctx.stroke();
