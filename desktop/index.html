@@ -546,7 +546,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 13:26 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 18:07 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -2949,6 +2949,55 @@ function nicePriceStep(range){
   for(var i=0;i<steps.length;i++){ var st=steps[i]*mag, d=Math.abs(range/st-16); if(d<bd){ bd=d; best=st; } }
   return best;
 }
+/* ---- DE-COLLISION VERTIKAL LABEL (fungsi murni — isa diuji Node) ----
+   Nampa dhaptar posisi Y ndhuwur label (px), ngasilne posisi anyar
+   kanthi JARAK VERTIKAL MINIMAL minGap antar label sing runtut,
+   urutan ora owah, kabeh kejaga ing [top, bottom]. Pola-ne niru
+   pamisah label zona JSNR (label digeser saka posisi asline +
+   garis penghubung cilik menyang titik asline), mung ing kene
+   gesere VERTIKAL amarga label dinding numpuk ing sumbu Y.
+   Klaster label sing jarake < minGap disebar SIMETRIS ngubengi
+   centroid posisi asline — label tengah tetep paling cedhak karo
+   asline, geseran seminimal mungkin; label sing wis jarake cukup
+   (>= minGap saka tangga-tanggane) ORA diowahi babar pisan. */
+function decollideLabelYs(ys, minGap, top, bottom){
+  var n=ys.length, out=ys.slice();
+  if(n<=1||!(minGap>0)) return out;
+  var order=ys.map(function(_,i){ return i; }).sort(function(a,b){ return (ys[a]-ys[b])||(a-b); });
+  var sorted=order.map(function(i){ return ys[i]; });
+  var adj=sorted.slice();
+  var i=0;
+  while(i<n){
+    var j=i;
+    while(j+1<n && sorted[j+1]-sorted[j]<minGap) j++;
+    if(j>i){
+      var sum=0, k;
+      for(k=i;k<=j;k++) sum+=sorted[k];
+      var start=sum/(j-i+1)-(j-i)*minGap/2;
+      var maxStart=bottom-(j-i)*minGap;
+      if(start<top) start=top;
+      if(start>maxStart) start=Math.max(top,maxStart);
+      for(k=i;k<=j;k++) adj[k]=start+(k-i)*minGap;
+    } else {
+      adj[i]=Math.max(top,Math.min(bottom,sorted[i]));
+    }
+    i=j+1;
+  }
+  /* jaminan pungkasan: jarak minimal & wates tetep kajaga sanajan
+     klaster nabrak pinggir plot utawa tangga antar klaster */
+  var p;
+  for(p=1;p<n;p++){ if(adj[p]<adj[p-1]+minGap) adj[p]=adj[p-1]+minGap; }
+  if(adj[n-1]>bottom){
+    adj[n-1]=bottom;
+    for(p=n-2;p>=0;p--){ if(adj[p]>adj[p+1]-minGap) adj[p]=adj[p+1]-minGap; }
+  }
+  if(adj[0]<top){
+    adj[0]=top;
+    for(p=1;p<n;p++){ if(adj[p]<adj[p-1]+minGap) adj[p]=adj[p-1]+minGap; }
+  }
+  for(var q=0;q<n;q++) out[order[q]]=adj[q];
+  return out;
+}
 /* ---- koordinat ---- */
 function X(t){ return view.offset + ((t-view.t0)/Math.max(1,(view.t1-view.t0)))*view.plotW; }
 function invX(x){ return view.t0 + ((x-view.offset)/Math.max(1,view.plotW))*(view.t1-view.t0); }
@@ -3495,43 +3544,76 @@ function drawChart(){
     var wallShift=drawShift(chart.sym);
     var wallNow=Date.now();
     var allStacks=Object.keys(s.stacks).map(function(k){ return s.stacks[k]; });
+    /* label dinding SINGKAT (arahan pemilik — label lawas
+       "DINDING ASK … · $… · awet …" dawa banget, nutupi candle
+       lan tabrakan karo skala rega): mung SISI + UKURAN + REGA
+       gambar, contone "ASK 1.595 oz · 3.580". Kata "DINDING"
+       lan durasi "awet …" DIBUSAK saka chart — durasi awet
+       tetep katon ing tab SCAN. Latar tipis semi-transparan,
+       lan ambane label diwatesi mandeg ing pinggir plot
+       (W-64) supaya ora mlebu ngisor skala rega.
+       DE-COLLISION LABEL (arahan pemilik — loro dinding mung
+       kacek $5 ing 1M label-e numpuk ora kewaca): kabeh dinding
+       sing katon dikumpulne DHISIK, garis-e digambar persis ing
+       level-e (ORA oleh obah), banjur posisi Y label dipisah
+       paksa nganggo decollideLabelYs — jarak minimal 15px
+       (dhuwur label 12px + celah 3px), digeser seminimal mungkin
+       & simetris ngubengi posisi asli klaster-e, kejaga ing njero
+       area plot. Label sing kegeser disambungne menyang garis-e
+       nganggo garis leader tipis samar (gaya kulawarga leader
+       label JSNR: werna label, alpha .55, 1px) + titik cilik pas
+       ing garis dinding-e, dadi cetha label endi duweke garis
+       endi. Ora ana tabrakan = ora ana geseran = ora ana leader. */
+    var wallItems=[];
     [["bid","#2ee6a8","BID "],["ask","#e879f9","ASK "]].forEach(function(cfg){
       allStacks.filter(function(x){ return x.side===cfg[0] && wallNow-x.first>=WALL_MIN_AGE_MS; }).sort(function(a,b){ return b.sz-a.sz; }).slice(0,3).forEach(function(st){
         var drawPx=st.px-wallShift;
         if(drawPx<min||drawPx>max) return;
-        var wy=Y(drawPx);
         /* masa tenggang: memudar seiring habisnya tenggang 45 dtk,
            sama seperti bubble — bukan lenyap seketika */
         var wfade=1;
         if(st.absentSince) wfade=Math.max(0.3, 1-0.7*Math.min(1,(wallNow-st.absentSince)/STACK_GRACE_MS));
+        wallItems.push({ side:cfg[0], col:cfg[1], wy:Y(drawPx), wfade:wfade,
+          wlabel:cfg[2]+fmt(st.sz,m.szDec)+" "+m.unit+" · "+fmt(drawPx,m.dec) });
+      });
+    });
+    if(wallItems.length){
+      ctx.font="bold 8px -apple-system,'Segoe UI',Roboto,sans-serif";
+      wallItems.forEach(function(it){
+        it.chipW=Math.min(ctx.measureText(it.wlabel).width+10, Math.max(30,(W-64)-6));
+        it.chipY0= it.wy<20? it.wy+4 : it.wy-16;
+      });
+      var adjWallY=decollideLabelYs(wallItems.map(function(it){ return it.chipY0; }), 15, 2, Math.max(2,(H-30)-12));
+      wallItems.forEach(function(it,wi){
+        var chipY=adjWallY[wi];
         /* BOBOT VISUAL DINDING DIKURANGI (arahan pemilik — "ben penak
            di sawang"): garis tetep 1px nanging alpha stroke mung 0.40
            (× fade masa tenggang), label font 8px kanthi latar separo
            alpha lawas. Logika dinding/rega/gerbang persistensi/werna
            sisih ora owah; bubble ora didemek. */
-        ctx.save(); ctx.globalAlpha=wfade*0.40;
-        ctx.strokeStyle=cfg[1]; ctx.lineWidth=1; ctx.setLineDash([7,4]);
-        ctx.beginPath(); ctx.moveTo(0,wy); ctx.lineTo(W-64,wy); ctx.stroke(); ctx.setLineDash([]);
-        ctx.globalAlpha=wfade;
-        /* label dinding SINGKAT (arahan pemilik — label lawas
-           "DINDING ASK … · $… · awet …" dawa banget, nutupi candle
-           lan tabrakan karo skala rega): mung SISI + UKURAN + REGA
-           gambar, contone "ASK 1.595 oz · 3.580". Kata "DINDING"
-           lan durasi "awet …" DIBUSAK saka chart — durasi awet
-           tetep katon ing tab SCAN. Latar tipis semi-transparan,
-           lan ambane label diwatesi mandeg ing pinggir plot
-           (W-64) supaya ora mlebu ngisor skala rega. */
-        var wlabel=cfg[2]+fmt(st.sz,m.szDec)+" "+m.unit+" · "+fmt(drawPx,m.dec);
+        ctx.save(); ctx.globalAlpha=it.wfade*0.40;
+        ctx.strokeStyle=it.col; ctx.lineWidth=1; ctx.setLineDash([7,4]);
+        ctx.beginPath(); ctx.moveTo(0,it.wy); ctx.lineTo(W-64,it.wy); ctx.stroke(); ctx.setLineDash([]);
+        ctx.globalAlpha=it.wfade;
         ctx.font="bold 8px -apple-system,'Segoe UI',Roboto,sans-serif";
-        var wtw=ctx.measureText(wlabel).width, chipY= wy<20? wy+4 : wy-16;
-        var chipW=Math.min(wtw+10, Math.max(30,(W-64)-6));
-        ctx.fillStyle= cfg[0]==="bid"? "rgba(3,26,18,.39)" : "rgba(30,4,38,.39)";
-        ctx.fillRect(6,chipY,chipW,12);
-        ctx.fillStyle=cfg[1]; ctx.fillText(wlabel,11,chipY+9);
+        /* leader mung kanggo label sing BENER kegeser: garis tipis
+           saka pinggir tengen label menyang titik pas ing garis
+           dinding-e (target leader = wy asli, ora owah) */
+        if(Math.abs(chipY-it.chipY0)>0.5){
+          ctx.save();
+          ctx.strokeStyle=it.col; ctx.globalAlpha=.55*it.wfade; ctx.lineWidth=1;
+          ctx.beginPath(); ctx.moveTo(6+it.chipW,chipY+6); ctx.lineTo(6+it.chipW+7,it.wy); ctx.stroke();
+          ctx.beginPath(); ctx.arc(6+it.chipW+7,it.wy,1.6,0,Math.PI*2);
+          ctx.fillStyle=it.col; ctx.fill();
+          ctx.restore();
+        }
+        ctx.fillStyle= it.side==="bid"? "rgba(3,26,18,.39)" : "rgba(30,4,38,.39)";
+        ctx.fillRect(6,chipY,it.chipW,12);
+        ctx.fillStyle=it.col; ctx.fillText(it.wlabel,11,chipY+9);
         ctx.font="10px ui-monospace,Menlo,monospace";
         ctx.restore();
       });
-    });
+    }
   }
   var plotH=H-38, volH= chart.vol? plotH*0.13 : 0, volTop=8+plotH-volH;
   /* konten plot (volume, garis indikator, candle, bubble) diklip ke
@@ -3626,7 +3708,18 @@ function drawChart(){
     var bStacks=Object.keys(s.stacks).map(function(k){ return s.stacks[k]; })
       .filter(function(st){ var dp=st.px-bubShift; return dp>=min&&dp<=max; })
       .sort(function(a,b){ return b.sz-a.sz; }).slice(0,14);
-    bStacks.forEach(function(st){
+    /* DE-COLLISION teks rega "≈spot" bubble: teks iki lungguh ing
+       dhuwur sing padha karo garis dinding level-e (by = Y rega
+       tumpukan), dadi loro tumpukan sing cedhak (mis. kacek $5 ing
+       1M) teks-e ISA numpuk vertikal — NANGING mung nek rentang X
+       teks-e uga tumpang tindih (bubble ing candle sing adoh ora
+       tau tabrakan senajan Y cedhak). Kanggo klaster sing bener
+       tabrakan X+Y: dhuwur teks dipisah paksa nganggo
+       decollideLabelYs sing padha karo label dinding (jarak
+       minimal 16px = dhuwur latar 15px + celah 1px), bubble &
+       target leader-e (by) ora owah, lan teks sing kegeser
+       disambungne nganggo leader tipis menyang pinggir bubble-e. */
+    var bubItems=bStacks.map(function(st){
       var drawPx=st.px-bubShift;
       var med= st.side==="bid"? medB : medA;
       var ratio= med>0? st.sz/med : 2;
@@ -3635,13 +3728,43 @@ function drawChart(){
       for(var bi=cs.length-1; bi>=0; bi--){ if(cs[bi].l<=drawPx&&cs[bi].h>=drawPx){ bx=X(cs[bi].t)+view.step/2; break; } }
       if(bx==null) bx=view.offset+view.plotW-r-3;
       bx=Math.max(r+2, Math.min(view.offset+view.plotW-r-2, bx));
-      var isBid= st.side==="bid";
       /* HISTERESIS VISUAL: tumpukan yang sedang dalam masa tenggang
          (absen dari buku <45 dtk) tetap digambar dengan ukuran
          terakhirnya tetapi MEMUDAR seiring habisnya tenggang —
          tidak lenyap seketika */
       var fade=1;
       if(st.absentSince){ fade=Math.max(0.3, 1-0.7*Math.min(1,(Date.now()-st.absentSince)/STACK_GRACE_MS)); }
+      return { st:st, drawPx:drawPx, r:r, bx:bx, by:by, isBid:st.side==="bid", fade:fade, ptxt:null, ptw:0, pxLbl:0, lblTop0:0, lblTop:0 };
+    });
+    if(bubShift!==0){
+      ctx.font="bold 8.5px ui-monospace,Menlo,monospace";
+      bubItems.forEach(function(it){
+        it.ptxt="$"+fmt(it.drawPx,m.dec)+" ≈spot";
+        it.ptw=ctx.measureText(it.ptxt).width;
+        it.pxLbl= it.bx+it.r+5+it.ptw<=view.offset+view.plotW? it.bx+it.r+5 : Math.max(2,it.bx-it.r-5-it.ptw);
+        it.lblTop0=it.by-8; it.lblTop=it.lblTop0;
+      });
+      var pSort=bubItems.slice().sort(function(a,b){ return a.lblTop0-b.lblTop0; });
+      var pCur=[];
+      function pFlush(){
+        if(pCur.length>1){
+          var tops=decollideLabelYs(pCur.map(function(it){ return it.lblTop0; }), 16, 2, Math.max(2,(H-30)-15));
+          pCur.forEach(function(it,ix){ it.lblTop=tops[ix]; });
+        }
+        pCur=[];
+      }
+      pSort.forEach(function(it){
+        var hitX=false;
+        for(var q=0;q<pCur.length;q++){ var o=pCur[q];
+          if(it.pxLbl-3 < o.pxLbl+o.ptw+3 && o.pxLbl-3 < it.pxLbl+it.ptw+3){ hitX=true; break; } }
+        if(pCur.length && it.lblTop0-pCur[pCur.length-1].lblTop0<16 && hitX) pCur.push(it);
+        else { pFlush(); pCur.push(it); }
+      });
+      pFlush();
+      ctx.font="10px ui-monospace,Menlo,monospace";
+    }
+    bubItems.forEach(function(bit){
+      var st=bit.st, drawPx=bit.drawPx, r=bit.r, bx=bit.bx, by=bit.by, isBid=bit.isBid, fade=bit.fade;
       ctx.save(); ctx.globalAlpha=fade;
       ctx.beginPath(); ctx.arc(bx,by,r,0,Math.PI*2);
       ctx.fillStyle= isBid? "rgba(46,230,168,.30)" : "rgba(232,121,249,.30)"; ctx.fill();
@@ -3653,15 +3776,24 @@ function drawChart(){
       if(btw<=2*r-3){ ctx.textAlign="center"; ctx.fillText(btxt, bx, by+3); ctx.textAlign="start"; }
       else ctx.fillText(btxt, Math.max(2,bx-r-4-btw), by+3);
       /* label harga bubble = harga SETELAH digeser basis, bertanda
-         ≈spot (hanya saat chart spot/proksi spot aktif) */
-      if(bubShift!==0){
-        var ptxt="$"+fmt(drawPx,m.dec)+" ≈spot";
+         ≈spot (hanya saat chart spot/proksi spot aktif); dhuwur-e
+         nganggo asil de-collision ing ndhuwur (lblTop) — tanpa
+         tabrakan persis posisi lawas (by-8), nek kegeser ana
+         leader tipis menyang pinggir bubble-e dhewe */
+      if(bubShift!==0&&bit.ptxt){
         ctx.font="bold 8.5px ui-monospace,Menlo,monospace";
-        var ptw=ctx.measureText(ptxt).width;
-        var pxLbl= bx+r+5+ptw<=view.offset+view.plotW? bx+r+5 : Math.max(2,bx-r-5-ptw);
-        ctx.fillStyle="rgba(5,8,13,.85)"; ctx.fillRect(pxLbl-3,by-8,ptw+6,15);
+        if(Math.abs(bit.lblTop-bit.lblTop0)>0.5){
+          ctx.save();
+          ctx.strokeStyle= isBid? "#2ee6a8" : "#e879f9"; ctx.globalAlpha=.55*fade; ctx.lineWidth=1;
+          ctx.beginPath();
+          if(bit.pxLbl>bx){ ctx.moveTo(bit.pxLbl-3,bit.lblTop+7.5); ctx.lineTo(bx+r,by); }
+          else{ ctx.moveTo(bit.pxLbl+bit.ptw+3,bit.lblTop+7.5); ctx.lineTo(bx-r,by); }
+          ctx.stroke();
+          ctx.restore();
+        }
+        ctx.fillStyle="rgba(5,8,13,.85)"; ctx.fillRect(bit.pxLbl-3,bit.lblTop,bit.ptw+6,15);
         ctx.fillStyle= isBid? "#a7f3d0" : "#f5c2fb";
-        ctx.fillText(ptxt, pxLbl, by+3);
+        ctx.fillText(bit.ptxt, bit.pxLbl, bit.lblTop+11);
         ctx.font="10px ui-monospace,Menlo,monospace";
       }
       ctx.restore();
