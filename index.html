@@ -572,11 +572,11 @@
   .jbn-it b{color:#eaf6ff;font-weight:700}
   .jbn-it .up{color:#20e3a2} .jbn-it .dn{color:#ff4d6a} .jbn-it .gd{color:#f0c84b}
   @media (prefers-reduced-motion: reduce){.jbn-logo,.jbn-move{animation:none}}
-  /* ===== GERBANG SANDI APLIKASI (obhp_gate_v1) =====
+  /* ===== GERBANG KODE AKSES APLIKASI =====
      Layar kunci sak layar kebak: awak kaca wiwit nganggo kelas
      .gate-locked — .wrap didhelikake total (visibility + pointer-events)
      lan mung overlay gerbang sing katon & isa diinteraksi. Kelas dicopot
-     mung sakwise sandi bener utawa sesi eling 30 dina sing valid.
+     mung sakwise kode akses bener utawa sesi eling 30 dina sing valid.
      Init aplikasi (script utama) DITUNDA nganti kunci kebukak, dadi
      feed data & widget TradingView ora dimuat sadurunge kebukak. */
   body.gate-locked{overflow:hidden}
@@ -605,7 +605,7 @@
 </style>
 </head>
 <body class="gate-locked">
-<!-- GERBANG SANDI — layar kunci sak layar kebak. Awak kaca wiwit
+<!-- GERBANG KODE AKSES — layar kunci sak layar kebak. Awak kaca wiwit
      kakunci (.gate-locked): aplikasi ing mburine ora katon & ora isa
      diinteraksi, lan init-e ditunda nganti kunci kebukak utawa sesi
      eling 30 dina sing valid ditemokne (script gerbang ing ngisor). -->
@@ -625,22 +625,18 @@
       </svg>
     </div>
     <div class="gate-title">JAMET<br><span>TERMINAL</span></div>
-    <h1 class="gate-heading" id="gateHeading">Memeriksa sesi…</h1>
-    <p class="gate-sub" id="gateSub">Sebentar — memeriksa apakah perangkat ini masih diingat.</p>
+    <h1 class="gate-heading" id="gateHeading">Eits, Katene Lapo koen! 😎</h1>
+    <p class="gate-sub" id="gateSub">Iki terminal-e <b>PAKPOH</b>. Kudu nganggo kode akses — ora nduwe kode, ora isa mlebu, titik. Pengin ngakses? <b>Tekono Pakpoh dhewe.</b> Nek dikei ya rejekimu, nek ora ya donasi utowo minimal kopilah 🤣🤭</p>
     <form id="gateForm" autocomplete="off" hidden>
       <div class="gate-field">
-        <label for="gatePw1" id="gatePw1Label">Sandi</label>
-        <input id="gatePw1" type="password" autocomplete="current-password" placeholder="Ketik sandi" />
-      </div>
-      <div class="gate-field" id="gatePw2Wrap" hidden>
-        <label for="gatePw2">Ulangi sandi</label>
-        <input id="gatePw2" type="password" autocomplete="new-password" placeholder="Ketik sandi yang sama sekali lagi" />
+        <label for="gatePw1" id="gatePw1Label">KODE AKSES</label>
+        <input id="gatePw1" type="password" autocomplete="current-password" placeholder="Ketik kode akses" />
       </div>
       <div class="gate-err" id="gateError" role="alert"></div>
       <div class="gate-lockout" id="gateLockout" aria-live="polite"></div>
-      <button class="gate-btn" id="gateSubmit" type="submit">BUKA KUNCI</button>
+      <button class="gate-btn" id="gateSubmit" type="submit">BUKA</button>
     </form>
-    <p class="gate-note">Sandi diatur &amp; disimpan hanya di perangkat ini dalam bentuk hash — tidak dikirim ke mana pun. Setelah kunci terbuka, perangkat diingat 30 hari.</p>
+    <p class="gate-note">Kode akses diatur dening PAKPOH — sesi kelingan 30 dina ndek piranti iki.</p>
   </div>
 </div>
 <div class="wrap">
@@ -657,7 +653,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 19:51 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 20:21 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -1083,7 +1079,7 @@
       <p>Footprint (toggle FOOT di popup indikator) diagregasi dari aggTrades Binance untuk candle yang terlihat saat mode FOOT aktif, bukan footprint tick-persis — candle di luar tampilan atau dari masa sebelum mode dihidupkan tidak memiliki data footprint dan digambar sebagai candle biasa; stacked imbalance dihitung dari perbandingan diagonal antar level harga di dalam candle yang sama.</p>
       <p>Absorption zones (toggle ABSORB di popup indikator) dihitung dari candle + delta taker-buy Binance yang tersimpan pada candle (delta = 2×takerBuy − volume, sama seperti kolom Δ pada STATS): candle dianggap absorpsi bila volumenya ≥1,5× rata-rata volume 20 candle sebelumnya dan |delta%| ≥40%, tetapi hasil harganya tidak sebanding — delta negatif kuat namun close tetap di paruh atas rentang candle (penjual diserap, zona mint) atau delta positif kuat namun close di paruh bawah rentang (pembeli diserap, zona merah muda). Zona digambar dari low–high candle itu dan memanjang ke kanan sampai ada body close menembus batasnya; maksimal 6 zona aktif terbaru yang digambar. Bila candle tidak memiliki data taker-buy (sumber cadangan Hyperliquid), ABSORB tidak menggambar apa pun.</p>
       <p>TPO profile (toggle TPO di popup indikator) adalah profil Time Price Opportunity hari ini (UTC): hari dibagi blok 30 menit (huruf A, B, C, …), tiap blok menandai baris harga yang tersentuh rentang high–low dalam blok itu, dihitung dari candle chart yang aktif — bila timeframe lebih besar dari 30 menit, tiap candle menjadi satu blok. Baris dengan huruf terbanyak adalah POC (diserot emas + garis POC), dan 70% huruf di sekitar POC membentuk value area yang disorot lebih terang. TPO ini didekati dari rentang candle per blok 30 menit, bukan dari data tick, jadi huruf per baris adalah pendekatan, bukan hitungan tick persis.</p>
-      <p><b>Gerbang sandi:</b> jika sandi lupa, satu-satunya cara memulihkan adalah menghapus data situs di browser — itu mereset gerbang beserta setelan &amp; gambar lokal aplikasi; tidak ada jalan belakang (backdoor).</p>
+      <p><b>Kode akses:</b> aplikasi ini dilindungi satu kode akses bersama yang diatur oleh PAKPOH; halaman ini hanya menyimpan hash-nya. Jika kode lupa, pemilik mengatur ulang dengan membangun kode baru ke dalam aplikasi — tidak ada pemulihan di dalam aplikasi.</p>
       <p><b>Pasang di HP:</b> halaman ini adalah <b>web app</b> — tidak bisa menginstal dirinya sendiri seperti APK Play Store, tapi bisa dipasang ke layar utama dan dibuka seperti aplikasi, lengkap dengan <b>ikon aplikasi khusus</b> yang akan muncul di layar utama setelah dipasang (bukan ikon bawaan browser). <b>iPhone (Safari):</b> tombol <b>Bagikan</b> → <b>Tambah ke Layar Utama</b> → <b>Tambah</b>. <b>Android (Chrome):</b> menu <b>⋮</b> → <b>Tambahkan ke Layar Utama</b> / <b>Instal aplikasi</b>. Bila ikon lama sudah terpasang sebelum ikon khusus ini ada, hapus dulu ikon lama dari layar utama lalu pasang ulang supaya ikon barunya muncul. APK Android sungguhan = proyek terpisah (dibangun &amp; ditandatangani di luar halaman ini) — bilang saja bila mau disiapkan jalurnya.</p>
     </div>
   </footer>
@@ -7343,43 +7339,34 @@ setInterval(function(){
 };
 </script>
 <script>
-/* ============ GERBANG SANDI APLIKASI (obhp_gate_v1) ============
-   Pager akses kasual sing kuwat ndek NJERO kaca: dudu login server.
-   Ora ana sandi sing ditandur ndek kaca lan ora ana sandi polos sing
-   disimpen/dikirim neng ngendi wae — sing duwe nyetel sandi dhewe ndek
-   piranti iki, lan sing disimpen mung HASH kasine uyah (salt acak +
-   SHA-256 WebCrypto, 10.000 puteran) ndek localStorage kunci
-   "obhp_gate_v1". Verifikasi = ngitung maneh hash lan mbandingne.
-   Sesi eling: sakwise kebukak, token sing diturunne saka hash + expiry
-   30 dina disimpen ndek "obhp_gate_session_v1"; token dicek maneh
-   saben kaca dimuat (nek hash ganti utawa expiry liwat, sesi batal).
-   Tombol "Kunci" ndek header mbusak sesi lan langsung ngunci maneh.
-   Sandi salah: jeda progresif 1 / 3 / 5 detik (timer katon), tanpa
-   lockout permanen. Init aplikasi ditunda: window.__obhpMain mung
-   diceluk sepisan, sakwise gerbang kebukak. */
+/* ============ GERBANG KODE AKSES APLIKASI ============
+   Gerbang nganggo SAIJI kode akses bareng sing diatur dening sing duwe
+   (PAKPOH) — ora ana alur nggawe/ngganti kode ndek kaca. Kode sing
+   diketik diverifikasi marang HASH sing ditandur ndek kaca (konstanta
+   GATE_HASH): kode polos ora tau ditulis utawa disimpen ndek kaca,
+   mung hash-e. Skema hash (fungsi murni, kapacak ndek window minangka
+   window.jametGateHash / window.jametGateVerify ben isa dites):
+   kode dinormalake dhisik (trim + huruf gedhe), banjur SHA-256
+   diambali 10.000 puteran marang byte UTF-8 saka "JAMETGATEv2|" +
+   kode sing wes dinormalake; asile hex huruf cilik dibandingne karo
+   GATE_HASH.
+   Sesi eling: sakwise kebukak, token sing diturunne saka GATE_HASH +
+   expiry 30 dina disimpen ndek localStorage lan dicek maneh saben
+   kaca dimuat — nek GATE_HASH ganti (kode diganti ndek build anyar)
+   utawa expiry liwat, kabeh sesi lawas otomatis batal.
+   Rekaman lawas per-piranti "obhp_gate_v1" (lan sesine) dibusak pas
+   kaca dimuat. Tombol "Kunci" ndek header mbusak sesi lan langsung
+   ngunci maneh. Kode salah: jeda progresif 1 / 3 / 5 detik (timer
+   katon), tanpa lockout permanen. Init aplikasi ditunda:
+   window.__obhpMain mung diceluk sepisan, sakwise gerbang kebukak. */
 (function(){
 "use strict";
-var GATE_KEY="obhp_gate_v1", SESS_KEY="obhp_gate_session_v1";
+var GATE_HASH="b66e7aca3586dbf0dc04723640919f71053dc8e2fc670c44d48bf727869f3c1b";
+var SESS_KEY="obhp_gate2_session_v1";
+var OLD_GATE_KEY="obhp_gate_v1", OLD_SESS_KEY="obhp_gate_session_v1";
 var ITER=10000, REMEMBER_MS=30*24*60*60*1000;
-var mainStarted=false, fails=0, lockUntil=0, lockTimer=null, mode="unlock";
+var mainStarted=false, fails=0, lockUntil=0, lockTimer=null;
 function $(id){ return document.getElementById(id); }
-function loadRec(){
-  try{
-    var r=localStorage.getItem(GATE_KEY); if(!r) return null;
-    var o=JSON.parse(r);
-    if(!o||typeof o.salt!=="string"||typeof o.hash!=="string"||!o.salt||!o.hash) return null;
-    return o;
-  }catch(e){ return null; }
-}
-function loadSess(){
-  try{
-    var r=localStorage.getItem(SESS_KEY); if(!r) return null;
-    var o=JSON.parse(r);
-    if(!o||typeof o.token!=="string"||typeof o.expiry!=="number") return null;
-    return o;
-  }catch(e){ return null; }
-}
-function clearSess(){ try{ localStorage.removeItem(SESS_KEY); }catch(e){} }
 function hexOf(buf){
   var b=new Uint8Array(buf), s="";
   for(var i=0;i<b.length;i++) s+=("0"+b[i].toString(16)).slice(-2);
@@ -7389,52 +7376,58 @@ function enc(s){ return new TextEncoder().encode(s); }
 function shaHex(data){
   return crypto.subtle.digest("SHA-256", data).then(function(buf){ return hexOf(buf); });
 }
-/* hash sandi: SHA-256 marang (salt + sandi), diambali 10.000 puteran */
-function hashPassword(salt, pw){
-  var p=Promise.resolve(enc(salt+"\u0000"+pw));
+/* normalake kode akses: trim spasi pinggir + dadekne huruf gedhe */
+function gateNormalize(code){
+  return String(code==null?"":code).trim().toUpperCase();
+}
+/* hash kode akses: SHA-256 10.000 puteran marang "JAMETGATEv2|" + kode normal */
+function gateHash(code){
+  var p=Promise.resolve(enc("JAMETGATEv2|"+gateNormalize(code)));
   for(var i=0;i<ITER;i++){
     p=p.then(function(d){ return crypto.subtle.digest("SHA-256", d); });
   }
   return p.then(function(buf){ return hexOf(buf); });
 }
-function makeSession(rec){
+function gateVerify(code){
+  return gateHash(code).then(function(h){ return h===GATE_HASH; });
+}
+window.jametGateHash=gateHash;
+window.jametGateVerify=gateVerify;
+window.jametGateNormalize=gateNormalize;
+/* ---- sesi eling 30 dina: token diturunne saka GATE_HASH + expiry ---- */
+function loadSess(){
+  try{
+    var r=localStorage.getItem(SESS_KEY); if(!r) return null;
+    var o=JSON.parse(r);
+    if(!o||typeof o.token!=="string"||typeof o.expiry!=="number") return null;
+    return o;
+  }catch(e){ return null; }
+}
+function clearSess(){ try{ localStorage.removeItem(SESS_KEY); }catch(e){} }
+function sessionToken(expiry){
+  return shaHex(enc(GATE_HASH+"|"+expiry));
+}
+function makeSession(){
   var expiry=Date.now()+REMEMBER_MS;
-  return shaHex(enc(rec.hash+"|"+expiry+"|"+rec.salt)).then(function(tok){
+  return sessionToken(expiry).then(function(tok){
     try{ localStorage.setItem(SESS_KEY, JSON.stringify({token:tok, expiry:expiry})); }catch(e){}
   });
 }
-function validSession(rec){
+function validSession(){
   var s=loadSess();
   if(!s||s.expiry<=Date.now()) return Promise.resolve(false);
-  return shaHex(enc(rec.hash+"|"+s.expiry+"|"+rec.salt)).then(function(tok){ return tok===s.token; });
+  return sessionToken(s.expiry).then(function(tok){ return tok===s.token; });
 }
-/* ---- UI layar kunci ---- */
-var form=$("gateForm"), pw1=$("gatePw1"), pw2=$("gatePw2"), pw2Wrap=$("gatePw2Wrap"),
-    errEl=$("gateError"), lockEl=$("gateLockout"), submitBtn=$("gateSubmit"),
-    heading=$("gateHeading"), sub=$("gateSub"), pw1Label=$("gatePw1Label");
+/* ---- UI layar kunci (saiji kolom: KODE AKSES) ---- */
+var form=$("gateForm"), pw1=$("gatePw1"),
+    errEl=$("gateError"), lockEl=$("gateLockout"), submitBtn=$("gateSubmit");
 function showError(msg){ if(errEl){ errEl.textContent=msg; errEl.classList.add("on"); } }
 function clearError(){ if(errEl){ errEl.textContent=""; errEl.classList.remove("on"); } }
-function setMode(m){
-  mode=m;
+function showForm(){
   if(!form) return;
   form.hidden=false;
   clearError();
   if(lockEl) lockEl.textContent="";
-  if(m==="setup"){
-    heading.textContent="Buat sandi aplikasi";
-    sub.textContent="Belum ada sandi di perangkat ini. Buat sandi Anda sendiri — minimal 6 karakter, ketik dua kali. Sandi hanya disimpan sebagai hash di perangkat ini.";
-    pw1Label.textContent="Sandi baru";
-    pw1.setAttribute("autocomplete","new-password");
-    pw2Wrap.hidden=false;
-    submitBtn.textContent="BUAT SANDI & BUKA";
-  }else{
-    heading.textContent="Aplikasi terkunci";
-    sub.textContent="Masukkan sandi untuk membuka JAMET TERMINAL di perangkat ini.";
-    pw1Label.textContent="Sandi";
-    pw1.setAttribute("autocomplete","current-password");
-    pw2Wrap.hidden=true;
-    submitBtn.textContent="BUKA KUNCI";
-  }
   setTimeout(function(){ try{ pw1.focus(); }catch(e){} },60);
 }
 function unlock(){
@@ -7450,11 +7443,9 @@ function lockNow(){
   fails=0; lockUntil=0;
   if(lockTimer){ clearTimeout(lockTimer); lockTimer=null; }
   if(pw1) pw1.value="";
-  if(pw2) pw2.value="";
   if(submitBtn) submitBtn.disabled=false;
   if(pw1) pw1.disabled=false;
-  if(pw2) pw2.disabled=false;
-  setMode(loadRec()? "unlock" : "setup");
+  showForm();
   document.body.classList.add("gate-locked");
 }
 /* jeda progresif sakwise gagal: 1 dtk, banjur 3 dtk, banjur 5 dtk (maks) */
@@ -7462,12 +7453,12 @@ function startLockout(){
   var delays=[1000,3000,5000];
   var ms=delays[Math.min(Math.max(fails-1,0),2)];
   lockUntil=Date.now()+ms;
-  submitBtn.disabled=true; pw1.disabled=true; pw2.disabled=true;
+  submitBtn.disabled=true; pw1.disabled=true;
   function tick(){
     var left=Math.ceil((lockUntil-Date.now())/1000);
     if(left<=0){
       lockEl.textContent="";
-      submitBtn.disabled=false; pw1.disabled=false; pw2.disabled=false;
+      submitBtn.disabled=false; pw1.disabled=false;
       lockTimer=null;
       try{ pw1.focus(); }catch(e){}
       return;
@@ -7480,66 +7471,41 @@ function startLockout(){
 if(form) form.addEventListener("submit",function(ev){
   ev.preventDefault();
   if(Date.now()<lockUntil) return;
-  if(!window.crypto||!crypto.subtle){ showError("Browser butuh koneksi aman (HTTPS) untuk memeriksa sandi."); return; }
+  if(!window.crypto||!crypto.subtle){ showError("Browser butuh koneksi aman (HTTPS) untuk memeriksa kode akses."); return; }
   clearError();
-  if(mode==="setup"){
-    var a=pw1.value, b=pw2.value;
-    if(a.length<6){ showError("Sandi terlalu pendek — minimal 6 karakter."); return; }
-    if(a!==b){ showError("Sandi tidak sama — ketik sandi yang sama di kedua kolom."); return; }
-    submitBtn.disabled=true; submitBtn.textContent="MENYIMPAN…";
-    var saltBytes=new Uint8Array(16);
-    crypto.getRandomValues(saltBytes);
-    var salt=hexOf(saltBytes.buffer);
-    hashPassword(salt,a).then(function(h){
-      var rec={v:1, salt:salt, hash:h, iter:ITER, createdAt:Date.now()};
-      try{ localStorage.setItem(GATE_KEY, JSON.stringify(rec)); }catch(e){}
-      return makeSession(rec);
-    }).then(function(){
-      submitBtn.disabled=false;
-      pw1.value=""; pw2.value="";
-      unlock();
-    }).catch(function(){
-      submitBtn.disabled=false; submitBtn.textContent="BUAT SANDI & BUKA";
-      showError("Gagal menyimpan sandi — coba lagi.");
-    });
-  }else{
-    var rec=loadRec();
-    if(!rec){ setMode("setup"); return; }
-    submitBtn.disabled=true; submitBtn.textContent="MEMERIKSA…";
-    hashPassword(rec.salt, pw1.value).then(function(h){
-      if(h===rec.hash){
-        fails=0;
-        if(lockEl) lockEl.textContent="";
-        submitBtn.disabled=false; submitBtn.textContent="BUKA KUNCI";
-        pw1.value="";
-        makeSession(rec).then(function(){ unlock(); });
-      }else{
-        fails++;
-        pw1.value="";
-        submitBtn.textContent="BUKA KUNCI";
-        showError("Sandi salah");
-        startLockout();
-      }
-    }).catch(function(){
-      submitBtn.disabled=false; submitBtn.textContent="BUKA KUNCI";
-      showError("Gagal memeriksa sandi — coba lagi.");
-    });
-  }
+  if(!pw1.value){ showError("Ketik kode akses dhisik."); return; }
+  submitBtn.disabled=true; submitBtn.textContent="MEMERIKSA…";
+  gateVerify(pw1.value).then(function(ok){
+    if(ok){
+      fails=0;
+      if(lockEl) lockEl.textContent="";
+      submitBtn.disabled=false; submitBtn.textContent="BUKA";
+      pw1.value="";
+      makeSession().then(function(){ unlock(); });
+    }else{
+      fails++;
+      pw1.value="";
+      submitBtn.disabled=false; submitBtn.textContent="BUKA";
+      showError("Kode akses salah");
+      startLockout();
+    }
+  }).catch(function(){
+    submitBtn.disabled=false; submitBtn.textContent="BUKA";
+    showError("Gagal memeriksa kode akses — coba lagi.");
+  });
 });
 /* tombol "Kunci" ndek header: mbusak sesi eling + langsung ngunci */
 var lockBtn=$("btnGateLock");
 if(lockBtn) lockBtn.addEventListener("click",function(){ lockNow(); });
-/* ---- boot gerbang: sesi eling sing valid langsung mbukak ---- */
-var rec0=loadRec();
-if(!rec0){
-  setMode("setup");
-}else if(!window.crypto||!crypto.subtle){
-  setMode("unlock");
+/* ---- boot gerbang: busak rekaman lawas, sesi eling valid langsung mbukak ---- */
+try{ localStorage.removeItem(OLD_GATE_KEY); localStorage.removeItem(OLD_SESS_KEY); }catch(e){}
+if(!window.crypto||!crypto.subtle){
+  showForm();
 }else{
-  validSession(rec0).then(function(ok){
+  validSession().then(function(ok){
     if(ok){ unlock(); }
-    else{ clearSess(); setMode("unlock"); }
-  }).catch(function(){ setMode("unlock"); });
+    else{ clearSess(); showForm(); }
+  }).catch(function(){ showForm(); });
 }
 })();
 </script>
