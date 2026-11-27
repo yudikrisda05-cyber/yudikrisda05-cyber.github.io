@@ -149,6 +149,24 @@
   #termPanel:fullscreen .tvwrap.on,#termPanel:-webkit-full-screen .tvwrap.on,#termPanel.fs-fallback .tvwrap.on{flex:1;height:auto;min-height:0}
   .tvnote{font-size:10.5px;color:var(--gold);font-weight:700;letter-spacing:.02em;padding:6px 10px;border-bottom:1px solid var(--line2);background:rgba(240,200,75,.06);line-height:1.45}
   .tvwrap .tradingview-widget-container{flex:1;min-height:0;width:100%}
+  /* ===== strip level JSNR ing mode OANDA: panel kompak persis ing
+     ngisore widget TradingView, ambane padha karo widget (anak saka
+     .tvwrap — mung katon nalika .tvwrap.on, tegese mung mode OANDA
+     ing tab PX). Isine state mesin JSNR sing padha karo panel status
+     JSNR mode ANALISA; gaya & werna melu kulawarga panel aplikasi ===== */
+  .jsnr-strip{border-top:1px solid var(--line2);background:rgba(7,11,18,.96);padding:6px 10px;font-size:10.5px;line-height:1.5}
+  .js-main{display:flex;flex-wrap:wrap;gap:1px 14px;align-items:baseline}
+  .js-bias{font-weight:800;letter-spacing:.08em;white-space:nowrap}
+  .js-seg{white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink);font-weight:700}
+  .js-seg .k{font-weight:800;letter-spacing:.05em}
+  .js-seg.buy .k{color:var(--jsnr-buy)} .js-seg.sell .k{color:var(--jsnr-sell)}
+  .js-seg .sc{color:var(--jsnr-rec);font-weight:800}
+  .js-seg .st{color:var(--muted);font-weight:600}
+  .js-seg .st.in{color:var(--jsnr-buy);font-weight:800}
+  .js-seg .st.in.sell{color:var(--jsnr-sell)}
+  .js-foot{color:var(--muted);white-space:nowrap}
+  .js-wait{color:var(--muted)}
+  .js-note{font-size:9.5px;color:var(--dim);margin-top:2px;line-height:1.4}
   /* bar nama zona personal (pengganti dialog penamaan bawaan browser yang tidak jalan di iframe) */
   .zonenamebar{display:none;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 8px;background:rgba(23,18,0,.94);border:1px solid rgba(240,200,75,.4);border-radius:10px;font-size:11px;color:var(--gold);font-weight:700;position:absolute;top:80px;left:50%;transform:translateX(-50%);z-index:7;width:min(94%,460px);box-shadow:0 3px 14px rgba(0,0,0,.5)}
   .zonenamebar.on{display:flex}
@@ -166,7 +184,32 @@
      BUY hijau, baris SELL merah, baris status di bawah tiap zona, baris
      kaki status tambahan) — garis sel tegas, bisa dilipat & ditutup
      (toggle PANEL di toolbar) */
-  .msnr-panel{position:absolute;top:110px;right:70px;z-index:4;width:238px;max-width:calc(100% - 84px);background:rgba(7,11,18,.92);border:1px solid #31435f;border-radius:3px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);font-size:10.5px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.45)}
+  /* tumpukan panel ngambang pojok tengen ndhuwur chart: wadhah flex
+     kolom — panel JSNR anak pertama, panel SKOR anak kapindho ing
+     ngisore; nek panel JSNR didhelikake, panel SKOR munggah dhewe */
+  .panelstack{position:absolute;top:110px;right:70px;z-index:4;width:238px;max-width:calc(100% - 84px);display:flex;flex-direction:column;gap:6px;pointer-events:none}
+  .panelstack>*{pointer-events:auto}
+  .msnr-panel{position:relative;width:100%;background:rgba(7,11,18,.92);border:1px solid #31435f;border-radius:3px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);font-size:10.5px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.45)}
+  /* ===== panel SKOR CONFLUENCE SMC — kulawarga visual padha karo
+     panel status JSNR (latar peteng, pinggir, font cilik) ===== */
+  .skor-panel{position:relative;width:100%;background:rgba(7,11,18,.92);border:1px solid #31435f;border-radius:3px;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);font-size:10.5px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.45)}
+  .sk-head{display:flex;align-items:center;gap:5px;padding:5px 8px;border-bottom:1px solid #31435f;background:rgba(34,211,238,.06)}
+  .sk-title{font-weight:800;letter-spacing:.07em;font-size:10px;color:var(--ink);white-space:nowrap}
+  .sk-chip{font-size:9px;font-weight:800;letter-spacing:.06em;border-radius:999px;padding:2px 7px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+  .sk-chip.bull{color:#20e3a2;border-color:rgba(32,227,162,.55)}
+  .sk-chip.bear{color:#ff4d6a;border-color:rgba(255,77,106,.55)}
+  .sk-sp{flex:1}
+  .sk-head button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:4px;min-height:18px;min-width:20px;font-size:10px;line-height:1;cursor:pointer;padding:0 4px}
+  .sk-score{display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:1px solid var(--line2)}
+  .sk-big{font-size:15px;font-weight:800;letter-spacing:.04em;color:var(--ink);font-variant-numeric:tabular-nums}
+  .sk-valid{background:#f0c84b;color:#171200;font-size:9px;font-weight:800;letter-spacing:.06em;border-radius:4px;padding:2px 6px;white-space:nowrap}
+  .sk-row{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:3px 8px;border-bottom:1px solid var(--line2)}
+  .sk-lab{color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sk-zlab{font-size:9px;color:var(--dim);margin-left:5px;letter-spacing:.05em;font-weight:700}
+  .sk-mark{font-weight:800;flex:none}
+  .sk-mark.ok{color:#20e3a2}
+  .sk-mark.no{color:var(--dim)}
+  .sk-note{padding:5px 8px;color:var(--muted);font-size:10px;text-align:center;letter-spacing:.02em;background:rgba(240,200,75,.05)}
   .mp-head{display:flex;align-items:center;gap:4px;padding:5px 8px;border-bottom:1px solid #31435f;background:rgba(34,211,238,.06);text-align:center}
   .mp-head .mp-bias{flex:1;font-weight:800;letter-spacing:.1em;font-size:10.5px;color:var(--jsnr-acc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .mp-head button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:4px;min-height:18px;min-width:20px;font-size:10px;line-height:1;cursor:pointer;padding:0 4px}
@@ -272,7 +315,7 @@
     .ovl-tr{flex-wrap:wrap;justify-content:flex-end;max-width:178px;gap:6px}
     .ovl-tr .tgl button{padding:0 6px;font-size:10px;min-height:22px}
     .term-legend{top:106px}
-    .msnr-panel{top:140px}
+    .panelstack{top:140px}
     .zonenamebar{top:106px}
     .ovl-ctrl{top:70px;right:8px}
     .indpop{top:106px;max-height:calc(100% - 114px)}
@@ -546,7 +589,7 @@
     <span class="brand">Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 18:07 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 27 Nov 2026 · 19:02 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
@@ -624,6 +667,7 @@
         <div class="chartwrap">
           <canvas id="chart"></canvas>
           <div class="term-legend" id="termLegend" style="display:none">Memuat candle…</div>
+          <div class="panelstack" id="panelStack">
           <div class="msnr-panel" id="msnrPanel">
             <div class="mp-head"><span class="mp-bias" id="msnrPanelBias">MSNR · —</span><button id="msnrPanelFold" aria-label="Lipat/buka panel MSNR" title="Lipat/buka">–</button><button id="msnrPanelClose" aria-label="Tutup panel MSNR" title="Tutup panel">✕</button></div>
             <div id="msnrPanelBody">
@@ -634,10 +678,35 @@
               <div class="mp-foot" id="mpFoot">—</div>
             </div>
           </div>
+          <!-- PANEL SKOR CONFLUENCE SMC — anak kapindho tumpukan panel
+               (sakngisore panel JSNR); didhelikake nek toggle SKOR mati,
+               mode OANDA, utawa njaba tab PX -->
+          <div class="skor-panel" id="skorPanel" style="display:none">
+            <div class="sk-head"><span class="sk-title">SKOR CONFLUENCE SMC</span><span class="sk-chip" id="skorChip">NETRAL</span><span class="sk-sp"></span><button id="skorPanelFold" aria-label="Lipat/buka panel skor" title="Lipat/buka">–</button><button id="skorPanelClose" aria-label="Tutup panel skor" title="Tutup panel">✕</button></div>
+            <div id="skorPanelBody">
+              <div class="sk-score"><span class="sk-big" id="skorBig">SKOR –/5</span><span class="sk-valid" id="skorValid" style="display:none">SETUP VALID</span></div>
+              <div class="sk-row"><span class="sk-lab">Struktur H1</span><span class="sk-mark no" id="skM-struktur">—</span></div>
+              <div class="sk-row"><span class="sk-lab">Zona H1<span class="sk-zlab" id="skZoneLab"></span></span><span class="sk-mark no" id="skM-zona">—</span></div>
+              <div class="sk-row"><span class="sk-lab">Sweep M15</span><span class="sk-mark no" id="skM-sweep">—</span></div>
+              <div class="sk-row"><span class="sk-lab">FVG M5</span><span class="sk-mark no" id="skM-fvg">—</span></div>
+              <div class="sk-row"><span class="sk-lab">OB M5</span><span class="sk-mark no" id="skM-ob">—</span></div>
+              <div class="sk-note" id="skorNote">durung ana setup</div>
+            </div>
+          </div>
+          </div><!-- /panelstack -->
         </div>
         <div class="tvwrap" id="tvWrap" aria-label="Chart referensi TradingView">
           <div class="tvnote">Referensi OANDA asli (TradingView) — garis JSNR &amp; marking ada di mode ANALISA</div>
           <div class="tradingview-widget-container" id="tvContainer"></div>
+          <!-- STRIP LEVEL JSNR (mode OANDA): state mesin JSNR aktif
+               ditampilne jejer widget — widget iframe ka-segel ora isa
+               digambari garis, dadi level-e wujud dhaptar kompak ing
+               kene. Diisi renderJsnrStrip() saka jsnrRes sing padha
+               karo panel status JSNR; label jujur tetep ing ngisore. -->
+          <div class="jsnr-strip" id="jsnrStrip">
+            <div class="js-main" id="jsnrStripMain"><span class="js-wait">JSNR lagi dietung…</span></div>
+            <div class="js-note">Level JSNR saka mesin ANALISA (Binance/PAXG) — referensi, ora digambar ndek njero chart OANDA</div>
+          </div>
         </div>
         <!-- OVERLAY MENU CHART — ngambang ing njero area chart (gaya
              SwiftEdge): simbol+timeframe ndhuwur-kiwa, mode+countdown+
@@ -741,6 +810,8 @@
             <button id="ind-foot" aria-pressed="false">FOOT</button>
             <button id="ind-absorb" aria-pressed="false">ABSORB</button>
             <button id="ind-tpo" aria-pressed="false">TPO</button>
+            <button id="ind-skor" aria-pressed="false">SKOR</button>
+            <button id="ind-presisi" aria-pressed="false">PRESISI</button>
           </div>
           <div class="indpop-foot">
             <button class="mini" id="btnCandles" style="margin-top:0">↻ MUAT ULANG CANDLE</button>
@@ -937,6 +1008,8 @@
       <p>Setup Teknikal dihitung dari buku perpetual saja — <b>bukan perintah order</b>, sejalan aturan Jarvis analis-saja. Selalu cek ulang terhadap Zona Pantau MSNR &amp; konteks sesi. Data: API publik Hyperliquid, langsung dari perangkat ini; tidak ada akun, tidak ada fungsi order. Jalur utama mode LIVE adalah <b>WebSocket per tick</b> (streaming l2Book mode <b>fast</b> + trades — langganan l2Book biasa dari Hyperliquid hanya mengirim buku ±0,13×/detik sehingga terasa diam; flag fast:true pada langganan yang sama menaikkan laju update buku ±14×, diuji langsung ke server 26 Nov 2026; baris DIAGNOSTIK LIVE menampilkan umur buku terakhir per simbol sebagai buktinya — data diterima &amp; diolah setiap pesan masuk, dan gambar ulang panel, chart, serta scanner digabung maksimal sekali per frame animasi supaya HP tidak terbebani dan tampilan mengalir mulus, bukan berkedip seperti refresh; status chip menampilkan “LIVE PER TICK · WEBSOCKET”); polling REST 2 detik hanya cadangan terakhir saat WebSocket putus dan status chip mengatakannya terus terang. Koneksi dijaga dengan ping/pong dua arah, dan watchdog menyambung ulang otomatis bila aliran tick diam lebih dari 15 detik (socket mati setengah-terbuka); label UPDATE menghitung jumlah tick WS yang sudah diterima sesi ini. Terminal Analisa menggambar candle dari <b>sumber resmi per simbol</b>: untuk <b>BTC, Binance Spot (BTCUSDT)</b> — muat awal dari REST klines resmi Binance (data-api.binance.vision, cadangan api.binance.com) dan candle berjalan dari WebSocket kline resmi Binance (data-stream.binance.vision, cadangan stream.binance.com:9443), jadi bentuk candle persis pasar spot asli; untuk <b>emas, PAXG dari Binance</b> — simbol <b>PAXGUSDT</b> lewat pipa Binance yang sama dengan BTC (REST klines + WebSocket kline resmi); PAXG adalah emas token yang harganya mengikuti spot emas sehingga menjadi proksi spot untuk XAU (label simbol chart tetap XAU), dekat dengan acuan spot OANDA Zona Pantau MSNR — zona tidak digeser dan duduk apa adanya di chart PAXG ≈ spot. Percobaan koneksi TradingView sudah dihapus dari alur muat XAU: server TradingView terbukti menolak koneksi dari halaman ini (WebSocket tutup kode 1006 pada dua varian URL, tercatat di foto diagnostik pengguna). <b>Pembangunan candle lokal dari tick dagang sudah dihapus total</b> — jalur rakitan itulah yang dulu membuat candle tidak beraturan; tick dagang Hyperliquid kini hanya dipakai untuk harga terakhir, CVD, dan panel-panel lain, tidak pernah membentuk atau mengubah candle. Sumber utama bersifat <b>NEMPEL (sticky)</b>: keheningan kline sesaat <b>tidak</b> mengganti sumber yang ditampilkan — <b>watchdog khusus</b> memperbaiki sambungan di latar (sambung ulang WebSocket + sinkron ulang REST) sementara chart dan label sumbernya tetap pada Binance. Chart baru jatuh ke <b>candle RESMI Hyperliquid (cadangan)</b> — hanya snapshot candleSnapshot REST + langganan WebSocket kanal candle resmi exchange, dengan snapshot disinkronkan ulang berkala tiap ±8 detik untuk mengoreksi candle berjalan, tanpa penggabungan rakitan lokal apa pun — bila Binance <b>mati terus-menerus ≥60 detik</b> tanpa data segar meski sudah disambung ulang dan dicoba lewat REST; setelah jatuh ke cadangan, chart <b>tetap di cadangan minimal 5 menit</b> dan hanya kembali ke Binance setelah Binance mengirim data segar terus-menerus ±30 detik, jadi label legenda OHLC selalu menyebut sumber yang benar-benar sedang ditampilkan dan tidak lagi gonta-ganti. Baris status menampilkan umur data candle terakhir sebagai <b>“Chart: X dtk lalu”</b> (merah bila &gt;10 detik) — kebasian selama perbaikan latar tetap terlihat jujur di sana. Di antara pembaruan kline, garis harga terakhir &amp; close candle tampilan di tepi live mengikuti <b>tick dagang Hyperliquid per tick</b> (tampilan saja, digeser sebesar basis terukur; candle tersimpan tetap murni dari sumber resmi). Mengganti timeframe meminta ulang candle dari sumber aktif untuk interval terpilih (nama interval chart 1m/5m/15m/1H/4H/1D sama dengan nama interval Binance &amp; kanal candle Hyperliquid). Chart bisa <b>diseret (pan)</b> untuk menelusuri riwayat candle dan di-<b>zoom</b> dengan cubit dua jari (pinch — jangkar di titik tengah cubit supaya area yang di-zoom tetap di tempat) atau roda mouse di desktop, dari 8 sampai 600 candle terlihat (bawaan 160; buffer candle 700); zoom rukun dengan pan — geser satu jari tetap menggeser, pan dimatikan selama pinch supaya jendela tidak melonjak — dan pinch tidak menggulir halaman (canvas touch-action:none + preventDefault); pan mengikuti pointer secara pecahan sub-candle (1:1, tanpa pembulatan ke candle utuh) dan seretan horizontal pada sumbu waktu (strip bawah) mengubah spasi candle ala TradingView; sisi kanan chart selalu menyisakan ruang kosong tetap (±8% jendela tampil, 3–14 candle) antara candle terakhir dan sumbu harga ala offset kanan TradingView, jadi harga tidak menempel tepi kanan dan chart leluasa digeser kiri/kanan; selama tidak digeser ke belakang, tampilan otomatis mengikuti candle terbaru, dan tombol KE TERBARU yang muncul saat melihat riwayat mengembalikan ke tepi live dengan ruang kanan standar itu. Skala vertikal (sumbu harga) bisa diatur manual: seret sumbu harga kanan ke atas/bawah untuk mempersempit/melebarkan rentang harga tampil di sekitar harga tengah, cubit vertikal dua jari melakukan hal yang sama, dan roda mouse di atas sumbu harga me-zoom vertikal di desktop; saat manual aktif label harga sumbu berwarna teal, seretan vertikal di area chart menggeser rentang harga, dan skala kembali otomatis lewat ketuk ganda pada sumbu harga, klik ganda mouse di sumbu, atau tombol SKALA AUTO — ganti simbol/timeframe juga mengembalikan skala otomatis. Timeframe tersedia 1m–1D, indikator EMA 20/50, VWAP harian, volume, panel RSI 14, dan panel MACD (12, 26, 9) — keduanya bisa dihidup-matikan dari toolbar indikator — plus piranti gambar personal yang tersimpan lokal per simbol di perangkat ini (trendline, garis harga, kotak zona personal bertepi emas putus-putus berlabel PERSONAL/nama sendiri) — data candle dari Binance Spot untuk BTC dan PAXG Binance untuk XAU (sumber yang sedang aktif per simbol selalu tertulis di baris legenda chart — “BINANCE SPOT” / “PAXG BINANCE ≈ SPOT” — termasuk saat jatuh ke cadangan Hyperliquid). Keselarasan orderbook di chart dijaga dengan <b>basis live terukur</b>: basis = mid perpetual Hyperliquid − mid spot Binance (BTC) atau mid PAXG (XAU, dari close bar terakhir); dinding &amp; bubble yang digambar di chart digeser sebesar basis itu — untuk gambar dipakai versi HALUSnya (rata-rata bergerak lambat dari basis mentah, diperbarui paling cepat tiap ±10 detik) supaya garis tidak meluncur mengikuti jitter basis per tick (harga gambar = harga perp − basis halus, label harga bertanda ≈spot; nilai basis mentah tampil apa adanya sebagai teks BASIS di bar atas chart dan di label “Sumber:” pada baris DIAGNOSTIK LIVE), sedangkan panel orderbook, ladder, scanner, dan CVD selalu memakai harga perpetual Hyperliquid asli tanpa digeser. Label “Sumber:” menggantikan kolom TV lama — percobaan TradingView tidak lagi ditampilkan karena tidak lagi dilakukan. Kedalaman orderbook dipilih per simbol dari panelnya: ALUS tanpa agregasi, SEDANG nSigFigs 4, JERU nSigFigs 3, PALING JERU nSigFigs 2 — Hyperliquid selalu mengirim maks 20 level/sisi, yang berubah adalah lebar agregasi harga tiap level; mode AUTO (bawaan) mengikuti timeframe Terminal Analisa (1m/5m ALUS, 15m SEDANG, 1H/4H JERU, 1D PALING JERU) supaya pada skala daily yang tampil adalah tumpukan harian, dan pilihan manual menimpa AUTO. Label jangkauan ±% di tiap panel dihitung dari buku terakhir yang diterima. Scanner Tumpukan tidak membaca buku ladder ini — ia punya langganan buku jeru sendiri (lihat paragraf Scanner di bawah).</p>
       <p>Scanner Tumpukan berlangganan buku JERU sendiri yang selalu aktif — l2Book WebSocket nSigFigs 3 + fast:true untuk BTC dan xyz:GOLD (jangkauan ±3,2% BTC / ±5,5% XAU dari mid), terpisah dari kedalaman ladder yang dipilih pengguna, supaya yang terdeteksi tumpukan dalam, bukan pucuk buku ±0,03%. Ia melacak semua level buku jeru itu dengan ukuran ≥2× median sisinya (median dihaluskan dengan rata-rata bergerak supaya ambang tidak berkedip): identitas tumpukan dikunci ke kisi harga absolut per simbol (BTC langkah $50, XAU langkah $5) supaya bucket agregasi nSigFigs yang bergeser mengikuti mid tidak terus mengganti identitas level yang sama; dicatat harga kisi, ukuran berjalan, puncak ukuran, dan sejak kapan level itu bertahan; tumpukan yang sudah tampil dipertahankan dengan ukuran terakhirnya selama masa tenggang 45 detik sejak terakhir terlihat di buku (bubble di chart memudar selama tenggang, bukan lenyap seketika) dan hanya dihapus bila absen melewati tenggang itu atau ukurannya jatuh jauh di bawah ambang (&lt;1,2× median halus) saat masih ada di buku; keadaan scanner tidak direset saat WebSocket-nya reconnect sesaat — masa tenggang hanya berjalan oleh snapshot nyata yang diterima tanpa level itu, bukan oleh jeda sambungan. Tumpukan terbesar per sisi dari daftar scan jeru yang sama digambar di Terminal Analisa sebagai garis putus-putus dinding berlabel singkat sisi + ukuran order + harga (lama bertahan tumpukan "awet …" tampil di Scanner) (bid teal, ask ungu; tombol DINDING) — dengan gerbang persistensi: garis hanya muncul setelah tumpukannya bertahan ≥30 detik di kisi tetap itu, dan tetap digambar memudar selama masa tenggang 45 detik saat levelnya absen sesaat, jadi dinding di chart adalah tumpukan awet yang sama dengan yang ditampilkan Scanner, bukan peringkat buku dangkal 20 level yang berubah tiap snapshot; pergeseran basis untuk menggambar dinding &amp; bubble memakai basis yang dihaluskan (rata-rata bergerak lambat dari basis mentah, diperbarui paling cepat tiap ±10 detik) supaya posisi garis tidak meluncur mengikuti jitter basis per tick — nilai basis mentah tetap ditampilkan apa adanya di teks BASIS bar atas chart dan baris DIAGNOSTIK LIVE — sengaja dibedakan gayanya dari garis Zona Pantau MSNR gaya JSNR (garis horizontal tipis (1,4–1,5px; zona fresh warna penuh, zona tested disamarkan ke ±55% untuk garis, dot, dan labelnya) palet JSNR — merah muda resistance/SELL, hijau support/BUY (status flip SBR/RBS dibaca dari teks label, bukan warna) — pada level kunci zona, TERKUNCI ke pemetaan harga chart: posisi vertikalnya dihitung ulang setiap frame dari view.min/view.max lewat fungsi Y() yang sama dengan yang dipakai candle pada frame itu (termasuk pan sub-candle, skala manual, dan auto-scale) dan digambar dalam klip area plot yang sama dengan candle, jadi garis tidak lepas dari levelnya saat chart digeser/di-zoom; zona lebar digambar dua garis tepi dengan arsir sangat tipis di antaranya; tiap garis memanjang dari tepi kiri sampai dekat sumbu harga kanan dan berakhir pada titik di ujung garisnya sendiri, tepat pada harga levelnya (zona lebar: dua garis tepi, masing-masing bertitik di level tepinya), label “harga level TIPE · fresh/tested” di kanan titik pada ketinggian yang sama persis dengan titiknya — label berdekatan hanya digeser mendatar dengan garis penghubung mungil, dot tidak pernah digeser dari levelnya; zona di luar rentang terlihat ditandai chip tepi ▲ DI ATAS / ▼ DI BAWAH + jarak %). Panel status JSNR berbentuk tabel di pojok kanan atas chart kini diisi mesin JSNR asli (bias storyline W+D, zona BUY/SELL terbaik dengan ★skor dan tahap sinyal menunggu/AWAS/DI ZONA/PEMICU/KONFIRMASI, baris kaki killzone waktu New York + hitungan sinyal terkonfirmasi/dihapus) bisa dihidup-matikan lewat toggle PANEL atau tombol ✕ di panelnya. Tumpukan yang sama juga ditandai lingkaran penanda likuiditas (bubble) di Terminal Analisa: lingkaran menempel pada candle terlihat terakhir yang buntutnya (wick) menyentuh level tumpukan itu — atau di tepi kanan plot pada level harganya bila belum ada candle yang menyentuh — dengan radius bertingkat dari rasio ukuran tumpukan terhadap median sisinya di buku jeru (≥5× paling besar, ≥3× sedang, ≥2× kecil), isi semi-transparan bertepi jelas (teal bid, ungu ask) dan label ukuran singkat di dalamnya; hidup-matikan lewat tombol BUBBLE. Ini pelacakan tumpukan berjalan sesi ini — bukan histori dan bukan jaminan level itu order asli (waspada spoofing). Khusus XAU, tumpukan juga bisa berasal dari buku order publik yang lebih dalam — Binance Futures, OKX, atau Gate — yang dicoba berurutan sebagai kaskade: sumber sehat pertama yang dipakai, dan sumber yang sedang aktif tertulis sebagai label kecil di header seksi XAU Scanner; bila ketiganya tidak sehat, scanner otomatis kembali ke buku jeru Hyperliquid seperti biasa. Level dari sumber eksternal digeser memakai basis live terhadap PAXG supaya tetap selaras dengan harga spot di chart.</p>
       <p>SMC: adhedhasar Smart Money Concepts [LuxAlgo] (CC BY-NC-SA 4.0)</p>
+      <p>SKOR: skor confluence SMC (Struktur H1 + Zona premium/discount H1 + Sweep M15 + FVG M5 + Order Block M5; SETUP VALID nek ≥3/5) dietung saka candle Binance sing WES CLOSE (XAU = PAXG ≈ spot), aturan diporting saka desain SMC open-source; mung analisa, dudu perintah order.</p>
+      <p>PRESISI: level saka rega swing H1 Binance/PAXG sing wes close + PDH/PDL, tanpa pelebaran ATR; band emas '2 METODE' = level PRESISI mlebu ndek njero zona JSNR (confluence loro metode); mung analisa, dudu perintah order.</p>
       <p>Heatmap orderbook (toggle HEAT di popup indikator) digambar sebagai lapisan latar chart dari rekaman buku jeru sesi ini — ia hanya menampilkan data sejak aplikasi dibuka pada sesi ini (rekaman disimpan di memori perangkat, hingga ±3 jam terakhir), bukan histori dari sebelum aplikasi dibuka.</p>
       <p>Footprint (toggle FOOT di popup indikator) diagregasi dari aggTrades Binance untuk candle yang terlihat saat mode FOOT aktif, bukan footprint tick-persis — candle di luar tampilan atau dari masa sebelum mode dihidupkan tidak memiliki data footprint dan digambar sebagai candle biasa; stacked imbalance dihitung dari perbandingan diagonal antar level harga di dalam candle yang sama.</p>
       <p>Absorption zones (toggle ABSORB di popup indikator) dihitung dari candle + delta taker-buy Binance yang tersimpan pada candle (delta = 2×takerBuy − volume, sama seperti kolom Δ pada STATS): candle dianggap absorpsi bila volumenya ≥1,5× rata-rata volume 20 candle sebelumnya dan |delta%| ≥40%, tetapi hasil harganya tidak sebanding — delta negatif kuat namun close tetap di paruh atas rentang candle (penjual diserap, zona mint) atau delta positif kuat namun close di paruh bawah rentang (pembeli diserap, zona merah muda). Zona digambar dari low–high candle itu dan memanjang ke kanan sampai ada body close menembus batasnya; maksimal 6 zona aktif terbaru yang digambar. Bila candle tidak memiliki data taker-buy (sumber cadangan Hyperliquid), ABSORB tidak menggambar apa pun.</p>
@@ -955,7 +1028,7 @@ var MARKETS=[
   {id:"gold", coin:"xyz:GOLD", name:"XAU PERP", tag:"HYPERLIQUID · PERP · xyz:GOLD", unit:"oz", dec:1, szDec:2, grid:5}
 ];
 var state={ mode:"live", ws:null, wsOk:false, pollTimer:null, pingTimer:null, retryTimer:null, retryDelay:3000, watchTimer:null, lastMsg:0, ticks:0 };
-var chart={ sym:"gold", tf:300, itv:"15m", viewMode:"analisa", ema:false, vwap:false, vol:true, rsi:true, macd:false, stoch:true, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:false, bubbles:true, panel:false, vprof:false, smc:true, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, info:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
+var chart={ sym:"gold", tf:300, itv:"15m", viewMode:"analisa", ema:false, vwap:false, vol:true, rsi:true, macd:false, stoch:true, cci:false, adx:false, obv:false, mfi:false, rvol:false, walls:true, zones:false, bubbles:true, panel:false, vprof:false, smc:true, smcObs:false, smcFvg:false, smcPd:false, snr:false, vband:false, pivot:false, strend:false, bb:false, kelt:false, don:false, orbs:false, stats:false, heat:false, foot:false, absorb:false, tpo:false, skor:false, presisi:false, info:true, tool:"cursor", cross:null, draft:null, pan:0, drag:null, hoverIdx:-1, visible:160, pointers:{}, pinch:null, yAuto:true, yMin:0, yMax:0, axisDrag:null, tAxisDrag:null, lastAxisTap:0 };
 var ITV_MS={ "1m":60000, "5m":300000, "15m":900000, "1h":3600000, "4h":14400000, "1d":86400000 };
 var M={};
 MARKETS.forEach(function(m){ M[m.id]={def:m, book:null, trades:[], cvd:0, cvdN:0, cvdLog:[], cvdSeries:[], el:null, hist:[], firstMid:null, stacks:{}, medSm:{bid:0,ask:0}, deepBook:null, lastDeepAt:0, candles:[], drawings:[], lastWsAt:0, wsTimes:[], lastBookAt:0, depthMode:"auto", appliedDepth:null, subNsig:null}; });
@@ -3033,7 +3106,56 @@ function zoneTypeShort(z){
    dan baris kaki killzone New York + hitungan sinyal. Hidup/mati lewat chart.panel
    (toggle PANEL di toolbar / tombol ✕ di panel), lipat lewat tombol –. */
 var msnrPanelCache="";
+/* ---- strip level JSNR ing mode OANDA ----
+   Strip kompak ing ngisore widget TradingView (njero .tvwrap, dadi
+   mung katon ing mode OANDA tab PX). MUNG nampilne state mesin JSNR
+   sing wis dietung (jsnrRes[chart.sym]) — persis data & formatting
+   sing padha karo cabang mesin JSNR ing updateMsnrPanel nduwur:
+   bias storyline, zona BUY/SELL paling apik (rentang + ★skor +
+   status), lan kaki killzone + hitungan sinyal. Ora ana etungan
+   utawa fetch dhewe. Diteluk saka dalan update sing padha karo
+   panel status JSNR: updateMsnrPanel(), rampunge etung maneh mesin
+   ing deferComputeJsnr(), ganti mode ing setChartViewMode(), lan
+   ganti simbol ing setChartSym() — dadi melu refresh saben mesin
+   etung maneh kalebu nalika mode OANDA lagi aktif (drawChart metu
+   luwih dhisik ing mode OANDA, mula kait deferComputeJsnr sing
+   njamin refresh ing kana). */
+var jsnrStripCache="";
+function renderJsnrStrip(){
+  var main=$("jsnrStripMain"); if(!main) return;
+  var engS=(typeof jsnrRes!=="undefined"&&jsnrRes)? jsnrRes[chart.sym] : null;
+  if(!engS){
+    var waitKey="wait|"+chart.sym;
+    if(jsnrStripCache!==waitKey){
+      jsnrStripCache=waitKey;
+      main.innerHTML='<span class="js-wait">JSNR lagi dietung…</span>';
+    }
+    return;
+  }
+  var mS=M[chart.sym].def;
+  var biasTxtS= engS.bias===1? "BULLISH ▲" : engS.bias===-1? "BEARISH ▼" : "CAMPUR ◆";
+  var bcolS= engS.bias===1? "#20e3a2" : engS.bias===-1? "#ff4d6a" : "#f0c84b";
+  var buyTxtS= engS.buy? fmt(engS.buy.lo,mS.dec)+" – "+fmt(engS.buy.hi,mS.dec)+"  ★"+fmtScore(engS.buy.adjScore) : "tidak ada zona layak";
+  var sellTxtS= engS.sell? fmt(engS.sell.lo,mS.dec)+" – "+fmt(engS.sell.hi,mS.dec)+"  ★"+fmtScore(engS.sell.adjScore) : "tidak ada zona layak";
+  var footTxtS= engS.kz+" · ✓"+engS.nConf+" terkonfirmasi · ✗"+engS.nFail+" dihapus";
+  var keyS="J|"+biasTxtS+"|"+buyTxtS+"|"+sellTxtS+"|"+engS.stateBuy+"|"+engS.stateSell+"|"+footTxtS+"|"+chart.sym;
+  if(keyS===jsnrStripCache) return;
+  jsnrStripCache=keyS;
+  var buySegS= engS.buy
+    ? '<span class="k">BUY</span> '+fmt(engS.buy.lo,mS.dec)+' – '+fmt(engS.buy.hi,mS.dec)+' <span class="sc">★'+fmtScore(engS.buy.adjScore)+'</span> <span class="st'+(engS.stateBuy===2||engS.stateBuy===4? " in":"")+'">('+jsnrStateName(engS.stateBuy)+')</span>'
+    : '<span class="k">BUY</span> tidak ada zona layak';
+  var sellSegS= engS.sell
+    ? '<span class="k">SELL</span> '+fmt(engS.sell.lo,mS.dec)+' – '+fmt(engS.sell.hi,mS.dec)+' <span class="sc">★'+fmtScore(engS.sell.adjScore)+'</span> <span class="st'+(engS.stateSell===2||engS.stateSell===4? " in sell":"")+'">('+jsnrStateName(engS.stateSell)+')</span>'
+    : '<span class="k">SELL</span> tidak ada zona layak';
+  main.innerHTML=
+    '<span class="js-bias" style="color:'+bcolS+'">JSNR · '+biasTxtS+'</span>'
+    +'<span class="js-seg buy">'+buySegS+'</span>'
+    +'<span class="js-seg sell">'+sellSegS+'</span>'
+    +'<span class="js-foot">'+footTxtS+'</span>';
+}
 function updateMsnrPanel(){
+  try{ renderSkorPanel(); }catch(e){}
+  try{ renderJsnrStrip(); }catch(e){}
   var p=$("msnrPanel"); if(!p) return;
   p.style.display= chart.panel? "block":"none";
   if(!chart.panel) return;
@@ -4016,6 +4138,14 @@ function drawChart(){
       if(chart.absorb&&indD.absorb){ try{ drawAbsorbData(indD.absorb,m); }catch(e){} }
       if(chart.tpo&&indD.tpo){ try{ drawTPOData(indD.tpo,m); }catch(e){} }
     }
+  }
+  /* ===== PRESISI: level rega tunggal + band confluence "2 METODE" =====
+     Digambar sakwise candle & kulawarga garis zona (JSNR/SNR), kekunci
+     pemetaan X()/Y() frame iki kaya overlay liyane; mode OANDA wis
+     metu luwih dhisik ing ndhuwur drawChart dadi otomatis didhelikake.
+     Toggle mati = ora ana garis lan ora ana band sing digambar. */
+  if(chart.presisi){
+    try{ drawPresisiData(cs,m); }catch(e){}
   }
   /* objek gambar pengguna */
   drawObjects(s,m);
@@ -5655,6 +5785,8 @@ function setChartViewMode(mode){
   } else {
     drawChart();
   }
+  try{ renderSkorPanel(); }catch(e){}
+  try{ renderJsnrStrip(); }catch(e){}
 }
 $("modeAnalisa").addEventListener("click",function(){ setChartViewMode("analisa"); });
 $("modeOanda").addEventListener("click",function(){ setChartViewMode("oanda"); });
@@ -5737,6 +5869,8 @@ function setChartSym(id){
   if(!M[id].candles.length) fetchCandles(id);
   msnrPanelCache="";
   ensureJsnr(id); updateJsnrStatus();
+  try{ skorCacheKey=""; if(chart.skor) skorRun(id); renderSkorPanel(); }catch(e){}
+  try{ renderJsnrStrip(); }catch(e){}
   startCandleSource();
   drawChart();
 }
@@ -5837,6 +5971,427 @@ function updateDiag(){
 }
 setInterval(updateDiag,1000);
 
+/* ============ PANEL SKOR CONFLUENCE SMC ============
+   Porting setia desain skoring SMC open-source (mesin Python: 5
+   detektor + skor confluence 0–5, setup valid nek ≥3): Struktur H1 +
+   Zona premium/discount H1 + Sweep M15 + FVG M5 + Order Block M5.
+   MUNG ANALISA — ora ana fungsi order apa wae. Kabeh etungan mung
+   nganggo candle Binance sing WES CLOSE (candle sing isih kawangun
+   dibuwang): BTC = BTCUSDT, XAU = PAXGUSDT ≈ spot, liwat pipa REST
+   klines sing padha karo mesin JSNR (BN_REST, host cadangan padha).
+   Modul iki di-isolasi try/catch kaya modul liyane — gagal fetch /
+   data kurang (H1 < 50 candle) mung marai panel nampilne kahanan
+   kalem "durung ana setup", ora tau ngalangi render chart.
+   Fungsi detektor murni (input candle = array {t,o,h,l,c,v} urut
+   lawas→anyar) diekspos menyang window ben isa dites saka njaba. */
+function skorATR(cs, period){
+  period=period||14;
+  var out=new Array(cs.length), atr=null;
+  for(var i=0;i<cs.length;i++){
+    var c=cs[i], tr;
+    if(i===0) tr=c.h-c.l;
+    else{ var pc=cs[i-1].c; tr=Math.max(c.h-c.l, Math.abs(c.h-pc), Math.abs(c.l-pc)); }
+    if(atr===null) atr=tr; else atr= atr+(tr-atr)/period;
+    out[i]=atr;
+  }
+  return out;
+}
+function skorSwings(cs, strength, lookback){
+  strength=strength||5; lookback=lookback||100;
+  var win=cs.slice(-lookback), n=win.length, highs=[], lows=[];
+  for(var i=strength;i<=n-strength-1;i++){
+    var isH=true, isL=true;
+    for(var j=i-strength;j<i;j++){ if(win[j].h>=win[i].h) isH=false; if(win[j].l<=win[i].l) isL=false; }
+    for(var k=i+1;k<=i+strength;k++){ if(win[k].h>=win[i].h) isH=false; if(win[k].l<=win[i].l) isL=false; }
+    if(isH) highs.push({i:i,p:win[i].h});
+    if(isL) lows.push({i:i,p:win[i].l});
+  }
+  return {highs:highs, lows:lows};
+}
+function skorStructure(cs){
+  var win=cs.slice(-100);
+  var sw=skorSwings(cs,5,100), highs=sw.highs, lows=sw.lows;
+  var priorBias="ranging";
+  if(highs.length>=2&&lows.length>=2){
+    var lh1=highs[highs.length-1].p, lh0=highs[highs.length-2].p, ll1=lows[lows.length-1].p, ll0=lows[lows.length-2].p;
+    if(lh1>lh0&&ll1>ll0) priorBias="bullish";
+    else if(lh1<lh0&&ll1<ll0) priorBias="bearish";
+  }
+  var lastBos=null, lastMss=null;
+  if(highs.length&&lows.length){
+    var lastSH=highs[highs.length-1].p, lastSL=lows[lows.length-1].p;
+    for(var i=Math.max(0,win.length-10);i<win.length;i++){
+      var c=win[i].c;
+      if(c>lastSH){ if(priorBias==="bullish") lastBos="bullish"; else lastMss="bullish"; }
+      if(c<lastSL){ if(priorBias==="bearish") lastBos="bearish"; else lastMss="bearish"; }
+    }
+  }
+  var choch= !!(lastBos&&lastMss&&lastBos!==lastMss);
+  return {trendBias:(lastMss||lastBos||priorBias), lastBos:lastBos, lastMss:lastMss, choch:choch};
+}
+function skorZone(cs){
+  if(!cs||cs.length<50) return null;
+  var win=cs.slice(-50), hi=-Infinity, lo=Infinity;
+  for(var i=0;i<win.length;i++){ if(win[i].h>hi) hi=win[i].h; if(win[i].l<lo) lo=win[i].l; }
+  var range=hi-lo; if(!(range>0)) return null;
+  var pct=(cs[cs.length-1].c-lo)/range; if(pct<0) pct=0; if(pct>1) pct=1;
+  var atEq=(pct>=0.47&&pct<=0.53), inPremium=(pct>0.53), inDiscount=(pct<0.47);
+  return {label:(atEq? "equilibrium" : (inPremium? "premium" : "discount")), inPremium:inPremium, inDiscount:inDiscount, atEq:atEq, pct:pct};
+}
+function skorSweep(cs, atrs){
+  var win=cs.slice(-100), n=win.length;
+  var sw=skorSwings(cs,5,100);
+  var avgVol=0;
+  for(var i=0;i<n;i++) avgVol+=(win[i].v||0);
+  avgVol= n? avgVol/n : 0;
+  var aSum=0, aCnt=0;
+  for(var a=cs.length-n;a<cs.length;a++){ if(atrs&&atrs[a]!=null){ aSum+=atrs[a]; aCnt++; } }
+  var avgATR= aCnt? aSum/aCnt : 0;
+  var best=null;
+  for(var w=Math.max(0,n-10);w<n;w++){
+    var cd=win[w];
+    for(var x=sw.highs.length-1;x>=0;x--){
+      var lvlH=sw.highs[x].p, extH=cd.h-lvlH;
+      if(extH>=2.0&&cd.c<lvlH){
+        var stH=Math.min(3, 1+(extH>0.5*avgATR? 1:0)+((cd.v||0)>1.5*avgVol? 1:0));
+        if(!best||stH>best.strength) best={direction:"bearish", strength:stH};
+        break;
+      }
+    }
+    for(var y=sw.lows.length-1;y>=0;y--){
+      var lvlL=sw.lows[y].p, extL=lvlL-cd.l;
+      if(extL>=2.0&&cd.c>lvlL){
+        var stL=Math.min(3, 1+(extL>0.5*avgATR? 1:0)+((cd.v||0)>1.5*avgVol? 1:0));
+        if(!best||stL>best.strength) best={direction:"bullish", strength:stL};
+        break;
+      }
+    }
+  }
+  if(!best) return {swept:false, direction:null, strength:0};
+  return {swept:true, direction:best.direction, strength:best.strength};
+}
+function skorFVG(cs){
+  var win=cs.slice(-100), n=win.length, best=null;
+  for(var i=Math.max(1,n-20);i<=n-2;i++){
+    var c1=win[i-1], c3=win[i+1], cand=null;
+    if(c3.l>c1.h){
+      var fB=false;
+      for(var j=i+2;j<n;j++){ if(win[j].l<=c3.l&&win[j].l>=c1.h){ fB=true; break; } }
+      cand={direction:"bullish", isFilled:fB};
+    } else if(c3.h<c1.l){
+      var fS=false;
+      for(var j2=i+2;j2<n;j2++){ if(win[j2].h>=c3.h&&win[j2].h<=c1.l){ fS=true; break; } }
+      cand={direction:"bearish", isFilled:fS};
+    }
+    if(!cand) continue;
+    if(!best) best=cand;
+    else if(best.isFilled&&!cand.isFilled) best=cand;
+    else if(best.isFilled===cand.isFilled) best=cand;
+  }
+  if(!best) return {detected:false, direction:null, isFilled:false};
+  return {detected:true, direction:best.direction, isFilled:best.isFilled};
+}
+function skorOB(cs, atrs){
+  var win=cs.slice(-100), n=win.length, off=cs.length-n, best=null;
+  for(var i=Math.max(0,n-30);i<=n-2;i++){
+    var ob=win[i], imp=win[i+1];
+    var body=Math.abs(imp.c-imp.o);
+    var atr= atrs? atrs[off+i] : null;
+    if(atr==null||!(atr>0)||body<1.0*atr) continue;
+    var dir=null;
+    if(ob.c<ob.o&&imp.c>imp.o) dir="bullish";
+    else if(ob.c>ob.o&&imp.c<imp.o) dir="bearish";
+    if(!dir) continue;
+    var mit=false;
+    for(var j=i+2;j<n;j++){ if(win[j].l<=ob.h&&win[j].h>=ob.l){ mit=true; break; } }
+    var ratio=body/atr, st=(ratio>=2.0? 3 : (ratio>=1.5? 2 : 1));
+    var cand={direction:dir, isMitigated:mit, strength:st};
+    if(!best) best=cand;
+    else if(best.isMitigated&&!cand.isMitigated) best=cand;
+    else if(best.isMitigated===cand.isMitigated&&cand.strength>best.strength) best=cand;
+  }
+  if(!best) return {detected:false, direction:null, isMitigated:false, strength:0};
+  return {detected:true, direction:best.direction, isMitigated:best.isMitigated, strength:best.strength};
+}
+function skorConfluence(h1, m15, m5){
+  var bias= (h1&&h1.structure)? h1.structure.trendBias : "ranging";
+  var parts={};
+  parts.struktur= !!h1&&!!h1.structure&&h1.structure.trendBias===bias;
+  parts.zona= !!h1&&!!h1.zone&&((bias==="bullish"&&!!h1.zone.inDiscount)||(bias==="bearish"&&!!h1.zone.inPremium));
+  parts.sweep= !!m15&&!!m15.sweep&&!!m15.sweep.swept&&m15.sweep.direction===bias;
+  parts.fvg= !!m5&&!!m5.fvg&&!!m5.fvg.detected&&!m5.fvg.isFilled&&m5.fvg.direction===bias;
+  parts.ob= !!m5&&!!m5.ob&&!!m5.ob.detected&&!m5.ob.isMitigated&&m5.ob.direction===bias;
+  var score=0;
+  for(var k in parts){ if(parts[k]) score++; }
+  return {bias:bias, score:score, valid:(score>=3), parts:parts};
+}
+try{
+  window.skorATR=skorATR; window.skorSwings=skorSwings; window.skorStructure=skorStructure; window.skorZone=skorZone;
+  window.skorSweep=skorSweep; window.skorFVG=skorFVG; window.skorOB=skorOB; window.skorConfluence=skorConfluence;
+}catch(e){}
+/* ---- data + etungan: fetch candle Binance WES CLOSE 5m/15m/1h ---- */
+var SKOR_MS={"5m":300000, "15m":900000, "1h":3600000};
+var skorData={}, skorBusy={}, skorCacheKey="";
+function skorFetchClosed(id, interval){
+  var sym=BIN_SYM[id]||"BTCUSDT";
+  function tryHost(idx){
+    if(idx>=BN_REST.length) return Promise.reject(new Error("klines SKOR gagal"));
+    return fetch(BN_REST[idx]+"?symbol="+sym+"&interval="+interval+"&limit=250")
+      .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
+      .then(function(list){
+        if(!Array.isArray(list)) throw new Error("klines kosong");
+        var now=Date.now(), ms=SKOR_MS[interval]||900000;
+        return list.map(function(k){ return {t:+k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4], v:+k[5]||0}; })
+          .filter(function(c){ return c.t&&c.o>0&&c.h>0&&c.l>0&&c.c>0&&(c.t+ms)<=now; })
+          .slice(-200);
+      })
+      .catch(function(){ return tryHost(idx+1); });
+  }
+  return tryHost(0);
+}
+function skorRun(id){
+  try{
+    if(!chart.skor||skorBusy[id]) return;
+    skorBusy[id]=true;
+    Promise.all([skorFetchClosed(id,"5m"), skorFetchClosed(id,"15m"), skorFetchClosed(id,"1h")])
+      .then(function(res){
+        skorBusy[id]=false;
+        try{
+          var m5cs=res[0], m15cs=res[1], h1cs=res[2];
+          if(!h1cs||h1cs.length<50||!m5cs||!m5cs.length||!m15cs||!m15cs.length){ skorData[id]=null; }
+          else{
+            var atrsM5=skorATR(m5cs), atrsM15=skorATR(m15cs);
+            var h1={structure:skorStructure(h1cs), zone:skorZone(h1cs)};
+            var m15={sweep:skorSweep(m15cs, atrsM15)};
+            var m5={fvg:skorFVG(m5cs), ob:skorOB(m5cs, atrsM5)};
+            skorData[id]={conf:skorConfluence(h1,m15,m5), zoneLabel:(h1.zone? h1.zone.label : null), at:Date.now()};
+          }
+        }catch(e){ skorData[id]=null; }
+        if(id===chart.sym){ skorCacheKey=""; renderSkorPanel(); }
+      })
+      .catch(function(){ skorBusy[id]=false; if(id===chart.sym){ skorCacheKey=""; renderSkorPanel(); } });
+  }catch(e){ skorBusy[id]=false; }
+}
+/* ---- render panel SKOR ---- */
+function renderSkorPanel(){
+  var p=$("skorPanel"); if(!p) return;
+  var show= !!chart.skor&&chart.viewMode!=="oanda";
+  p.style.display= show? "block":"none";
+  if(!show) return;
+  var body=$("skorPanelBody");
+  var collapsed=p.getAttribute("data-collapsed")==="1";
+  if(body) body.style.display= collapsed? "none":"block";
+  var fold=$("skorPanelFold"); if(fold) fold.textContent= collapsed? "+":"–";
+  var d=skorData[chart.sym]||null;
+  var key= chart.sym+"|"+(d? (d.conf.bias+"|"+d.conf.score+"|"+d.conf.valid+"|"+d.conf.parts.struktur+"|"+d.conf.parts.zona+"|"+d.conf.parts.sweep+"|"+d.conf.parts.fvg+"|"+d.conf.parts.ob+"|"+d.zoneLabel) : "nodata");
+  if(key===skorCacheKey) return;
+  skorCacheKey=key;
+  var chip=$("skorChip"), big=$("skorBig"), validEl=$("skorValid"), note=$("skorNote");
+  var bias= d? d.conf.bias : "ranging";
+  if(chip){
+    chip.textContent= bias==="bullish"? "BULLISH" : bias==="bearish"? "BEARISH" : "NETRAL";
+    chip.className= "sk-chip"+(bias==="bullish"? " bull" : bias==="bearish"? " bear" : "");
+  }
+  if(big) big.textContent= d? ("SKOR "+d.conf.score+"/5") : "SKOR –/5";
+  if(validEl) validEl.style.display= (d&&d.conf.valid)? "" : "none";
+  function setMark(id, ok){
+    var el=$(id); if(!el) return;
+    el.textContent= ok? "✓" : "—";
+    el.className= "sk-mark "+(ok? "ok":"no");
+  }
+  var parts= d? d.conf.parts : null;
+  setMark("skM-struktur", !!(parts&&parts.struktur));
+  setMark("skM-zona", !!(parts&&parts.zona));
+  setMark("skM-sweep", !!(parts&&parts.sweep));
+  setMark("skM-fvg", !!(parts&&parts.fvg));
+  setMark("skM-ob", !!(parts&&parts.ob));
+  var zl=$("skZoneLab");
+  if(zl) zl.textContent= (d&&d.zoneLabel)? (d.zoneLabel==="discount"? "DISCOUNT" : d.zoneLabel==="premium"? "PREMIUM" : "EQ") : "";
+  if(note) note.style.display= (!d||bias==="ranging")? "" : "none";
+}
+/* ---- toggle SKOR: standar MATI, disimpen pola pref PANEL
+   (localStorage "obhp_skor_v1"); ORA klebu migrasi standar apa wae
+   — pengguna sing wis ana tetep OFF nganti nguripne dhewe ---- */
+var SKOR_PREF_KEY="obhp_skor_v1";
+function saveSkorPref(){ try{ localStorage.setItem(SKOR_PREF_KEY, chart.skor? "1":"0"); }catch(e){} }
+try{
+  if(localStorage.getItem(SKOR_PREF_KEY)==="1"){
+    chart.skor=true;
+    var skorBtn0=$("ind-skor"); if(skorBtn0) skorBtn0.setAttribute("aria-pressed","true");
+  }
+}catch(e){}
+bindToggle("ind-skor","skor",function(){
+  saveSkorPref(); skorCacheKey=""; renderSkorPanel();
+  if(chart.skor) skorRun(chart.sym);
+});
+var skorCloseEl=$("skorPanelClose");
+if(skorCloseEl) skorCloseEl.addEventListener("click",function(){
+  chart.skor=false;
+  var t=$("ind-skor"); if(t) t.setAttribute("aria-pressed","false");
+  saveSkorPref(); renderSkorPanel();
+});
+var skorFoldEl=$("skorPanelFold");
+if(skorFoldEl) skorFoldEl.addEventListener("click",function(){
+  var p=$("skorPanel"); if(!p) return;
+  p.setAttribute("data-collapsed", p.getAttribute("data-collapsed")==="1"? "0":"1");
+  renderSkorPanel();
+});
+/* kadens etung maneh: paling kerep saben ±30 detik (mung nek toggle urip) */
+setInterval(function(){ try{ if(chart.skor&&!document.hidden) skorRun(chart.sym); }catch(e){} },30000);
+try{ renderSkorPanel(); if(chart.skor) skorRun(chart.sym); }catch(e){}
+
+/* ============ PRESISI — METODE ZONA KAPINDHO NDEK CHART ============
+   Level rega TUNGGAL sing presisi: rega swing H1 PERSIS (high/low
+   candle swing) TANPA pelebaran/clustering ATR apa wae — beda karo
+   zona JSNR sing adaptif (kekandelan melu ATR). Deteksi swing sing
+   dienggo = swing SNR klasik dawa 10 (10 candle kiwa + 10 tengen,
+   persis loop calcSNR), amarga data H1 mesin JSNR akeh (nganti 1000
+   candle) dadi swing dawa 10 stabil; level-e dijupuk rega persise,
+   ora dirata-rata kaya clustering SNR. Ditambah PDH/PDL (high/low
+   dina UTC sadurunge) nganggo derivasi sing padha karo calcPivot()
+   (candle D mesin JSNR). Data: cache H1 mesin JSNR (jsnrData) sing
+   mung candle WES CLOSE (slice(0,-1) kaya mesin JSNR dhewe) — ora
+   ana pipa anyar; etung maneh melu kadens sumber-e (tutup H1 / ganti
+   simbol, dideteksi saka t candle close pungkasan) + nalika rega
+   nyabrang level (role flip). MUNG ANALISA — ora ana fungsi order.
+   Fungsi murni presisiLevels diekspos menyang window ben isa dites
+   saka njaba. */
+function presisiLevels(h1cs, pdh, pdl, price){
+  var empty={above:[], below:[]};
+  if(!(price>0)) return empty;
+  var pts=[];
+  if(h1cs&&h1cs.length){
+    var L=10, n=h1cs.length;
+    for(var s=L;s<n-L;s++){
+      var c=h1cs[s], isH=true, isL=true;
+      for(var j=s-L;j<=s+L;j++){
+        if(j===s) continue;
+        if(h1cs[j].h>=c.h) isH=false;
+        if(h1cs[j].l<=c.l) isL=false;
+        if(!isH&&!isL) break;
+      }
+      if(isH) pts.push(c.h);
+      if(isL) pts.push(c.l);
+    }
+  }
+  if(pdh!=null&&isFinite(pdh)&&pdh>0) pts.push(+pdh);
+  if(pdl!=null&&isFinite(pdl)&&pdl>0) pts.push(+pdl);
+  if(!pts.length) return empty;
+  pts.sort(function(a,b){ return a-b; });
+  var uniq=[];
+  pts.forEach(function(p){ if(!uniq.length||p!==uniq[uniq.length-1]) uniq.push(p); });
+  var above=[], below=[];
+  uniq.forEach(function(p){
+    if(p>price) above.push({p:p, role:"resistance"});
+    else if(p<price) below.push({p:p, role:"support"});
+  });
+  above.sort(function(a,b){ return a.p-b.p; });
+  below.sort(function(a,b){ return b.p-a.p; });
+  return { above:above.slice(0,3), below:below.slice(0,3) };
+}
+try{ window.presisiLevels=presisiLevels; }catch(e){}
+/* cache level simbol aktif: kunci = simbol + t candle H1 close
+   pungkasan + PDH/PDL — etung maneh mung nalika sumber owah (tutup
+   H1 / ganti simbol) utawa rega nyabrang level sing lagi digambar
+   (role kudu flip); kabeh di-isolasi try/catch, ora ngalangi render */
+var presisiCache={ key:"", price:0, data:null };
+function presisiCurrent(price){
+  try{
+    if(typeof jsnrData==="undefined"||!jsnrData) return null;
+    var dd=jsnrData[chart.sym]; if(!dd||!dd.H1||dd.H1.length<25) return null;
+    var closed=dd.H1.slice(0,-1); if(closed.length<22) return null;
+    var pv=null; try{ pv=calcPivot(); }catch(e){}
+    var pdh= pv? pv.pdh : null, pdl= pv? pv.pdl : null;
+    var key=chart.sym+"|"+closed[closed.length-1].t+"|"+pdh+"|"+pdl;
+    var stale= presisiCache.key!==key||!presisiCache.data;
+    if(!stale&&presisiCache.data){
+      var all=presisiCache.data.above.concat(presisiCache.data.below);
+      for(var i=0;i<all.length;i++){
+        if((all[i].p-presisiCache.price)*(all[i].p-price)<0){ stale=true; break; }
+      }
+    }
+    if(stale) presisiCache={ key:key, price:price, data:presisiLevels(closed, pdh, pdl, price) };
+    return presisiCache.data;
+  }catch(e){ return null; }
+}
+/* gambar: (1) band confluence EMAS "2 METODE" — zona JSNR (saka
+   jsnrRes, TANPA nggatekne toggle ZONA MSNR) sing njerone ana level
+   PRESISI; CAP 2 paling cedhak karo rega; alpha ±0,12 samar banget.
+   (2) garis level PRESISI: TIPIS 1px DOTTED (titik-titik — beda karo
+   garis JSNR sing utuh lan SNR klasik sing dashed), slate padhang
+   netral alpha stroke ±0,40 sak kulawarga garis dinding sing samar;
+   label rega cilik ing pinggir kiwa kaya label level liyane (SNR/
+   PIVOT), font cilik kalem ORA bold. */
+function drawPresisiData(cs,m){
+  var price=cs[cs.length-1].c;
+  var lv=presisiCurrent(price); if(!lv) return;
+  var plotR=view.W-64;
+  /* ---- band confluence 2 METODE ---- */
+  var eng=null;
+  try{ eng=(typeof jsnrRes!=="undefined"&&jsnrRes)? jsnrRes[chart.sym] : null; }catch(e){}
+  var allLv=lv.above.concat(lv.below);
+  if(eng&&eng.zones&&eng.zones.length&&allLv.length){
+    var hits=[];
+    eng.zones.forEach(function(z){
+      for(var i=0;i<allLv.length;i++){
+        if(allLv[i].p>=z.lo&&allLv[i].p<=z.hi){
+          var dist= price>z.hi? price-z.hi : (price<z.lo? z.lo-price : 0);
+          hits.push({z:z, dist:dist});
+          break;
+        }
+      }
+    });
+    hits.sort(function(a,b){ return a.dist-b.dist; });
+    hits=hits.slice(0,2);
+    if(hits.length){
+      ctx.save(); ctx.beginPath(); ctx.rect(0,0,plotR,view.H); ctx.clip();
+      hits.forEach(function(h){
+        if(h.z.hi<view.min||h.z.lo>view.max) return;
+        var yT=Y(Math.min(h.z.hi,view.max)), yB=Y(Math.max(h.z.lo,view.min));
+        if(yB-yT<2) return;
+        ctx.fillStyle="rgba(232,195,58,.12)";
+        ctx.fillRect(0,yT,plotR,yB-yT);
+        var tag="2 METODE";
+        ctx.font="bold 8.5px -apple-system,'Segoe UI',Roboto,sans-serif";
+        var tw=ctx.measureText(tag).width;
+        ctx.fillStyle="rgba(5,8,13,.78)";
+        ctx.fillRect(4,yT+2,tw+6,12);
+        ctx.fillStyle="#e8c33a";
+        ctx.fillText(tag,7,yT+11);
+      });
+      ctx.restore();
+    }
+  }
+  /* ---- garis level PRESISI ---- */
+  ctx.save(); ctx.beginPath(); ctx.rect(0,0,plotR,view.H); ctx.clip();
+  ctx.font="9px -apple-system,'Segoe UI',Roboto,sans-serif";
+  function prLine(l){
+    if(l.p<view.min||l.p>view.max) return;
+    var y=Y(l.p); if(y<4||y>view.H-34) return;
+    ctx.strokeStyle="rgba(203,213,225,.40)"; ctx.lineWidth=1; ctx.setLineDash([1,3]);
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(plotR,y); ctx.stroke(); ctx.setLineDash([]);
+    var txt=fmt(l.p,m.dec), tw=ctx.measureText(txt).width;
+    ctx.fillStyle="rgba(5,8,13,.72)"; ctx.fillRect(4,y-7,tw+6,12);
+    ctx.fillStyle="rgba(203,213,225,.78)"; ctx.fillText(txt,7,y+3);
+  }
+  lv.above.forEach(prLine);
+  lv.below.forEach(prLine);
+  ctx.restore();
+  ctx.font="10px ui-monospace,Menlo,monospace";
+}
+/* ---- toggle PRESISI: standar MATI, disimpen pola pref SKOR
+   (localStorage "obhp_presisi_v1"); ORA klebu migrasi standar apa
+   wae — pengguna sing wis ana tetep OFF nganti nguripne dhewe ---- */
+var PRESISI_PREF_KEY="obhp_presisi_v1";
+function savePresisiPref(){ try{ localStorage.setItem(PRESISI_PREF_KEY, chart.presisi? "1":"0"); }catch(e){} }
+try{
+  if(localStorage.getItem(PRESISI_PREF_KEY)==="1"){
+    chart.presisi=true;
+    var presBtn0=$("ind-presisi"); if(presBtn0) presBtn0.setAttribute("aria-pressed","true");
+  }
+}catch(e){}
+bindToggle("ind-presisi","presisi",function(){ savePresisiPref(); });
+
 /* ============ MESIN JSNR V1.0 (porting Pine Script v6 pemilik) ============
    Porting setia script "JSNR V1.0 — Javanese Support & Resistance":
    (1) Level A/V/OCL dari candle D, H4, H1 — A: candle sebelumnya
@@ -5930,6 +6485,9 @@ function deferComputeJsnr(id){
   setTimeout(function(){
     computeJsnr(id);
     if(jsnrRes[id]){ buildZonePanel(); msnrPanelCache=""; if(id===chart.sym) markChartDirty(); }
+    /* strip JSNR mode OANDA melu refresh saben etung maneh rampung —
+       kalebu nalika mode OANDA aktif (drawChart ora mlaku ing kana) */
+    if(id===chart.sym){ try{ jsnrStripCache=""; renderJsnrStrip(); }catch(e){} }
     updateJsnrStatus();
   },40);
 }
