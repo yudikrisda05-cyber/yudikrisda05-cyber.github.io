@@ -997,8 +997,8 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
 
   /* ===== RAPAT PX + DISIPLIN BORDER (mung presentasi) =====
      Lapisan pungkasan babak iki: (1) ritme spasi 12px sing konsisten
-     antar seksi PX — banner (ndhuwur dhewe tampilan PX) → baris
-     kertu ticker → panel chart → chart dobel; ora ana margin dobel amarga
+     antar seksi PX — banner (ndhuwur dhewe tampilan PX) → panel
+     chart langsung → chart dobel; ora ana margin dobel amarga
      #tp-px kolom flex (margin anak ora nate ambruk); (2) disiplin
      border: kabeh item 1px nganggo warna border tema (--line, padha
      regane karo --border ing saben tema), radius panel/kertu 4px,
@@ -1018,6 +1018,17 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
      tab sing wis ana; ora ana logika/JS sing owah */
   .wrap > .jbn{display:none}
   .wrap:has(> .tabwrap > #tp-px.on) > .jbn{display:flex}
+  /* strip kertu ticker (BTC PERP / XAU PERP): elemen global sing
+     padha persis, saiki mung tampil nalika tab DOM aktif — teknik
+     :has() sing padha karo banner ing ndhuwur; ora ana markup sing
+     dipindah/didobel lan ora ana logika/JS sing owah, updater kertu
+     tetep mlaku saka kahanan global ing tab apa wae. Amarga strip
+     manggon ing .wrap sak ndhuwure .tabwrap, urutan visual ing tab
+     DOM: strip kertu → panel Ringkesan Pasar (elemen pisanan
+     #tp-dom) → isi DOM; ing tab PX strip ilang total (display:none)
+     dadi banner → panel chart langsung tanpa sisa jarak. */
+  .wrap > .ticker{display:none}
+  .wrap:has(> .tabwrap > #tp-dom.on) > .ticker{display:flex}
   @media(max-width:700px){
     .panel.term-panel{margin:12px 12px 0;border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:4px}
     .tick{min-width:150px}
@@ -1073,7 +1084,7 @@ try{var __t=localStorage.getItem("obhp_theme_v1");if(__t!=="institusional"&&__t!
     <span class="brand"><svg class="brandmark" width="22" height="22" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45" fill="none" stroke="#12303f" stroke-width="3"/><circle cx="50" cy="50" r="45" fill="none" stroke="#20e3c2" stroke-width="5" stroke-linecap="round" stroke-dasharray="70 40 30 45 50 48" transform="rotate(-90 50 50)" opacity="0.95"/><rect x="38" y="40" width="6" height="22" rx="1.5" fill="#20e3a2"/><line x1="41" y1="34" x2="41" y2="68" stroke="#20e3a2" stroke-width="2.4"/><rect x="48" y="34" width="6" height="28" rx="1.5" fill="#f0c84b"/><line x1="51" y1="29" x2="51" y2="67" stroke="#f0c84b" stroke-width="2.4"/><rect x="58" y="44" width="6" height="16" rx="1.5" fill="#ff4d6a"/><line x1="61" y1="39" x2="61" y2="65" stroke="#ff4d6a" stroke-width="2.4"/></svg>Orderbook <small>Depth · Hyperliquid feed</small></span>
     <span id="statusText">MENGHUBUNGKAN…</span>
     <div class="cmd-right">
-      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 02:40 JST</span>
+      <span class="verlabel" title="Tanggal + jam build halaman ini — bandingkan dengan versi di HP untuk cek cache lama">VERSI 28 Nov 2026 · 12:35 JST</span>
       <div class="seg" role="group" aria-label="Mode data">
         <button id="modeLive" aria-pressed="true">LIVE</button>
         <button id="modeRefresh" aria-pressed="false">REFRESH</button>
